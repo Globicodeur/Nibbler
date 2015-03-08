@@ -5,7 +5,7 @@
 
 typedef void (*init_t)(uint, uint);
 typedef void (*clean_t)();
-typedef void (*draw_t)(gui::GameInfo &);
+typedef void (*draw_t)(const gui::GameInfo &);
 typedef gui::InputType (*getInput_t)();
 
 template<class T>
@@ -13,10 +13,10 @@ static T    dlsymSafe(void *handle, const char *toGet) {
     T       symbol;
     char    *error;
 
-    symbol = (T)dlsym(handle, toGet);
-    if ((error = dlerror()) != NULL)  {
-        fputs(error, stderr);
-        exit(1);
+    symbol = reinterpret_cast<T>(dlsym(handle, toGet));
+    if ((error = dlerror()) != nullptr)  {
+        std::cerr << error << std::endl;
+        return nullptr;
     }
     return symbol;
 }
@@ -40,6 +40,9 @@ static void gameLoop(GameEngine &game) {
     clean = dlsymSafe<clean_t>(handle, "clean");
     draw = dlsymSafe<draw_t>(handle, "draw");
     getInput = dlsymSafe<getInput_t>(handle, "getInput");
+
+    if (!init || !clean || !draw || !getInput)
+        return ;
 
 
     Timer<std::chrono::milliseconds> stepTimer;
@@ -88,7 +91,7 @@ static void gameLoop(GameEngine &game) {
 }
 
 int         main(void) {
-    GameEngine  game(30, 30);
+    GameEngine  game(18, 32);
 
     srand(time(0));
     gameLoop(game);
