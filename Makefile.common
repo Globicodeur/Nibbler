@@ -11,15 +11,11 @@ OBJS			=	$(addprefix $(OBJ_DIR)/, $(SRCS:.cpp=.o))
 
 OBJ_SUB_DIRS	=	$(dir $(OBJS))
 
-all: $(NAME) ../$(NAME)
+all: $(NAME)
 
 $(NAME): $(OBJS)
 	@echo "linking $@"
 	@$(COMPILER) $^ $(LFLAGS) -o $@
-
-../$(NAME):
-	@echo "adding symlink"
-	@ln -s $(notdir $(shell pwd))/$(NAME) ../$(NAME)
 
 $(OBJS): | $(OBJ_DIR)
 
@@ -46,7 +42,6 @@ clean:
 fclean: clean
 	@echo "cleaning $(NAME)"
 	@rm -f $(NAME)
-	@rm -f ../$(NAME)
 
 re:
 	@$(MAKE) fclean
