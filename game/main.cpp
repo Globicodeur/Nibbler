@@ -26,9 +26,8 @@ static void gameLoop(GameEngine &game) {
     clean_t         clean;
     draw_t          draw;
     getInput_t      getInput;
-    Snake           *snake = game.snake;
+    Snake           *snake = game.snake.get();
     gui::InputType  input;
-    gui::GameInfo   gameInfo;
 
     handle = dlopen("nibbler_gui_sfml.so", RTLD_LAZY);
     if (!handle) {
@@ -65,12 +64,19 @@ static void gameLoop(GameEngine &game) {
             default:
                 break ;
         }
-        usleep(100000);
-        if (!snake->move(game))
-            break ;
-        std::cout << game.snake->body.size() << std::endl;
-        gameInfo.snake = game.snake->body;
-        gameInfo.food = game.food;
+        usleep(500000);
+        game.update();
+        std::cout << game.snake->body().size() << std::endl;
+        gui::GameInfo   gameInfo;
+        std::transform(
+            game.snake->body().begin(),
+            game.snake->body().end(),
+            std::back_inserter(gameInfo.snake),
+            [](const Position & pos) -> gui::GameInfo::position {
+                return { pos.x, pos.y };
+            }
+        );
+        gameInfo.food = { game.food.x, game.food.y };
         (*draw)(gameInfo);
     }
 
@@ -82,6 +88,5 @@ int         main(void) {
     GameEngine  game(30, 30);
 
     srand(time(0));
-    game.spawnFood();
     gameLoop(game);
 }

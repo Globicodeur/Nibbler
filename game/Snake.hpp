@@ -1,36 +1,32 @@
 #pragma once
 
 #include "nibbler.hpp"
-
-using position = std::pair<uint, uint>;
-
-class GameEngine;
+#include "Position.hpp"
 
 class Snake {
 
 public:
-    uint                    gameHeight;
-    uint                    gameWidth;
-    std::vector<position>   body;
-    eDirection              direction;
+    using Body = std::vector<Position>;
 
                             Snake(uint height, uint width);
                             ~Snake(void);
-    bool                    move(GameEngine &game);
-    int                     checkCollisions(position &food);
+    void                    move();
     void                    changeDirection(eDirection dirChange);
 
+    const Position &        head() const;
+    const Body &            body() const;
+    void                    eat();
+
 private:
-    typedef bool (Snake::*MoveFn)(position &, position &);
+    typedef std::function<Position (Snake *)> MoveFn;
     static const MoveFn MOVERS[];
 
                             Snake(void) = default;
                             Snake(const Snake &copy) = default;
     Snake &                 operator=(const Snake &copy) = default;
 
+    Position                movedHead(int dx, int dy) const;
 
-    bool                    moveUp(position &newHead, position &oldHead);
-    bool                    moveRight(position &newHead, position &oldHead);
-    bool                    moveDown(position &newHead, position &oldHead);
-    bool                    moveLeft(position &newHead, position &oldHead);
+    Body                    body_;
+    eDirection              direction_;
 };

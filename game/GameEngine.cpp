@@ -1,28 +1,46 @@
 #include "GameEngine.hpp"
 #include "Snake.hpp"
 
-GameEngine::GameEngine(uint height, uint width): running(true), height(height), width(width) {
-    snake = new Snake(height, width);
+GameEngine::GameEngine(uint height, uint width):
+    running(true), height(height), width(width),
+    snake(new Snake(width, height)) {
+    spawnFood();
 }
 
 GameEngine::~GameEngine(void) {
-    delete snake;
+
+}
+
+void        GameEngine::update(void) {
+    // Move Snake
+    snake->move();
+
+    // Check arena bounds
+    if (snake->head().x < 0 || snake->head().x >= width ||
+        snake->head().y < 0 || snake->head().y >= height)
+        running = false;
+
+    // Check food collision
+    if (snake->head() == food) {
+        snake->eat();
+        spawnFood();
+    }
+
+    // Check snake collision
+    auto bodyIt = std::find(
+        std::next(snake->body().begin()),
+        snake->body().end(),
+        snake->head()
+    );
+    if (bodyIt != snake->body().end())
+        running = false;
 }
 
 void        GameEngine::spawnFood(void) {
-    bool    spawned = false;
-    uint    y;
-    uint    x;
-    std::vector<position>   snakePos = snake->body;
+    Snake::Body::const_iterator bodyIt;
 
-    while (!spawned) {
-        spawned = true;
-        y = rand() % height;
-        x = rand() % width;
-        for (std::vector<position>::iterator i = snakePos.begin(); i != snakePos.end(); ++i) {
-            if (y == std::get<0>(*i) && x == std::get<1>(*i))
-                spawned = false;
-        }
-    }
-    food = std::make_pair(y, x);
+    do {
+        food = { rand() % width, rand() % height };
+        bodyIt = std::find(snake->body().begin(), snake->body().end(), food);
+    } while (bodyIt != snake->body().end());
 }
