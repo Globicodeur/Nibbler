@@ -41,8 +41,6 @@ static void gameLoop(GameEngine &game) {
     draw = dlsymSafe<draw_t>(handle, "draw");
     getInput = dlsymSafe<getInput_t>(handle, "getInput");
 
-    gameInfo.snake = game.snake->body;
-    gameInfo.food = game.food;
 
     (*init)(game.width, game.height);
     while (game.running)
@@ -67,9 +65,12 @@ static void gameLoop(GameEngine &game) {
             default:
                 break ;
         }
-        sleep(1);
+        usleep(100000);
         if (!snake->move(game))
             break ;
+        std::cout << game.snake->body.size() << std::endl;
+        gameInfo.snake = game.snake->body;
+        gameInfo.food = game.food;
         (*draw)(gameInfo);
     }
 
