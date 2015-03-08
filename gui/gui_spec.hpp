@@ -8,6 +8,7 @@ namespace gui {
     using uint = unsigned int;
 
     enum class InputType {
+        None,
         Up,
         Down,
         Left,
