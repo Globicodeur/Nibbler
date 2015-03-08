@@ -26,6 +26,7 @@
 *.exe
 *.out
 *.app
+nibbler
 
 # Makefile dependencies stuff
 .depend
