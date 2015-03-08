@@ -1,7 +1,9 @@
 #include "Snake.hpp"
 #include "GameEngine.hpp"
 
-Snake::Snake(uint height, uint width): direction_(UP) {
+Snake::Snake(uint height, uint width):
+    direction_(UP),
+    hasChanged_(false) {
     for (uint i = 0; i < 4; ++i)
         body_.emplace_back(width / 2 - 1, height / 2 - 1 + i);
 }
@@ -30,6 +32,7 @@ const Snake::Body &     Snake::body() const {
 void        Snake::move() {
     body_.pop_back();
     body_.insert(body_.begin(), MOVERS[direction_](this));
+    hasChanged_ = false;
 }
 
 void        Snake::eat() {
@@ -44,8 +47,15 @@ Position    Snake::movedHead(int dx, int dy) const {
 }
 
 void        Snake::changeDirection(eDirection dirChange) {
-    if ((direction_ == DOWN || direction_ == UP) && (dirChange == RIGHT || dirChange == LEFT))
+    if (hasChanged_)
+        return ;
+
+    if ((direction_ == DOWN || direction_ == UP) && (dirChange == RIGHT || dirChange == LEFT)) {
         direction_ = dirChange;
-    if ((direction_ == LEFT || direction_ == RIGHT) && (dirChange == UP || dirChange == DOWN))
+        hasChanged_ = true;
+    }
+    if ((direction_ == LEFT || direction_ == RIGHT) && (dirChange == UP || dirChange == DOWN)) {
         direction_ = dirChange;
+        hasChanged_ = true;
+    }
 }

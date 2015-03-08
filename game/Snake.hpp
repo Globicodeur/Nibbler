@@ -29,4 +29,5 @@ private:
 
     Body                    body_;
     eDirection              direction_;
+    bool                    hasChanged_;
 };
