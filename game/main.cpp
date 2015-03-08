@@ -2,92 +2,62 @@
 #include "GameEngine.hpp"
 #include "Snake.hpp"
 #include "Timer.hpp"
+#include "GuiManager.hpp"
 
-typedef void (*init_t)(uint, uint);
-typedef void (*clean_t)();
-typedef void (*draw_t)(const gui::GameInfo &);
-typedef gui::InputType (*getInput_t)();
-
-template<class T>
-static T    dlsymSafe(void *handle, const char *toGet) {
-    T       symbol;
-    char    *error;
-
-    symbol = reinterpret_cast<T>(dlsym(handle, toGet));
-    if ((error = dlerror()) != nullptr)  {
-        std::cerr << error << std::endl;
-        return nullptr;
-    }
-    return symbol;
-}
+static const GuiManager::LibraryNames LIBRARIES = {
+    "nibbler_gui_sfml.so"
+};
 
 static void gameLoop(GameEngine &game) {
-    void            *handle;
-    init_t          init;
-    clean_t         clean;
-    draw_t          draw;
-    getInput_t      getInput;
-    Snake           *snake = game.snake.get();
+    using StepTimer = Timer<std::chrono::milliseconds>;
+
+    StepTimer       stepTimer;
     gui::InputType  input;
+    GuiManager      guiManager { game.width, game.height, LIBRARIES };
 
-    handle = dlopen("nibbler_gui_sfml.so", RTLD_LAZY);
-    if (!handle) {
-        fputs(dlerror(), stderr);
-        exit(1);
-    }
-
-    init = dlsymSafe<init_t>(handle, "init");
-    clean = dlsymSafe<clean_t>(handle, "clean");
-    draw = dlsymSafe<draw_t>(handle, "draw");
-    getInput = dlsymSafe<getInput_t>(handle, "getInput");
-
-    if (!init || !clean || !draw || !getInput)
+    bool loadOk = guiManager.changeLibrary(rand() % LIBRARIES.size());
+    if (!loadOk)
         return ;
 
-
-    Timer<std::chrono::milliseconds> stepTimer;
-    (*init)(game.width, game.height);
     while (game.running)
     {
-        input = (*getInput)();
+        input = guiManager.getInput();
         switch (input) {
             case gui::InputType::Up:
-                snake->changeDirection(UP);
+                game.snake->changeDirection(UP);
                 break ;
             case gui::InputType::Down:
-                snake->changeDirection(DOWN);
+                game.snake->changeDirection(DOWN);
                 break ;
             case gui::InputType::Left:
-                snake->changeDirection(LEFT);
+                game.snake->changeDirection(LEFT);
                 break ;
             case gui::InputType::Right:
-                snake->changeDirection(RIGHT);
+                game.snake->changeDirection(RIGHT);
                 break ;
             case gui::InputType::Exit:
                 game.running = false;
                 break ;
+            case gui::InputType::ChangeGui1:
+            case gui::InputType::ChangeGui2:
+            case gui::InputType::ChangeGui3:
+                if (!guiManager.changeLibrary(
+                    static_cast<int>(input) -
+                    static_cast<int>(gui::InputType::ChangeGui1)
+                ))
+                    return ;
+                break;
             default:
                 break ;
         }
-        if (stepTimer.elapsed() >= 100) {
+
+        if (stepTimer.elapsed() >= 20) {
             game.update();
             stepTimer.reset();
         }
-        gui::GameInfo   gameInfo;
-        std::transform(
-            game.snake->body().begin(),
-            game.snake->body().end(),
-            std::back_inserter(gameInfo.snake),
-            [](const Position & pos) -> gui::GameInfo::position {
-                return { pos.x, pos.y };
-            }
-        );
-        gameInfo.food = { game.food.x, game.food.y };
-        (*draw)(gameInfo);
-    }
 
-    (*clean)();
-    dlclose(handle);
+        guiManager.draw(game);
+    }
 }
 
 int         main(void) {
