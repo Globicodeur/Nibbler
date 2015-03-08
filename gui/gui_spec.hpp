@@ -4,9 +4,9 @@
 #include <utility>
 #include <string>
 
-namespace gui {
+using uint = unsigned int;
 
-    using uint = unsigned int;
+namespace gui {
 
     enum class InputType {
         None,
