@@ -23,4 +23,8 @@ private:
     sf::Event event_;
     bool isClosed_;
 
+    sf::Image snakeImg_, foodImg_;
+    sf::Texture snakeTx_, foodTx_;
+    sf::Sprite snakeSp_, foodSp_;
+
 };
