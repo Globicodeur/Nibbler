@@ -3,9 +3,9 @@
 #include <vector>
 #include <utility>
 
-namespace gui {
+using uint = unsigned int;
 
-    using uint = unsigned int;
+namespace gui {
 
     enum class InputType {
         Up,
