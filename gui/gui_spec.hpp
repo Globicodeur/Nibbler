@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <utility>
+#include <string>
 
 namespace gui {
 
@@ -28,5 +29,9 @@ namespace gui {
         position food;
 
     };
+
+    static const auto WINDOW_WIDTH = 1920u;
+    static const auto WINDOW_HEIGHT = 1080u;
+    static const std::string WINDOW_TITLE_PREFIX = "Nibbler ";
 
 }
