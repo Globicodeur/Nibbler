@@ -1,6 +1,7 @@
 #include "nibbler.hpp"
 #include "GameEngine.hpp"
 #include "Snake.hpp"
+#include "Timer.hpp"
 
 typedef void (*init_t)(uint, uint);
 typedef void (*clean_t)();
@@ -41,6 +42,7 @@ static void gameLoop(GameEngine &game) {
     getInput = dlsymSafe<getInput_t>(handle, "getInput");
 
 
+    Timer<std::chrono::milliseconds> stepTimer;
     (*init)(game.width, game.height);
     while (game.running)
     {
@@ -64,9 +66,10 @@ static void gameLoop(GameEngine &game) {
             default:
                 break ;
         }
-        usleep(500000);
-        game.update();
-        std::cout << game.snake->body().size() << std::endl;
+        if (stepTimer.elapsed() >= 100) {
+            game.update();
+            stepTimer.reset();
+        }
         gui::GameInfo   gameInfo;
         std::transform(
             game.snake->body().begin(),
