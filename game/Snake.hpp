@@ -18,6 +18,7 @@ public:
                             ~Snake(void);
     bool                    move(GameEngine &game);
     int                     checkCollisions(position &food);
+    void                    changeDirection(eDirection dirChange)
 
 private:
     typedef bool (Snake::*MoveFn)(position &, position &);

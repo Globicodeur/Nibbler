@@ -36,9 +36,9 @@ int        Snake::checkCollisions(position &food) {
 
     if (std::get<0>(head) == std::get<0>(food) && std::get<1>(head) == std::get<1>(food))
         return 1;
-    for (std::vector<position>::iterator i = snakePos.begin(); i != snakePos.end(); ++i) {
+    for (std::vector<position>::iterator i = std::next(snakePos.begin()); i != snakePos.end(); ++i) {
         if (std::get<0>(head) == std::get<0>(*i) && std::get<1>(head) == std::get<1>(*i))
-            return 2;
+            return -1;
     }
     return 0;
 }
@@ -48,16 +48,20 @@ bool        Snake::move(GameEngine &game) {
     position    &oldHead = body[0];
     bool        moved = false;
     position    &food = game.food;
+    int         collision;
 
     if ((this->*(MOVERS[direction]))(newHead, oldHead)) {
-        if (checkCollisions(food) != 1)
-            body.pop_back();
-        if (checkCollisions(food) == 0)
+        collision = checkCollisions(food);
+        if (collision >= 0)
             moved = true;
-        if (checkCollisions(food) == 1)
+        if (collision != 1)
+            body.pop_back();
+        if (collision == 1)
             game.spawnFood();
         body.insert(body.begin(), newHead);
     }
+    if (moved == false)
+        game.running = false;
     return moved;
 }
 
@@ -95,4 +99,11 @@ bool        Snake::moveLeft(position &newHead, position &oldHead) {
         return false;
     newHead = std::make_pair(std::get<0>(oldHead), std::get<1>(oldHead) - 1);
     return true;
+}
+
+void        Snake::changeDirection(eDirection dirChange) {
+    if ((direction == DOWN || direction == UP) && (dirChange == RIGHT || dirChange == LEFT))
+        direction = dirChange;
+    if ((direction == LEFT || direction == RIGHT) && (dirChange == UP || dirChange == DOWN))
+        direction = dirChange;
 }

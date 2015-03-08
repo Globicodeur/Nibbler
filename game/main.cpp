@@ -2,7 +2,7 @@
 #include "GameEngine.hpp"
 #include "Snake.hpp"
 
-typedef void (*init_t)();
+typedef void (*init_t)(uint, uint);
 typedef void (*clean_t)();
 typedef void (*draw_t)(gui::GameInfo &);
 typedef gui::InputType (*getInput_t)();
@@ -41,32 +41,33 @@ static void gameLoop(GameEngine &game) {
     draw = dlsymSafe<draw_t>(handle, "draw");
     getInput = dlsymSafe<getInput_t>(handle, "getInput");
 
-    gameInfo.width = game.width;
-    gameInfo.height = game.height;
     gameInfo.snake = game.snake->body;
     gameInfo.food = game.food;
 
-    (*init)();
+    (*init)(game.width, game.height);
     while (game.running)
     {
         input = (*getInput)();
         switch (input) {
             case gui::InputType::Up:
-                snake->direction = UP;
+                snake->changeDirection(UP);
                 break ;
             case gui::InputType::Down:
-                snake->direction = DOWN;
+                snake->changeDirection(DOWN);
                 break ;
             case gui::InputType::Left:
-                snake->direction = LEFT;
+                snake->changeDirection(LEFT);
                 break ;
             case gui::InputType::Right:
-                snake->direction = RIGHT;
+                snake->changeDirection(RIGHT);
                 break ;
             case gui::InputType::Exit:
+                game.running = false;
+                break ;
             default:
                 break ;
         }
+        sleep(1);
         if (!snake->move(game))
             break ;
         (*draw)(gameInfo);
