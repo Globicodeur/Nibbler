@@ -2,14 +2,16 @@
 
 #include "../gui_spec.hpp"
 
-Window::Window():
+Window::Window(uint width, uint height):
     sf::RenderWindow {
         sf::VideoMode { gui::WINDOW_WIDTH, gui::WINDOW_HEIGHT },
         gui::WINDOW_TITLE_PREFIX + "SFML"
     },
-    isClosed_ { false }
-{ }
+    boxWidth_ { (float)gui::WINDOW_WIDTH / width },
+    boxHeight_ { (float)gui::WINDOW_HEIGHT / height },
+    isClosed_ { false } {
 
+}
 bool Window::isClosed() const {
     return isClosed_;
 }

@@ -24,7 +24,6 @@ namespace gui {
 
         using position = std::pair<uint, uint>;
 
-        uint width, height;
         std::vector<position> snake;
         position food;
 
