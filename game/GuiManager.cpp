@@ -60,5 +60,6 @@ bool GuiManager::changeLibrary(LibraryNames::size_type i) {
         return false;
 
     (*init_)(width_, height_);
+    currentIndex_ = i;
     return true;
 }
