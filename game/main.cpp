@@ -5,7 +5,8 @@
 #include "GuiManager.hpp"
 
 static const GuiManager::LibraryNames LIBRARIES = {
-    "nibbler_gui_sfml.so"
+    "nibbler_gui_sfml.so",
+    "nibbler_gui_sdl.so"
 };
 
 static void gameLoop(GameEngine &game) {
@@ -51,7 +52,7 @@ static void gameLoop(GameEngine &game) {
                 break ;
         }
 
-        if (stepTimer.elapsed() >= 20) {
+        if (stepTimer.elapsed() >= 100) {
             game.update();
             stepTimer.reset();
         }
