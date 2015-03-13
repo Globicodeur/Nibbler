@@ -1,1 +1,2 @@
 LFLAGS += -shared -fPIC
+CFLAGS += -fPIC
