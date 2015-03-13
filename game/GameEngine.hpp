@@ -10,8 +10,8 @@ class GameEngine {
 
 public:
     bool                    running;
-    int                     height;
     int                     width;
+    int                     height;
     std::unique_ptr<Snake>  snake;
     Position                food;
 

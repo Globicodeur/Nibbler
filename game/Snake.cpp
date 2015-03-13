@@ -16,9 +16,9 @@ using std::placeholders::_1;
 const Snake::MoveFn Snake::MOVERS[] =
 {
     std::bind(&Snake::movedHead, _1, 0, -1),
-    std::bind(&Snake::movedHead, _1, 1, 0),
-    std::bind(&Snake::movedHead, _1, 0, 1),
+    std::bind(&Snake::movedHead, _1, 0,  1),
     std::bind(&Snake::movedHead, _1, -1, 0),
+    std::bind(&Snake::movedHead, _1, 1,  0),
 };
 
 const Position &        Snake::head() const {
@@ -46,15 +46,11 @@ Position    Snake::movedHead(int dx, int dy) const {
     };
 }
 
-void        Snake::changeDirection(eDirection dirChange) {
+void        Snake::changeDirection(Direction dirChange) {
     if (hasChanged_)
         return ;
 
-    if ((direction_ == DOWN || direction_ == UP) && (dirChange == RIGHT || dirChange == LEFT)) {
-        direction_ = dirChange;
-        hasChanged_ = true;
-    }
-    if ((direction_ == LEFT || direction_ == RIGHT) && (dirChange == UP || dirChange == DOWN)) {
+    if (OPPOSITES[direction_] != dirChange) {
         direction_ = dirChange;
         hasChanged_ = true;
     }

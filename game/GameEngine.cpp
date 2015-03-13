@@ -3,8 +3,8 @@
 
 #include <algorithm>
 
-GameEngine::GameEngine(uint height, uint width):
-    running(true), height(height), width(width),
+GameEngine::GameEngine(uint width, uint height):
+    running(true), width(width), height(height),
     snake(new Snake(width, height)) {
     spawnFood();
 }
