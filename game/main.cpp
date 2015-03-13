@@ -4,7 +4,8 @@
 #include "GuiManager.hpp"
 
 static const GuiManager::LibraryNames LIBRARIES = {
-    "nibbler_gui_sfml.so"
+    "./nibbler_gui_sdl.so",
+    "./nibbler_gui_sfml.so",
 };
 
 static void gameLoop(GameEngine &game) {
