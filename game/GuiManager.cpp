@@ -2,6 +2,8 @@
 #include "GameEngine.hpp"
 #include "Snake.hpp"
 
+#include <algorithm>
+
 GuiManager::GuiManager(uint width, uint height, const LibraryNames & libraries):
     width_(width), height_(height),
     libraries_(libraries),

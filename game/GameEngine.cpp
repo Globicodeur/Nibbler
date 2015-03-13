@@ -1,6 +1,8 @@
 #include "GameEngine.hpp"
 #include "Snake.hpp"
 
+#include <algorithm>
+
 GameEngine::GameEngine(uint height, uint width):
     running(true), height(height), width(width),
     snake(new Snake(width, height)) {

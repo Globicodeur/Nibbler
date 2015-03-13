@@ -1,6 +1,8 @@
 #pragma once
 
-#include "nibbler.hpp"
+#include <dlfcn.h>
+#include <iostream>
+
 #include "../gui/gui_spec.hpp"
 
 class GameEngine;

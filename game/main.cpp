@@ -1,7 +1,6 @@
-#include "nibbler.hpp"
+#include "Timer.hpp"
 #include "GameEngine.hpp"
 #include "Snake.hpp"
-#include "Timer.hpp"
 #include "GuiManager.hpp"
 
 static const GuiManager::LibraryNames LIBRARIES = {

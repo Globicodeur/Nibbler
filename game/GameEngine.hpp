@@ -1,6 +1,7 @@
 #pragma once
 
-#include "nibbler.hpp"
+#include <memory>
+
 #include "Position.hpp"
 
 class Snake;

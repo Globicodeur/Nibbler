@@ -1,3 +1,5 @@
+#include <chrono>
+
 template <class Precision>
 class Timer {
 

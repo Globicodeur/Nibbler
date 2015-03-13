@@ -1,7 +1,10 @@
 #pragma once
 
-#include "nibbler.hpp"
+#include <functional>
+#include <vector>
+
 #include "Position.hpp"
+#include "Direction.hpp"
 
 class Snake {
 
