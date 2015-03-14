@@ -1,12 +1,11 @@
-#include "nibbler.hpp"
+#include "Timer.hpp"
 #include "GameEngine.hpp"
 #include "Snake.hpp"
-#include "Timer.hpp"
 #include "GuiManager.hpp"
 
 static const GuiManager::LibraryNames LIBRARIES = {
-    "nibbler_gui_sfml.so",
-    "nibbler_gui_sdl.so"
+    "./nibbler_gui_sdl.so",
+    "./nibbler_gui_sfml.so",
 };
 
 static void gameLoop(GameEngine &game) {
@@ -14,7 +13,7 @@ static void gameLoop(GameEngine &game) {
 
     StepTimer       stepTimer;
     gui::InputType  input;
-    GuiManager      guiManager { game.width, game.height, LIBRARIES };
+    GuiManager      guiManager { 32, 18, LIBRARIES };
 
     bool loadOk = guiManager.changeLibrary(rand() % LIBRARIES.size());
     if (!loadOk)
@@ -25,16 +24,10 @@ static void gameLoop(GameEngine &game) {
         input = guiManager.getInput();
         switch (input) {
             case gui::InputType::Up:
-                game.snake->changeDirection(UP);
-                break ;
             case gui::InputType::Down:
-                game.snake->changeDirection(DOWN);
-                break ;
             case gui::InputType::Left:
-                game.snake->changeDirection(LEFT);
-                break ;
             case gui::InputType::Right:
-                game.snake->changeDirection(RIGHT);
+                game.snake->changeDirection(static_cast<Direction>(input));
                 break ;
             case gui::InputType::Exit:
                 game.running = false;
@@ -42,10 +35,7 @@ static void gameLoop(GameEngine &game) {
             case gui::InputType::ChangeGui1:
             case gui::InputType::ChangeGui2:
             case gui::InputType::ChangeGui3:
-                if (!guiManager.changeLibrary(
-                    static_cast<int>(input) -
-                    static_cast<int>(gui::InputType::ChangeGui1)
-                ))
+                if (!guiManager.changeLibrary(input - gui::ChangeGui1))
                     return ;
                 break;
             default:
@@ -62,8 +52,10 @@ static void gameLoop(GameEngine &game) {
 }
 
 int         main(void) {
-    GameEngine  game(18, 32);
+    // Randomization
+    srand(time(nullptr));
 
-    srand(time(0));
+    GameEngine  game(32, 18);
+
     gameLoop(game);
 }

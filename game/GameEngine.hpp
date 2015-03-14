@@ -1,6 +1,7 @@
 #pragma once
 
-#include "nibbler.hpp"
+#include <memory>
+
 #include "Position.hpp"
 
 class Snake;
@@ -9,8 +10,8 @@ class GameEngine {
 
 public:
     bool                    running;
-    int                     height;
     int                     width;
+    int                     height;
     std::unique_ptr<Snake>  snake;
     Position                food;
 
