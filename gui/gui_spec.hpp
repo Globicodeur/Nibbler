@@ -8,16 +8,16 @@ using uint = unsigned int;
 
 namespace gui {
 
-    enum class InputType {
-        None,
+    enum InputType {
         Up,
         Down,
         Left,
         Right,
-        Exit,
         ChangeGui1,
         ChangeGui2,
         ChangeGui3,
+        Exit,
+        None,
     };
 
     struct GameInfo {

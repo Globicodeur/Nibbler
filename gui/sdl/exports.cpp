@@ -1,24 +1,26 @@
+#include <memory>
+
 #include "window.hpp"
 
 #include "../gui_spec.hpp"
 
 struct KeyBind {
-	SDL_Keycode        key;
-	gui::InputType     type;
+    SDL_Keycode        key;
+    gui::InputType     type;
 };
 
 static const KeyBind KEY_MAP[] = {
-	{ SDLK_UP,	       gui::InputType::Up		  },
-	{ SDLK_DOWN,       gui::InputType::Down	      },
-	{ SDLK_LEFT,       gui::InputType::Left	      },
-	{ SDLK_RIGHT,      gui::InputType::Right	  },
-	{ SDLK_ESCAPE,     gui::InputType::Exit	      },
-	{ SDLK_KP_1,       gui::InputType::ChangeGui1 },
-	{ SDLK_KP_2,       gui::InputType::ChangeGui2 },
-	{ SDLK_KP_3,       gui::InputType::ChangeGui3 },
+    { SDLK_UP,     gui::InputType::Up         },
+    { SDLK_DOWN,   gui::InputType::Down       },
+    { SDLK_LEFT,   gui::InputType::Left       },
+    { SDLK_RIGHT,  gui::InputType::Right      },
+    { SDLK_ESCAPE, gui::InputType::Exit       },
+    { SDLK_KP_1,   gui::InputType::ChangeGui1 },
+    { SDLK_KP_2,   gui::InputType::ChangeGui2 },
+    { SDLK_KP_3,   gui::InputType::ChangeGui3 },
 };
 
-static std::unique_ptr<Window>	window;
+static std::unique_ptr<Window> window;
 
 extern "C" {
 
@@ -27,11 +29,7 @@ extern "C" {
     }
 
     void clean() {
-        SDL_FreeSurface(window->surface);
-        SDL_FreeSurface(window->surface_doge);
-        SDL_FreeSurface(window->surface_snake);
-        SDL_DestroyRenderer(window->renderer);
-        SDL_DestroyWindow(window->win);
+
     }
 
     void draw(const gui::GameInfo & info) {
