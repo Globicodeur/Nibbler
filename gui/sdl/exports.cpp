@@ -29,11 +29,7 @@ extern "C" {
     }
 
     void clean() {
-        SDL_FreeSurface(window->surface);
-        SDL_FreeSurface(window->surface_doge);
-        SDL_FreeSurface(window->surface_snake);
-        SDL_DestroyRenderer(window->renderer);
-        SDL_DestroyWindow(window->win);
+
     }
 
     void draw(const gui::GameInfo & info) {

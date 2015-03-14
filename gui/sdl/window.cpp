@@ -20,6 +20,14 @@ Window::Window(uint width, uint height):
     surface_snake = SDL_LoadBMP("gui/snake.bmp");
 }
 
+Window::~Window() {
+    SDL_FreeSurface(surface);
+    SDL_FreeSurface(surface_doge);
+    SDL_FreeSurface(surface_snake);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(win);
+}
+
 bool            Window::isClosed() const {
     return isClosed_;
 }
