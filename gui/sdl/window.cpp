@@ -16,8 +16,8 @@ Window::Window(uint width, uint height):
     );
     renderer = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
     surface = SDL_CreateRGBSurface(0, boxWidth_, boxHeight_, 32, 0, 0, 0, 255);
-    surface_doge = SDL_LoadBMP("gui/doge.bmp");
-    surface_snake = SDL_LoadBMP("gui/snake.bmp");
+    surface_doge = SDL_LoadBMP("gui/Pedobear.bmp");
+    surface_snake = SDL_LoadBMP("gui/shinobu.bmp");
 }
 
 bool            Window::isClosed() const {
@@ -35,7 +35,7 @@ void            Window::clear(void) const {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 }
-
+#include <iostream>
 static void     renderSquare(int x, int y, int sprite, Window *window) {
     int             w, h;
     SDL_Texture     *texture;
@@ -44,7 +44,11 @@ static void     renderSquare(int x, int y, int sprite, Window *window) {
     if (sprite)
         texture = SDL_CreateTextureFromSurface(window->renderer, window->surface_doge);
     else
-        texture = SDL_CreateTextureFromSurface(window->renderer, window->surface_snake);
+    {
+        // texture = SDL_CreateTextureFromSurface(window->renderer, window->test_surface);
+        texture = IMG_LoadTexture(window->renderer, "gui/shinobu.png");
+        std::cout << SDL_GetError() << std::endl;
+    }
     SDL_QueryTexture(texture, 0, 0, &w, &h);
     SDL_Rect    rect = {x, y, static_cast<int>(window->getBoxWidth()), static_cast<int>(window->getBoxHeight())};
     SDL_RenderCopy(window->renderer, texture, 0, &rect);
