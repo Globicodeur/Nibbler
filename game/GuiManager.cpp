@@ -1,68 +1,49 @@
 #include "GuiManager.hpp"
 #include "GameEngine.hpp"
+#include "DynamicLibrary.hpp"
 #include "Snake.hpp"
 
 #include <algorithm>
 
-GuiManager::GuiManager(unsigned width, unsigned height,
-                       const LibraryNames & libraries):
-    width_(width), height_(height),
-    libraries_(libraries),
-    handle_(nullptr) {
+const GuiManager::LibraryNames GuiManager::LIBRARY_NAMES = {
+    "./nibbler_gui_sdl.so",
+    "./nibbler_gui_sfml.so",
+    "./nibbler_gui_qt.so",
+};
 
+GuiManager::GuiManager(unsigned width, unsigned height):
+    width_(width), height_(height),
+    currentLibrary_(nullptr)
+{
+    for (auto name: LIBRARY_NAMES)
+        libraries_.emplace_back(new DynamicLibrary { name });
+
+    changeLibrary(rand() % libraries_.size());
 }
 
 GuiManager::~GuiManager() {
-    if (handle_) {
-        (*clean_)();
-        dlclose(handle_);
-    }
+    (*currentLibrary_->clean)();
 }
 
 void GuiManager::draw(const GameEngine & game) const {
     gui::GameInfo info;
 
-    std::transform(
-        game.snake->body().begin(),
-        game.snake->body().end(),
-        std::back_inserter(info.snake),
-        [](const Position & pos) -> gui::GameInfo::position {
-            return { pos.x, pos.y };
-        }
-    );
+    for (auto pos: game.snake->body())
+        info.snake.emplace_back(pos.x, pos.y);
     info.food = { game.food.x, game.food.y };
 
-    (*draw_)(info);
+    (*currentLibrary_->draw)(info);
 }
 
 gui::InputType GuiManager::getInput() const {
-    return (*getInput_)();
+    return (*currentLibrary_->getInput)();
 }
 
-bool GuiManager::changeLibrary(LibraryNames::size_type i) {
-    if (handle_) {
-        if (i == currentIndex_)
-            return true;
-        (*clean_)();
-        dlclose(handle_);
-        handle_ = nullptr;
+void GuiManager::changeLibrary(LibraryNames::size_type i) {
+    if (i < LIBRARY_NAMES.size()) {
+        if (currentLibrary_)
+            (*currentLibrary_->clean)();
+        currentLibrary_ = libraries_.at(i).get();
+        (*currentLibrary_->init)(width_, height_);
     }
-
-    handle_ = dlopen(libraries_[i].c_str(), RTLD_NOW | RTLD_LOCAL);
-    if (!handle_) {
-        std::cerr << dlerror() << std::endl;
-        return false;
-    }
-
-    bool allSymLoaded = true;
-    allSymLoaded &= dlsymSafe(init_, "init");
-    allSymLoaded &= dlsymSafe(clean_, "clean");
-    allSymLoaded &= dlsymSafe(draw_, "draw");
-    allSymLoaded &= dlsymSafe(getInput_, "getInput");
-    if (!allSymLoaded)
-        return false;
-
-    (*init_)(width_, height_);
-    currentIndex_ = i;
-    return true;
 }

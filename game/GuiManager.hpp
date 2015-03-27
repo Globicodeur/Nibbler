@@ -1,55 +1,32 @@
 #pragma once
 
-#include <dlfcn.h>
-#include <iostream>
-
 #include "../gui/gui_spec.hpp"
 
 class GameEngine;
+class DynamicLibrary;
 
 class GuiManager {
 
-    using init_t        = void (*)(unsigned, unsigned);
-    using clean_t       = void (*)();
-    using draw_t        = void (*)(const gui::GameInfo &);
-    using getInput_t    = gui::InputType (*)();
-
 public:
-
     using LibraryNames  = std::vector<std::string>;
 
-    GuiManager(unsigned width, unsigned height, const LibraryNames & libraries);
+    GuiManager(unsigned width, unsigned height);
     ~GuiManager();
 
     void draw(const GameEngine & game) const;
     gui::InputType getInput() const;
 
-    bool changeLibrary(LibraryNames::size_type i);
+    void changeLibrary(LibraryNames::size_type i);
 
 private:
-    init_t                  init_;
-    clean_t                 clean_;
-    draw_t                  draw_;
-    getInput_t              getInput_;
+    using Libraries = std::vector<std::unique_ptr<DynamicLibrary>>;
 
-    unsigned                width_, height_;
+    GuiManager(const GuiManager &);
+    GuiManager & operator=(const GuiManager &);
 
-    const LibraryNames      libraries_;
-    void                    *handle_;
-    LibraryNames::size_type currentIndex_;
+    unsigned width_, height_;
 
-    template<class T>
-    bool        dlsymSafe(T & symbol, const char *toGet) {
-        char    *error;
-
-        symbol = reinterpret_cast<T>(dlsym(handle_, toGet));
-        if ((error = dlerror()) != nullptr)  {
-            std::cerr << error << std::endl;
-            return false;
-        }
-        return true;
-    }
-
-                        GuiManager(const GuiManager &) = default;
-    GuiManager &        operator=(const GuiManager &) = default;
+    static const LibraryNames LIBRARY_NAMES;
+    Libraries libraries_;
+    DynamicLibrary * currentLibrary_;
 };
