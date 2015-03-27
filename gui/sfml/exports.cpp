@@ -24,7 +24,7 @@ static std::unique_ptr<Window> window;
 
 extern "C" {
 
-    void init(uint width, uint height) {
+    void init(unsigned width, unsigned height) {
         window.reset(new Window { width, height });
     }
 
