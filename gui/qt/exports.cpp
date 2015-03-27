@@ -19,7 +19,8 @@ extern "C" {
     }
 
     void clean() {
-        app->quit();
+        window.reset();
+        app.reset();
     }
 
     void draw(const gui::GameInfo & info) {
