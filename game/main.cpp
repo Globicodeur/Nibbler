@@ -1,24 +1,16 @@
+#include <cstdlib>
+
 #include "Timer.hpp"
 #include "GameEngine.hpp"
 #include "Snake.hpp"
 #include "GuiManager.hpp"
-
-static const GuiManager::LibraryNames LIBRARIES = {
-    "./nibbler_gui_sdl.so",
-    "./nibbler_gui_sfml.so",
-    "./nibbler_gui_qt.so",
-};
 
 static void gameLoop(GameEngine &game) {
     using StepTimer = Timer<std::chrono::milliseconds>;
 
     StepTimer       stepTimer;
     gui::InputType  input;
-    GuiManager      guiManager { 32, 18, LIBRARIES };
-
-    bool loadOk = guiManager.changeLibrary(rand() % LIBRARIES.size());
-    if (!loadOk)
-        return ;
+    GuiManager      guiManager { 32, 18 };
 
     while (game.running)
     {
@@ -36,8 +28,7 @@ static void gameLoop(GameEngine &game) {
             case gui::InputType::ChangeGui1:
             case gui::InputType::ChangeGui2:
             case gui::InputType::ChangeGui3:
-                if (!guiManager.changeLibrary(input - gui::ChangeGui1))
-                    return ;
+                guiManager.changeLibrary(input - gui::ChangeGui1);
                 break;
             default:
                 break ;
@@ -53,7 +44,6 @@ static void gameLoop(GameEngine &game) {
 }
 
 int         main(void) {
-    // Randomization
     srand(time(nullptr));
 
     GameEngine  game(32, 18);
