@@ -4,7 +4,8 @@
 
 #include <algorithm>
 
-GuiManager::GuiManager(uint width, uint height, const LibraryNames & libraries):
+GuiManager::GuiManager(unsigned width, unsigned height,
+                       const LibraryNames & libraries):
     width_(width), height_(height),
     libraries_(libraries),
     handle_(nullptr) {
@@ -43,7 +44,7 @@ bool GuiManager::changeLibrary(LibraryNames::size_type i) {
         if (i == currentIndex_)
             return true;
         (*clean_)();
-        std::cout << dlclose(handle_) << std::endl;
+        dlclose(handle_);
         handle_ = nullptr;
     }
 

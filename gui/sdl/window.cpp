@@ -2,7 +2,7 @@
 
 #include "../gui_spec.hpp"
 
-Window::Window(uint width, uint height):
+Window::Window(unsigned width, unsigned height):
     boxWidth_ { (float)gui::WINDOW_WIDTH / width },
     boxHeight_ { (float)gui::WINDOW_HEIGHT / height },
     isClosed_ { false } {

@@ -9,7 +9,7 @@ class GameEngine;
 
 class GuiManager {
 
-    using init_t        = void (*)(uint, uint);
+    using init_t        = void (*)(unsigned, unsigned);
     using clean_t       = void (*)();
     using draw_t        = void (*)(const gui::GameInfo &);
     using getInput_t    = gui::InputType (*)();
@@ -18,7 +18,7 @@ public:
 
     using LibraryNames  = std::vector<std::string>;
 
-    GuiManager(uint width, uint height, const LibraryNames & libraries);
+    GuiManager(unsigned width, unsigned height, const LibraryNames & libraries);
     ~GuiManager();
 
     void draw(const GameEngine & game) const;
@@ -32,7 +32,7 @@ private:
     draw_t                  draw_;
     getInput_t              getInput_;
 
-    uint                    width_, height_;
+    unsigned                width_, height_;
 
     const LibraryNames      libraries_;
     void                    *handle_;

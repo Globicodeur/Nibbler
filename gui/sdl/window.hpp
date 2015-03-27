@@ -14,7 +14,7 @@ public:
     SDL_Surface     *surface_doge;
     SDL_Event       event;
 
-                    Window(uint width, uint height);
+                    Window(unsigned width, unsigned height);
                     ~Window();
     bool            isClosed(void) const;
     void            processEvents(void);

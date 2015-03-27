@@ -8,7 +8,7 @@ class Window: public sf::RenderWindow {
 
 public:
 
-    Window(uint width, uint height);
+    Window(unsigned width, unsigned height);
 
     bool isClosed() const;
 

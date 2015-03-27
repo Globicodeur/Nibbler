@@ -4,8 +4,6 @@
 #include <utility>
 #include <string>
 
-using uint = unsigned int;
-
 namespace gui {
 
     enum InputType {
@@ -22,7 +20,7 @@ namespace gui {
 
     struct GameInfo {
 
-        using position = std::pair<uint, uint>;
+        using position = std::pair<unsigned, unsigned>;
 
         std::vector<position> snake;
         position food;

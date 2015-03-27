@@ -15,7 +15,7 @@ public:
     std::unique_ptr<Snake>  snake;
     Position                food;
 
-                    GameEngine(uint width, uint height);
+                    GameEngine(unsigned width, unsigned height);
                     ~GameEngine(void);
     void            spawnFood(void);
     void            update(void);

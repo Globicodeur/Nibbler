@@ -2,7 +2,7 @@
 
 #include "../gui_spec.hpp"
 
-Window::Window(uint width, uint height):
+Window::Window(unsigned width, unsigned height):
     sf::RenderWindow {
         sf::VideoMode { gui::WINDOW_WIDTH, gui::WINDOW_HEIGHT },
         gui::WINDOW_TITLE_PREFIX + "SFML"

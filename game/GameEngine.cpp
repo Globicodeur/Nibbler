@@ -2,8 +2,9 @@
 #include "Snake.hpp"
 
 #include <algorithm>
+#include <cstdlib>
 
-GameEngine::GameEngine(uint width, uint height):
+GameEngine::GameEngine(unsigned width, unsigned height):
     running(true), width(width), height(height),
     snake(new Snake(width, height)) {
     spawnFood();

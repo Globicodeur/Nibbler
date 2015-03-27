@@ -1,10 +1,10 @@
 #include "Snake.hpp"
 #include "GameEngine.hpp"
 
-Snake::Snake(uint height, uint width):
+Snake::Snake(unsigned height, unsigned width):
     direction_(UP),
     hasChanged_(false) {
-    for (uint i = 0; i < 4; ++i)
+    for (unsigned i = 0; i < 4; ++i)
         body_.emplace_back(width / 2 - 1, height / 2 - 1 + i);
 }
 
