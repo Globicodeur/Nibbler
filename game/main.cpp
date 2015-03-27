@@ -6,6 +6,7 @@
 static const GuiManager::LibraryNames LIBRARIES = {
     "./nibbler_gui_sdl.so",
     "./nibbler_gui_sfml.so",
+    "./nibbler_gui_qt.so",
 };
 
 static void gameLoop(GameEngine &game) {
