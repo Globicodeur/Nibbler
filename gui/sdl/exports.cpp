@@ -25,11 +25,12 @@ static std::unique_ptr<Window> window;
 extern "C" {
 
     void init(unsigned width, unsigned height) {
+        SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
         window.reset(new Window { width, height });
     }
 
     void clean() {
-
+        SDL_Quit();
     }
 
     void draw(const gui::GameInfo & info) {
