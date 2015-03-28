@@ -41,9 +41,12 @@ gui::InputType GuiManager::getInput() const {
 
 void GuiManager::changeLibrary(LibraryNames::size_type i) {
     if (i < LIBRARY_NAMES.size()) {
-        if (currentLibrary_)
-            (*currentLibrary_->clean)();
-        currentLibrary_ = libraries_.at(i).get();
-        (*currentLibrary_->init)(width_, height_);
+        auto newLibrary = libraries_.at(i).get();
+        if (newLibrary != currentLibrary_) {
+            if (currentLibrary_)
+                (*currentLibrary_->clean)();
+            (*newLibrary->init)(width_, height_);
+            currentLibrary_ = newLibrary;
+        }
     }
 }
