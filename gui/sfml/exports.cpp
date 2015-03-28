@@ -30,19 +30,16 @@ extern "C" {
 
     void clean() {
         window->close();
+        window.reset();
     }
 
     void draw(const gui::GameInfo & info) {
-        window->processEvents();
         window->clear();
         window->render(info);
         window->display();
     }
 
     gui::InputType getInput() {
-        if (window->isClosed())
-            return gui::InputType::Exit;
-
         for (const auto & bind: KEY_MAP)
             if (sf::Keyboard::isKeyPressed(bind.key))
                 return bind.type;

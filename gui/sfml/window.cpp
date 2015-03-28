@@ -8,8 +8,7 @@ Window::Window(unsigned width, unsigned height):
         gui::WINDOW_TITLE_PREFIX + "SFML"
     },
     boxWidth_ { (float)gui::WINDOW_WIDTH / width },
-    boxHeight_ { (float)gui::WINDOW_HEIGHT / height },
-    isClosed_ { false } {
+    boxHeight_ { (float)gui::WINDOW_HEIGHT / height } {
 
     snakeImg_.create(1, 1, sf::Color::Green);
     foodImg_.create(1, 1, sf::Color::Yellow);
@@ -22,17 +21,6 @@ Window::Window(unsigned width, unsigned height):
 
     snakeSp_.scale(boxWidth_, boxHeight_);
     foodSp_.scale(boxWidth_, boxHeight_);
-}
-
-bool Window::isClosed() const {
-    return isClosed_;
-}
-
-void Window::processEvents() {
-    while (pollEvent(event_)) {
-        if (event_.type == sf::Event::Closed)
-            isClosed_ = true;
-    }
 }
 
 void Window::render(const gui::GameInfo & info) {
