@@ -10,14 +10,14 @@ struct KeyBind {
 };
 
 static const KeyBind KEY_MAP[] = {
-    { sf::Keyboard::Up,      gui::InputType::Up         },
-    { sf::Keyboard::Down,    gui::InputType::Down       },
-    { sf::Keyboard::Left,    gui::InputType::Left       },
-    { sf::Keyboard::Right,   gui::InputType::Right      },
-    { sf::Keyboard::Escape,  gui::InputType::Exit       },
-    { sf::Keyboard::Numpad1, gui::InputType::ChangeGui1 },
-    { sf::Keyboard::Numpad2, gui::InputType::ChangeGui2 },
-    { sf::Keyboard::Numpad3, gui::InputType::ChangeGui3 },
+    { sf::Keyboard::Up,     gui::InputType::Up         },
+    { sf::Keyboard::Down,   gui::InputType::Down       },
+    { sf::Keyboard::Left,   gui::InputType::Left       },
+    { sf::Keyboard::Right,  gui::InputType::Right      },
+    { sf::Keyboard::Escape, gui::InputType::Exit       },
+    { sf::Keyboard::Num1,   gui::InputType::ChangeGui1 },
+    { sf::Keyboard::Num2,   gui::InputType::ChangeGui2 },
+    { sf::Keyboard::Num3,   gui::InputType::ChangeGui3 },
 };
 
 static std::unique_ptr<Window> window;
