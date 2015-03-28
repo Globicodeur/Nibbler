@@ -1,85 +1,89 @@
 #include "window.hpp"
 
-#include "../gui_spec.hpp"
-
 Window::Window(unsigned width, unsigned height):
     boxWidth_ { (float)gui::WINDOW_WIDTH / width },
-    boxHeight_ { (float)gui::WINDOW_HEIGHT / height },
-    isClosed_ { false } {
-    win = SDL_CreateWindow(
-        "SDL",
+    boxHeight_ { (float)gui::WINDOW_HEIGHT / height } {
+
+    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
+    IMG_Init(IMG_INIT_PNG);
+
+    win_ = SDL_CreateWindow(
+        (gui::WINDOW_TITLE_PREFIX + "SDL").c_str(),
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
         gui::WINDOW_WIDTH,
         gui::WINDOW_HEIGHT,
         SDL_WINDOW_SHOWN
     );
-    renderer = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
-    surface = SDL_CreateRGBSurface(0, boxWidth_, boxHeight_, 32, 0, 0, 0, 255);
-    surface_doge = SDL_LoadBMP("gui/Pedobear.bmp");
-    surface_snake = SDL_LoadBMP("gui/shinobu.bmp");
+
+    renderer_ = SDL_CreateRenderer(win_, -1, SDL_RENDERER_ACCELERATED);
+
+    auto snakeSurface = SDL_LoadBMP("gui/sdl/assets/pedobear.bmp");
+    spSnake_ = SDL_CreateTextureFromSurface(renderer_, snakeSurface);
+    SDL_FreeSurface(snakeSurface);
+    spFood_ = IMG_LoadTexture(renderer_, "gui/sdl/assets/shinobu.png");
 }
 
 Window::~Window() {
-    SDL_FreeSurface(surface);
-    SDL_FreeSurface(surface_doge);
-    SDL_FreeSurface(surface_snake);
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(win);
-}
-
-bool            Window::isClosed() const {
-    return isClosed_;
-}
-
-void            Window::processEvents() {
-    while (SDL_PollEvent(&event)) {
-        if (event.type == SDL_QUIT)
-            isClosed_ = true;
-    }
+    SDL_DestroyTexture(spSnake_);
+    SDL_DestroyTexture(spFood_);
+    SDL_DestroyRenderer(renderer_);
+    SDL_DestroyWindow(win_);
+    IMG_Quit();
+    SDL_Quit();
 }
 
 void            Window::clear(void) const {
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
+    SDL_SetRenderDrawColor(renderer_, 0, 0, 0, 255);
+    SDL_RenderClear(renderer_);
 }
-#include <iostream>
-static void     renderSquare(int x, int y, int sprite, Window *window) {
-    int             w, h;
-    SDL_Texture     *texture;
 
-    // SDL_FillRect(window->surface, 0, color);
-    if (sprite)
-        texture = SDL_CreateTextureFromSurface(window->renderer, window->surface_doge);
-    else
-        // texture = SDL_CreateTextureFromSurface(window->renderer, window->test_surface);
-        texture = IMG_LoadTexture(window->renderer, "gui/shinobu.png");
-    SDL_QueryTexture(texture, 0, 0, &w, &h);
-    SDL_Rect    rect = {x, y, static_cast<int>(window->getBoxWidth()), static_cast<int>(window->getBoxHeight())};
-    SDL_RenderCopy(window->renderer, texture, 0, &rect);
-    SDL_DestroyTexture(texture);
+void            Window::drawTexture(int x, int y, SDL_Texture * texture) {
+    SDL_Rect rect {
+        static_cast<int>(x * boxWidth_),
+        static_cast<int>(y * boxHeight_),
+        static_cast<int>(boxWidth_),
+        static_cast<int>(boxHeight_)
+    };
+    SDL_RenderCopy(renderer_, texture, 0, &rect);
 }
 
 void            Window::render(const gui::GameInfo &info) {
-    // uint        color;
-
-    // color = SDL_MapRGB(surface->format, 255, 255, 0);
-    renderSquare(info.food.first * boxWidth_, info.food.second * boxHeight_, 0, this);
-    // color = SDL_MapRGB(surface->format, 0, 255, 0);
-    for (const auto & pos: info.snake) {
-        renderSquare(pos.first * boxWidth_, pos.second * boxHeight_, 1, this);
-    }
+    drawTexture(info.food.first, info.food.second, spFood_);
+    for (auto pos: info.snake)
+        drawTexture(pos.first, pos.second, spSnake_);
 }
 
 
 void            Window::display(void) const {
-    SDL_RenderPresent(renderer);
+    SDL_RenderPresent(renderer_);
 }
 
-float           Window::getBoxWidth(void) const {
-    return boxWidth_;
-}
+struct KeyBind {
+    SDL_Keycode        key;
+    gui::InputType     type;
+};
 
-float           Window::getBoxHeight(void) const {
-    return boxHeight_;
+static const KeyBind KEY_MAP[] = {
+    { SDLK_UP,     gui::InputType::Up         },
+    { SDLK_DOWN,   gui::InputType::Down       },
+    { SDLK_LEFT,   gui::InputType::Left       },
+    { SDLK_RIGHT,  gui::InputType::Right      },
+    { SDLK_ESCAPE, gui::InputType::Exit       },
+    { SDLK_KP_1,   gui::InputType::ChangeGui1 },
+    { SDLK_KP_2,   gui::InputType::ChangeGui2 },
+    { SDLK_KP_3,   gui::InputType::ChangeGui3 },
+};
+
+gui::InputType  Window::getInput(void) {
+    while (SDL_PollEvent(&event_)) {
+        if (event_.type == SDL_KEYDOWN) {
+            for (const auto & bind: KEY_MAP) {
+                if (event_.key.keysym.sym == bind.key)
+                    return bind.type;
+            }
+        }
+    }
+
+    return gui::InputType::None;
 }
