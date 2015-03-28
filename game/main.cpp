@@ -5,12 +5,18 @@
 #include "Snake.hpp"
 #include "GuiManager.hpp"
 
-static void gameLoop(GameEngine &game) {
+int         main(void) {
+    srand(time(nullptr));
+
     using StepTimer = Timer<std::chrono::milliseconds>;
 
+    GameEngine      game { 32, 18 };
+    GuiManager      guiManager { 32, 18 };
     StepTimer       stepTimer;
     gui::InputType  input;
-    GuiManager      guiManager { 32, 18 };
+
+    if (!guiManager.isValid())
+        return -1;
 
     while (game.running)
     {
@@ -41,12 +47,6 @@ static void gameLoop(GameEngine &game) {
 
         guiManager.draw(game);
     }
-}
 
-int         main(void) {
-    srand(time(nullptr));
-
-    GameEngine  game(32, 18);
-
-    gameLoop(game);
+    return 0;
 }

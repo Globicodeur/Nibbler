@@ -17,6 +17,7 @@ public:
     gui::InputType getInput() const;
 
     void changeLibrary(LibraryNames::size_type i);
+    bool isValid() const;
 
 private:
     using Libraries = std::vector<std::unique_ptr<DynamicLibrary>>;

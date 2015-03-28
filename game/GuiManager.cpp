@@ -25,6 +25,15 @@ GuiManager::~GuiManager() {
     (*currentLibrary_->clean)();
 }
 
+bool GuiManager::isValid() const
+{
+    return std::all_of(
+        libraries_.begin(),
+        libraries_.end(),
+        [](const auto & lib) { return lib->isValid(); }
+    );
+}
+
 void GuiManager::draw(const GameEngine & game) const {
     gui::GameInfo info;
 
