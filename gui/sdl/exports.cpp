@@ -30,6 +30,7 @@ extern "C" {
     }
 
     void clean() {
+        window.reset();
         SDL_Quit();
     }
 
