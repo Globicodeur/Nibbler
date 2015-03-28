@@ -10,10 +10,6 @@ GameEngine::GameEngine(unsigned width, unsigned height):
     spawnFood();
 }
 
-GameEngine::~GameEngine(void) {
-
-}
-
 void        GameEngine::update(void) {
     // Move Snake
     snake.move();

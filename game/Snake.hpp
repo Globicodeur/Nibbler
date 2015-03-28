@@ -12,23 +12,23 @@ public:
     using Body = std::vector<Position>;
 
                             Snake(unsigned height, unsigned width);
-                            ~Snake(void);
+                            ~Snake(void) = default;
 
     void                    eat();
     void                    move();
-    void                    changeDirection(Direction dirChange);
+    void                    changeDirection(Direction newDirection);
 
     const Position &        head() const;
     const Body &            body() const;
 
 private:
-                            Snake(void) = default;
-                            Snake(const Snake &copy) = default;
-    Snake &                 operator=(const Snake &copy) = default;
-
+                            Snake(void);
+                            Snake(const Snake &);
+    Snake &                 operator=(const Snake &);
 
     Body                    body_;
     Direction               direction_;
-    bool                    hasChanged_;
+    bool                    canChangDirection_;
+
     static const Position   DELTAS[];
 };
