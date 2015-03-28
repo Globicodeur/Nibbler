@@ -1,6 +1,7 @@
 #include "window.hpp"
 
 #include <QKeyEvent>
+
 #include <unordered_map>
 
 Window::Window(unsigned width, unsigned height):

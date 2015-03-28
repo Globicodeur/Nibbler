@@ -3,8 +3,8 @@
 
 #include "window.hpp"
 
-static int FAKE_ARGC = 1;
-static char * FAKE_ARGV[] = { 0 };
+static int FAKE_ARGC = 0;
+static char * FAKE_ARGV[] = { nullptr };
 
 static std::unique_ptr<QApplication> app;
 static std::unique_ptr<Window> window;
@@ -13,7 +13,6 @@ extern "C" {
 
     void init(unsigned width, unsigned height) {
         app.reset(new QApplication { FAKE_ARGC, FAKE_ARGV });
-        app->setQuitOnLastWindowClosed(false);
         window.reset(new Window { width, height });
         window->show();
     }
@@ -29,7 +28,6 @@ extern "C" {
 
     gui::InputType getInput() {
         QApplication::processEvents();
-        QApplication::sendPostedEvents();
 
         return window->lastInput();
     }
