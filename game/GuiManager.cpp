@@ -1,7 +1,6 @@
 #include "GuiManager.hpp"
 #include "GameEngine.hpp"
 #include "DynamicLibrary.hpp"
-#include "Snake.hpp"
 
 #include <algorithm>
 
@@ -37,7 +36,7 @@ bool GuiManager::isValid() const
 void GuiManager::draw(const GameEngine & game) const {
     gui::GameInfo info;
 
-    for (auto pos: game.snake->body())
+    for (auto pos: game.snake.body())
         info.snake.emplace_back(pos.x, pos.y);
     info.food = { game.food.x, game.food.y };
 

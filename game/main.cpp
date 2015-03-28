@@ -2,7 +2,6 @@
 
 #include "Timer.hpp"
 #include "GameEngine.hpp"
-#include "Snake.hpp"
 #include "GuiManager.hpp"
 
 int         main(void) {
@@ -26,7 +25,7 @@ int         main(void) {
             case gui::InputType::Down:
             case gui::InputType::Left:
             case gui::InputType::Right:
-                game.snake->changeDirection(static_cast<Direction>(input));
+                game.snake.changeDirection(static_cast<Direction>(input));
                 break ;
             case gui::InputType::Exit:
                 game.running = false;

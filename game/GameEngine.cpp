@@ -6,7 +6,7 @@
 
 GameEngine::GameEngine(unsigned width, unsigned height):
     running(true), width(width), height(height),
-    snake(new Snake(width, height)) {
+    snake { width, height } {
     spawnFood();
 }
 
@@ -16,26 +16,26 @@ GameEngine::~GameEngine(void) {
 
 void        GameEngine::update(void) {
     // Move Snake
-    snake->move();
+    snake.move();
 
     // Check arena bounds
-    if (snake->head().x < 0 || snake->head().x >= width ||
-        snake->head().y < 0 || snake->head().y >= height)
+    if (snake.head().x < 0 || snake.head().x >= width ||
+        snake.head().y < 0 || snake.head().y >= height)
         running = false;
 
     // Check food collision
-    if (snake->head() == food) {
-        snake->eat();
+    if (snake.head() == food) {
+        snake.eat();
         spawnFood();
     }
 
     // Check snake collision
     auto bodyIt = std::find(
-        std::next(snake->body().begin()),
-        snake->body().end(),
-        snake->head()
+        std::next(snake.body().begin()),
+        snake.body().end(),
+        snake.head()
     );
-    if (bodyIt != snake->body().end())
+    if (bodyIt != snake.body().end())
         running = false;
 }
 
@@ -44,6 +44,6 @@ void        GameEngine::spawnFood(void) {
 
     do {
         food = { rand() % width, rand() % height };
-        bodyIt = std::find(snake->body().begin(), snake->body().end(), food);
-    } while (bodyIt != snake->body().end());
+        bodyIt = std::find(snake.body().begin(), snake.body().end(), food);
+    } while (bodyIt != snake.body().end());
 }

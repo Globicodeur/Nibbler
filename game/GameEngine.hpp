@@ -1,10 +1,6 @@
 #pragma once
 
-#include <memory>
-
-#include "Position.hpp"
-
-class Snake;
+#include "Snake.hpp"
 
 class GameEngine {
 
@@ -12,8 +8,8 @@ public:
     bool                    running;
     int                     width;
     int                     height;
-    std::unique_ptr<Snake>  snake;
     Position                food;
+    Snake           snake;
 
                     GameEngine(unsigned width, unsigned height);
                     ~GameEngine(void);
