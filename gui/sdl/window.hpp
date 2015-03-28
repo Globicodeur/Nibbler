@@ -25,6 +25,4 @@ private:
     SDL_Window      *win_;
     SDL_Renderer    *renderer_;
     SDL_Texture     *spSnake_, *spFood_;
-
-    SDL_Event       event_;
 };

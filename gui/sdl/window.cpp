@@ -70,16 +70,18 @@ static const KeyBind KEY_MAP[] = {
     { SDLK_LEFT,   gui::InputType::Left       },
     { SDLK_RIGHT,  gui::InputType::Right      },
     { SDLK_ESCAPE, gui::InputType::Exit       },
-    { SDLK_KP_1,   gui::InputType::ChangeGui1 },
-    { SDLK_KP_2,   gui::InputType::ChangeGui2 },
-    { SDLK_KP_3,   gui::InputType::ChangeGui3 },
+    { SDLK_1,      gui::InputType::ChangeGui1 },
+    { SDLK_2,      gui::InputType::ChangeGui2 },
+    { SDLK_3,      gui::InputType::ChangeGui3 },
 };
 
 gui::InputType  Window::getInput(void) {
-    while (SDL_PollEvent(&event_)) {
-        if (event_.type == SDL_KEYDOWN) {
+    SDL_Event       event;
+
+    while (SDL_PollEvent(&event)) {
+        if (event.type == SDL_KEYDOWN) {
             for (const auto & bind: KEY_MAP) {
-                if (event_.key.keysym.sym == bind.key)
+                if (event.key.keysym.sym == bind.key)
                     return bind.type;
             }
         }
