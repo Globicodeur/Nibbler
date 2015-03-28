@@ -22,17 +22,13 @@ public:
     const Body &            body() const;
 
 private:
-
-    using MoveFn = std::function<Position (Snake *)>;
-    static const MoveFn MOVERS[];
-
                             Snake(void) = default;
                             Snake(const Snake &copy) = default;
     Snake &                 operator=(const Snake &copy) = default;
 
-    Position                movedHead(int dx, int dy) const;
 
     Body                    body_;
     Direction               direction_;
     bool                    hasChanged_;
+    static const Position   DELTAS[];
 };

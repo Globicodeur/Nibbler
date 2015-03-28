@@ -10,6 +10,8 @@ public:
                 Position(int x, int y);
                 Position(const Position &) = default;
     Position &  operator=(const Position &) = default;
+
+    Position    operator+(const Position &) const;
 };
 
 bool operator==(const Position & lhs, const Position & rhs);
