@@ -3,7 +3,7 @@
 #include <dlfcn.h>
 #include <iostream>
 
-#include "../gui/gui_spec.hpp"
+#include "gui/spec.hpp"
 
 template<class T>
 bool        dlsymSafe(void *handle, T & symbol, const char *toGet) {

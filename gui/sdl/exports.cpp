@@ -1,27 +1,31 @@
-#include <memory>
+// #include <memory>
 
-#include "window.hpp"
+#include "Canvas.hpp"
 
-static std::unique_ptr<Window> window;
+// static std::unique_ptr<Window> window;
 
 extern "C" {
 
-    void init(unsigned width, unsigned height) {
-        window.reset(new Window { width, height });
-    }
+    // void init(unsigned width, unsigned height) {
+    //     window.reset(new Window { width, height });
+    // }
 
-    void clean() {
-        window.reset();
-    }
+    // void clean() {
+    //     window.reset();
+    // }
 
-    void draw(const gui::GameInfo & info) {
-        window->clear();
-        window->render(info);
-        window->display();
-    }
+    // void draw(const gui::GameInfo & info) {
+    //     window->clear();
+    //     window->render(info);
+    //     window->display();
+    // }
 
-    gui::InputType getInput() {
-        return window->getInput();
+    // gui::InputType getInput() {
+    //     return window->getInput();
+    // }
+
+    gui::Canvas * get(unsigned width, unsigned height) {
+        return new SDLCanvas { width, height };
     }
 
 }

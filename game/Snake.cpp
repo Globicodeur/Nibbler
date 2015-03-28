@@ -4,7 +4,7 @@
 static const auto SNAKE_INITIAL_SIZE = 4u;
 
 Snake::Snake(unsigned height, unsigned width):
-    direction_ { UP },
+    direction_ { Up },
     canChangDirection_ { true } {
 
     for (unsigned i = 0; i < SNAKE_INITIAL_SIZE; ++i)

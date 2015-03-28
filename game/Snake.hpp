@@ -3,8 +3,8 @@
 #include <functional>
 #include <vector>
 
-#include "Position.hpp"
-#include "Direction.hpp"
+#include "tools/Position.hpp"
+#include "tools/Direction.hpp"
 
 class Snake {
 

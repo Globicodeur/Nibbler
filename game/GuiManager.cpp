@@ -1,8 +1,7 @@
 #include "GuiManager.hpp"
 #include "GameEngine.hpp"
-#include "DynamicLibrary.hpp"
 
-#include <algorithm>
+// #include <algorithm>
 
 const GuiManager::LibraryNames GuiManager::LIBRARY_NAMES = {
     "./nibbler_gui_sdl.so",
@@ -11,26 +10,26 @@ const GuiManager::LibraryNames GuiManager::LIBRARY_NAMES = {
 };
 
 GuiManager::GuiManager(unsigned width, unsigned height):
-    width_(width), height_(height),
     currentLibrary_(nullptr)
 {
     for (auto name: LIBRARY_NAMES)
-        libraries_.emplace_back(new DynamicLibrary { name });
+        libraries_.emplace_back(new GraphicLibrary { name, width, height });
 
     changeLibrary(rand() % libraries_.size());
 }
 
 GuiManager::~GuiManager() {
-    (*currentLibrary_->clean)();
+    // (*currentLibrary_->clean)();
 }
 
 bool GuiManager::isValid() const
 {
-    return std::all_of(
-        libraries_.begin(),
-        libraries_.end(),
-        [](const auto & lib) { return lib->isValid(); }
-    );
+    // return std::all_of(
+    //     libraries_.begin(),
+    //     libraries_.end(),
+    //     [](const auto & lib) { return lib->isValid(); }
+    // );
+    return true;
 }
 
 void GuiManager::draw(const GameEngine & game) const {
@@ -40,11 +39,11 @@ void GuiManager::draw(const GameEngine & game) const {
         info.snake.emplace_back(pos.x, pos.y);
     info.food = { game.food.x, game.food.y };
 
-    (*currentLibrary_->draw)(info);
+    currentLibrary_->get()->draw(info);
 }
 
-gui::InputType GuiManager::getInput() const {
-    return (*currentLibrary_->getInput)();
+gui::Inputs GuiManager::getInputs() const {
+    return currentLibrary_->get()->getInputs();
 }
 
 void GuiManager::changeLibrary(LibraryNames::size_type i) {
@@ -52,8 +51,8 @@ void GuiManager::changeLibrary(LibraryNames::size_type i) {
         auto newLibrary = libraries_.at(i).get();
         if (newLibrary != currentLibrary_) {
             if (currentLibrary_)
-                (*currentLibrary_->clean)();
-            (*newLibrary->init)(width_, height_);
+                currentLibrary_->get()->setVisible(false);
+            newLibrary->get()->setVisible(true);
             currentLibrary_ = newLibrary;
         }
     }
