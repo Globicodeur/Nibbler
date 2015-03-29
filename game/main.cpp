@@ -1,15 +1,16 @@
-#include <cstdlib>
-
 #include "tools/Timer.hpp"
 #include "GameEngine.hpp"
 #include "GuiManager.hpp"
 
-int         main(void) {
+#include "command_line.hpp"
+
+int main(int argc, char **argv) {
+    parseCommandLine(argc, argv);
 
     using StepTimer = Timer<std::chrono::milliseconds>;
 
-    GameEngine      game { 32, 18 };
-    GuiManager      guiManager { 32, 18 };
+    GameEngine      game;
+    GuiManager      guiManager;
     StepTimer       stepTimer;
 
     if (!guiManager.isValid())
