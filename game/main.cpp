@@ -1,6 +1,6 @@
 #include <cstdlib>
 
-#include "Timer.hpp"
+#include "tools/Timer.hpp"
 #include "GameEngine.hpp"
 #include "GuiManager.hpp"
 
