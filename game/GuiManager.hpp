@@ -8,15 +8,13 @@ class GameEngine;
 class GuiManager {
 
 public:
-    using LibraryNames  = std::vector<std::string>;
-
     GuiManager(unsigned width, unsigned height);
-    ~GuiManager();
+    ~GuiManager() = default;
 
     void draw(const GameEngine & game) const;
     gui::Inputs getInputs() const;
 
-    void changeLibrary(LibraryNames::size_type i);
+    void changeLibrary(size_t i);
     bool isValid() const;
 
 private:
@@ -30,7 +28,6 @@ private:
     GuiManager(const GuiManager &);
     GuiManager & operator=(const GuiManager &);
 
-    static const LibraryNames LIBRARY_NAMES;
     Libraries libraries_;
     GraphicLibrary * currentLibrary_;
 };

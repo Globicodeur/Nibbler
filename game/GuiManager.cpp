@@ -3,11 +3,14 @@
 
 // #include <algorithm>
 
-const GuiManager::LibraryNames GuiManager::LIBRARY_NAMES = {
+static const char * LIBRARY_NAMES[] = {
     "./nibbler_gui_sdl.so",
     "./nibbler_gui_sfml.so",
     "./nibbler_gui_qt.so",
 };
+
+static constexpr auto LIBRARY_COUNT =
+    sizeof(LIBRARY_NAMES) / sizeof(const char *);
 
 GuiManager::GuiManager(unsigned width, unsigned height):
     currentLibrary_(nullptr)
@@ -15,11 +18,7 @@ GuiManager::GuiManager(unsigned width, unsigned height):
     for (auto name: LIBRARY_NAMES)
         libraries_.emplace_back(new GraphicLibrary { name, width, height });
 
-    changeLibrary(rand() % libraries_.size());
-}
-
-GuiManager::~GuiManager() {
-    // (*currentLibrary_->clean)();
+    changeLibrary(rand() % LIBRARY_COUNT);
 }
 
 bool GuiManager::isValid() const
@@ -33,26 +32,23 @@ bool GuiManager::isValid() const
 }
 
 void GuiManager::draw(const GameEngine & game) const {
-    gui::GameInfo info;
-
-    for (auto pos: game.snake.body())
-        info.snake.emplace_back(pos.x, pos.y);
-    info.food = { game.food.x, game.food.y };
-
-    currentLibrary_->get()->draw(info);
+    currentLibrary_->get()->draw({
+        game.snake.body(),
+        game.food
+    });
 }
 
 gui::Inputs GuiManager::getInputs() const {
     return currentLibrary_->get()->getInputs();
 }
 
-void GuiManager::changeLibrary(LibraryNames::size_type i) {
-    if (i < LIBRARY_NAMES.size()) {
+void GuiManager::changeLibrary(size_t i) {
+    if (i < LIBRARY_COUNT) {
         auto newLibrary = libraries_.at(i).get();
         if (newLibrary != currentLibrary_) {
             if (currentLibrary_)
-                currentLibrary_->get()->setVisible(false);
-            newLibrary->get()->setVisible(true);
+                currentLibrary_->release();
+            newLibrary->get();
             currentLibrary_ = newLibrary;
         }
     }
