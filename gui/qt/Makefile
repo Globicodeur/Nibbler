@@ -8,7 +8,7 @@ QT_INCLUDES		=		$(HOME)/.brew/Cellar/qt5/5.4.1/include/QtCore\
 						$(HOME)/.brew/Cellar/qt5/5.4.1/include/QtWidgets\
 						$(HOME)/.brew/Cellar/qt5/5.4.1/include
 
-QT_LIB_DIR		=		$(HOME)/.brew/Cellar/qt5/5.3.0/lib
+QT_LIB_DIR		=		$(HOME)/.brew/Cellar/qt5/5.4.1/lib
 
 CFLAGS			+=		$(foreach inc, $(QT_INCLUDES), -I$(inc))
 LFLAGS			+=		-F$(QT_LIB_DIR)\
