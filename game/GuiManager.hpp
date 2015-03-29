@@ -1,7 +1,7 @@
 #pragma once
 
 #include "gui/spec.hpp"
-#include "SharedObject.hpp"
+#include "tools/SharedObject.hpp"
 
 class GameEngine;
 
