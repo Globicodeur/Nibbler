@@ -15,7 +15,14 @@ GameEngine::GameEngine(void):
     spawnFood();
 }
 
-void        GameEngine::update(void) {
+void GameEngine::update(void) {
+    if (timer_.elapsed() >= 100) {
+        updateImpl();
+        timer_.reset();
+    }
+}
+
+void GameEngine::updateImpl(void) {
     // Move Snake
     snake.move();
 
@@ -40,7 +47,7 @@ void        GameEngine::update(void) {
         running = false;
 }
 
-void        GameEngine::spawnFood(void) {
+void GameEngine::spawnFood(void) {
     Snake::Body::const_iterator bodyIt;
 
     do {

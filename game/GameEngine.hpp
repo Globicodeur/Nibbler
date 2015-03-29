@@ -2,6 +2,8 @@
 
 #include "Snake.hpp"
 
+#include "tools/Timer.hpp"
+
 class GameEngine {
 
 public:
@@ -17,6 +19,10 @@ public:
     void            update(void);
 
 private:
+    using StepTimer = Timer<std::chrono::milliseconds>;
+    StepTimer       timer_;
+
+    void            updateImpl(void);
     void            spawnFood(void);
 
                     GameEngine(const GameEngine &copy);
