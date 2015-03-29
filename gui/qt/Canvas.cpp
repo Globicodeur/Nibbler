@@ -64,8 +64,6 @@ static const KeyMap KEY_MAP = {
     { Qt::Key_3,      gui::InputType::ChangeGui3 },
 };
 
-#include <iostream>
-
 bool QtCanvas::eventFilter(QObject *, QEvent * event) {
     KeyMap::const_iterator inputIt;
 
