@@ -8,8 +8,7 @@
 
 template <
     class Interface,
-    class GetterFn = typename Interface::SharedObjectInfo::Getter,
-    const char * getterFnName = Interface::SharedObjectInfo::GETTER_NAME
+    class SOInfo = typename Interface::SharedObjectInfo
 >
 class SharedObject {
 
@@ -22,8 +21,8 @@ public:
             throw std::system_error { std::error_code{}, dlerror() };
 
         // Acquiring the interface creation function
-        auto getterFn = reinterpret_cast<GetterFn>(
-            dlsym(handle_, getterFnName)
+        auto getterFn = reinterpret_cast<typename SOInfo::Getter>(
+            dlsym(handle_, SOInfo::getterName())
         );
         char *error = dlerror();
         if (error)
