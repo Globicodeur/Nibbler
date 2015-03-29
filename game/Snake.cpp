@@ -2,6 +2,7 @@
 #include "GameEngine.hpp"
 
 static const auto SNAKE_INITIAL_SIZE = 4u;
+static_assert(SNAKE_INITIAL_SIZE > 0, "Snake size cannot be zero");
 
 Snake::Snake(unsigned height, unsigned width):
     direction_ { Up },
