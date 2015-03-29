@@ -2,29 +2,35 @@
 
 #include "Snake.hpp"
 
+#include "audio/spec.hpp"
+
+#include "tools/SharedObjectCollection.hpp"
 #include "tools/Timer.hpp"
 
 class GameEngine {
 
 public:
-    static int      width, height;
+    static int          width, height;
 
-    bool            running;
-    Snake           snake;
-    Position        food;
+    bool                running;
+    Snake               snake;
+    Position            food;
 
-                    GameEngine(void);
-                    ~GameEngine(void) = default;
+                        GameEngine(void);
+                        ~GameEngine(void) = default;
 
-    void            update(void);
+    void                update(void);
 
 private:
-    using StepTimer = Timer<std::chrono::milliseconds>;
-    StepTimer       timer_;
+    using StepTimer     = Timer<std::chrono::milliseconds>;
+    using AudioManager  = SharedObjectCollection<audio::Player>;
 
-    void            updateImpl(void);
-    void            spawnFood(void);
+    StepTimer           timer_;
+    AudioManager        audio_;
 
-                    GameEngine(const GameEngine &copy);
-    GameEngine &    operator=(const GameEngine &copy);
+    void                updateImpl(void);
+    void                spawnFood(void);
+
+                        GameEngine(const GameEngine &copy);
+    GameEngine &        operator=(const GameEngine &copy);
 };

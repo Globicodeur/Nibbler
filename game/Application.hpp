@@ -4,8 +4,9 @@
 
 #include "gui/spec.hpp"
 
+#include "tools/SharedObjectCollection.hpp"
+
 class GameEngine;
-class GuiManager;
 
 class Application {
 
@@ -16,8 +17,10 @@ public:
                                 void run();
 
 private:
+    using GuiManager            = SharedObjectCollection<gui::Canvas>;
+
     std::unique_ptr<GameEngine> engine_;
-    std::unique_ptr<GuiManager> gui_;
+    GuiManager                  gui_;
 
     void                        handleInput(gui::InputType input);
 

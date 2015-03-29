@@ -3,6 +3,7 @@
 #include <dlfcn.h>
 
 #include <memory>
+#include <string>
 #include <functional>
 #include <system_error>
 
