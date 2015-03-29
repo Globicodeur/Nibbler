@@ -7,6 +7,8 @@
 GameEngine::GameEngine(unsigned width, unsigned height):
     running(true), width(width), height(height),
     snake { width, height } {
+    // Randomness
+    srand(time(nullptr));
     spawnFood();
 }
 

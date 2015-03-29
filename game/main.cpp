@@ -5,7 +5,6 @@
 #include "GuiManager.hpp"
 
 int         main(void) {
-    srand(time(nullptr));
 
     using StepTimer = Timer<std::chrono::milliseconds>;
 
