@@ -3,8 +3,8 @@
 #include <functional>
 #include <vector>
 
-#include "Position.hpp"
-#include "Direction.hpp"
+#include "tools/Position.hpp"
+#include "tools/Direction.hpp"
 
 class Snake {
 
@@ -12,27 +12,23 @@ public:
     using Body = std::vector<Position>;
 
                             Snake(unsigned height, unsigned width);
-                            ~Snake(void);
+                            ~Snake(void) = default;
 
     void                    eat();
     void                    move();
-    void                    changeDirection(Direction dirChange);
+    void                    changeDirection(Direction newDirection);
 
     const Position &        head() const;
     const Body &            body() const;
 
 private:
-
-    using MoveFn = std::function<Position (Snake *)>;
-    static const MoveFn MOVERS[];
-
-                            Snake(void) = default;
-                            Snake(const Snake &copy) = default;
-    Snake &                 operator=(const Snake &copy) = default;
-
-    Position                movedHead(int dx, int dy) const;
+                            Snake(void);
+                            Snake(const Snake &);
+    Snake &                 operator=(const Snake &);
 
     Body                    body_;
     Direction               direction_;
-    bool                    hasChanged_;
+    bool                    canChangDirection_;
+
+    static const Position   DELTAS[];
 };

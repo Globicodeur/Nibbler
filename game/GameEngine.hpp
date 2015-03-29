@@ -1,28 +1,26 @@
 #pragma once
 
-#include <memory>
-
-#include "Position.hpp"
-
-class Snake;
+#include "Snake.hpp"
 
 class GameEngine {
 
 public:
-    bool                    running;
-    int                     width;
-    int                     height;
-    std::unique_ptr<Snake>  snake;
-    Position                food;
+    bool            running;
+    int             width;
+    int             height;
+    Snake           snake;
+    Position        food;
 
                     GameEngine(unsigned width, unsigned height);
-                    ~GameEngine(void);
-    void            spawnFood(void);
+                    ~GameEngine(void) = default;
+
     void            update(void);
 
 private:
 
-                    GameEngine(void) = default;
-                    GameEngine(const GameEngine &copy) = default;
-    GameEngine &    operator=(const GameEngine &copy) = default;
+                    GameEngine(void);
+                    GameEngine(const GameEngine &copy);
+    GameEngine &    operator=(const GameEngine &copy);
+
+    void            spawnFood(void);
 };

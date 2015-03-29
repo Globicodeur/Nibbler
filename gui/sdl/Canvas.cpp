@@ -1,13 +1,15 @@
-#include "window.hpp"
+#include "Canvas.hpp"
 
-Window::Window(unsigned width, unsigned height):
+#include <unordered_map>
+
+SDLCanvas::SDLCanvas(unsigned width, unsigned height):
     boxWidth_ { (float)gui::WINDOW_WIDTH / width },
     boxHeight_ { (float)gui::WINDOW_HEIGHT / height } {
 
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
     IMG_Init(IMG_INIT_PNG);
 
-    win_ = SDL_CreateWindow(
+    window_ = SDL_CreateWindow(
         (gui::WINDOW_TITLE_PREFIX + "SDL").c_str(),
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
@@ -16,7 +18,8 @@ Window::Window(unsigned width, unsigned height):
         SDL_WINDOW_SHOWN
     );
 
-    renderer_ = SDL_CreateRenderer(win_, -1, SDL_RENDERER_ACCELERATED);
+    renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED);
+    SDL_SetRenderDrawColor(renderer_, 0, 0, 0, 255);
 
     auto snakeSurface = SDL_LoadBMP("gui/sdl/assets/pedobear.bmp");
     spSnake_ = SDL_CreateTextureFromSurface(renderer_, snakeSurface);
@@ -24,21 +27,16 @@ Window::Window(unsigned width, unsigned height):
     spFood_ = IMG_LoadTexture(renderer_, "gui/sdl/assets/shinobu.png");
 }
 
-Window::~Window() {
+SDLCanvas::~SDLCanvas() {
     SDL_DestroyTexture(spSnake_);
     SDL_DestroyTexture(spFood_);
     SDL_DestroyRenderer(renderer_);
-    SDL_DestroyWindow(win_);
+    SDL_DestroyWindow(window_);
     IMG_Quit();
     SDL_Quit();
 }
 
-void            Window::clear(void) const {
-    SDL_SetRenderDrawColor(renderer_, 0, 0, 0, 255);
-    SDL_RenderClear(renderer_);
-}
-
-void            Window::drawTexture(int x, int y, SDL_Texture * texture) {
+void SDLCanvas::drawTexture(int x, int y, SDL_Texture * texture) {
     SDL_Rect rect {
         static_cast<int>(x * boxWidth_),
         static_cast<int>(y * boxHeight_),
@@ -48,23 +46,18 @@ void            Window::drawTexture(int x, int y, SDL_Texture * texture) {
     SDL_RenderCopy(renderer_, texture, 0, &rect);
 }
 
-void            Window::render(const gui::GameInfo &info) {
-    drawTexture(info.food.first, info.food.second, spFood_);
-    for (auto pos: info.snake)
-        drawTexture(pos.first, pos.second, spSnake_);
-}
+void SDLCanvas::draw(const gui::GameInfo & info) {
+    SDL_RenderClear(renderer_);
 
+    drawTexture(info.food.x, info.food.y, spFood_);
+    for (auto bodyPart: info.snake)
+        drawTexture(bodyPart.x, bodyPart.y, spSnake_);
 
-void            Window::display(void) const {
     SDL_RenderPresent(renderer_);
 }
 
-struct KeyBind {
-    SDL_Keycode        key;
-    gui::InputType     type;
-};
-
-static const KeyBind KEY_MAP[] = {
+using KeyMap = std::unordered_map<SDL_Keycode, gui::InputType>;
+static const KeyMap KEY_MAP = {
     { SDLK_UP,     gui::InputType::Up         },
     { SDLK_DOWN,   gui::InputType::Down       },
     { SDLK_LEFT,   gui::InputType::Left       },
@@ -75,17 +68,24 @@ static const KeyBind KEY_MAP[] = {
     { SDLK_3,      gui::InputType::ChangeGui3 },
 };
 
-gui::InputType  Window::getInput(void) {
-    SDL_Event       event;
+gui::Inputs SDLCanvas::getInputs(void) {
+    gui::Inputs inputs;
+    SDL_Event event;
+    KeyMap::const_iterator inputIt;
 
     while (SDL_PollEvent(&event)) {
-        if (event.type == SDL_KEYDOWN) {
-            for (const auto & bind: KEY_MAP) {
-                if (event.key.keysym.sym == bind.key)
-                    return bind.type;
-            }
+        switch (event.type) {
+            case SDL_QUIT:
+                inputs.push_back(gui::InputType::Exit);
+                break ;
+            case SDL_KEYDOWN:
+                inputIt = KEY_MAP.find(event.key.keysym.sym);
+                if (inputIt != KEY_MAP.end())
+                    inputs.push_back(inputIt->second);
+                break ;
+            default:
+                break ;
         }
     }
-
-    return gui::InputType::None;
+    return inputs;
 }
