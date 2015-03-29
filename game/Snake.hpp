@@ -11,7 +11,7 @@ class Snake {
 public:
     using Body = std::vector<Position>;
 
-                            Snake(unsigned height, unsigned width);
+                            Snake(int height, int width);
                             ~Snake(void) = default;
 
     void                    eat();

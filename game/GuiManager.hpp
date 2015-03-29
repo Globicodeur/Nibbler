@@ -8,14 +8,14 @@ class GameEngine;
 class GuiManager {
 
 public:
-    GuiManager(unsigned width, unsigned height);
-    ~GuiManager() = default;
+    GuiManager(void);
+    ~GuiManager(void) = default;
 
     void draw(const GameEngine & game) const;
-    gui::Inputs getInputs() const;
+    gui::Inputs getInputs(void) const;
 
     void changeLibrary(size_t i);
-    bool isValid() const;
+    bool isValid(void) const;
 
 private:
     using GraphicLibrary = SharedObject<

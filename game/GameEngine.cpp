@@ -4,8 +4,11 @@
 #include <algorithm>
 #include <cstdlib>
 
-GameEngine::GameEngine(unsigned width, unsigned height):
-    running(true), width(width), height(height),
+int GameEngine::width = 32;
+int GameEngine::height = 18;
+
+GameEngine::GameEngine(void):
+    running { true },
     snake { width, height } {
     // Randomness
     srand(time(nullptr));

@@ -5,22 +5,20 @@
 class GameEngine {
 
 public:
+    static int      width, height;
+
     bool            running;
-    int             width;
-    int             height;
     Snake           snake;
     Position        food;
 
-                    GameEngine(unsigned width, unsigned height);
+                    GameEngine(void);
                     ~GameEngine(void) = default;
 
     void            update(void);
 
 private:
+    void            spawnFood(void);
 
-                    GameEngine(void);
                     GameEngine(const GameEngine &copy);
     GameEngine &    operator=(const GameEngine &copy);
-
-    void            spawnFood(void);
 };

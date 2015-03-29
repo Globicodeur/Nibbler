@@ -12,11 +12,15 @@ static const char * LIBRARY_NAMES[] = {
 static constexpr auto LIBRARY_COUNT =
     sizeof(LIBRARY_NAMES) / sizeof(const char *);
 
-GuiManager::GuiManager(unsigned width, unsigned height):
+GuiManager::GuiManager(void):
     currentLibrary_(nullptr)
 {
     for (auto name: LIBRARY_NAMES)
-        libraries_.emplace_back(new GraphicLibrary { name, width, height });
+        libraries_.emplace_back(new GraphicLibrary {
+            name,
+            GameEngine::width,
+            GameEngine::height
+        });
 
     changeLibrary(rand() % LIBRARY_COUNT);
 }
