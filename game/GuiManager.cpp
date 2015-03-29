@@ -12,8 +12,10 @@ static const char * LIBRARY_NAMES[] = {
 static constexpr auto LIBRARY_COUNT =
     sizeof(LIBRARY_NAMES) / sizeof(const char *);
 
+constexpr char gui::Canvas::SharedObjectInfo::GETTER_NAME[];
+
 GuiManager::GuiManager(void):
-    currentLibrary_(nullptr)
+    currentLibrary_ { nullptr }
 {
     for (auto name: LIBRARY_NAMES)
         libraries_.emplace_back(new GraphicLibrary {

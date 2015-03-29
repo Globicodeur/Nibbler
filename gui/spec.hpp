@@ -31,14 +31,17 @@ namespace gui {
 
     struct Canvas {
 
+        // Dependent type for SharedObject usability
+        struct SharedObjectInfo {
+            using Getter = Canvas * (*)(unsigned, unsigned);
+            static constexpr char GETTER_NAME[] = "get";
+        };
+
         virtual             ~Canvas(void)           = default;
 
         virtual void        draw(const GameInfo &)  = 0;
         virtual Inputs      getInputs(void)         = 0;
 
     };
-
-    using CanvasGetter = Canvas * (*)(unsigned, unsigned);
-    static constexpr char CANVAS_GETTER_FUNC_NAME[] = "get";
 
 }

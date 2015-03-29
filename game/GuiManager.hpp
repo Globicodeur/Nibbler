@@ -8,25 +8,21 @@ class GameEngine;
 class GuiManager {
 
 public:
-    GuiManager(void);
-    ~GuiManager(void) = default;
+                            GuiManager(void);
+                            ~GuiManager(void) = default;
 
-    void draw(const GameEngine & game) const;
-    gui::Inputs getInputs(void) const;
+    void                    draw(const GameEngine & game) const;
+    gui::Inputs             getInputs(void) const;
 
-    void changeLibrary(size_t i);
+    void                    changeLibrary(size_t i);
 
 private:
-    using GraphicLibrary = SharedObject<
-        gui::Canvas,
-        gui::CanvasGetter,
-        gui::CANVAS_GETTER_FUNC_NAME
-    >;
-    using Libraries = std::vector<std::unique_ptr<GraphicLibrary>>;
+    using GraphicLibrary    = SharedObject<gui::Canvas>;
+    using Libraries         = std::vector<std::unique_ptr<GraphicLibrary>>;
 
-    GuiManager(const GuiManager &);
-    GuiManager & operator=(const GuiManager &);
+    Libraries               libraries_;
+    GraphicLibrary          *currentLibrary_;
 
-    Libraries libraries_;
-    GraphicLibrary * currentLibrary_;
+                            GuiManager(const GuiManager &);
+                            GuiManager & operator=(const GuiManager &);
 };

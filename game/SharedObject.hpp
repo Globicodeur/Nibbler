@@ -6,31 +6,36 @@
 #include <functional>
 #include <system_error>
 
-template <class Interface, class GetterFn, const char * getterFnName>
+template <
+    class Interface,
+    class GetterFn = typename Interface::SharedObjectInfo::Getter,
+    const char * getterFnName = Interface::SharedObjectInfo::GETTER_NAME
+>
 class SharedObject {
 
 public:
     template <class... GetterArgs>
-    SharedObject(const std::string & objectName, const GetterArgs &... args):
-        handle_ { nullptr } {
-
+    SharedObject(const std::string & objectName, const GetterArgs &... args) {
+        // Acquiring object handle
         handle_ = dlopen(objectName.c_str(), RTLD_NOW | RTLD_LOCAL);
         if (!handle_)
             throw std::system_error { std::error_code{}, dlerror() };
 
-        char *error;
-        auto getterFn = reinterpret_cast<GetterFn>(dlsym(handle_, getterFnName));
-        if ((error = dlerror()) != nullptr)
+        // Acquiring the interface creation function
+        auto getterFn = reinterpret_cast<GetterFn>(
+            dlsym(handle_, getterFnName)
+        );
+        char *error = dlerror();
+        if (error)
             throw std::system_error { std::error_code{}, error };
 
+        // Binding getter with its arguments
         initF_ = std::bind(getterFn, args...);
     }
 
     ~SharedObject() {
-        if (handle_) {
-            release();
-            dlclose(handle_);
-        }
+        release();
+        dlclose(handle_);
     }
 
     Interface * get() {
@@ -44,7 +49,7 @@ public:
     }
 
 private:
-    using InitF = std::function<Interface * ()>;
+    using InitF                 = std::function<Interface * ()>;
 
     void                        *handle_;
     InitF                       initF_;
