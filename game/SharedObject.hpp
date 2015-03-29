@@ -1,9 +1,10 @@
 #pragma once
 
 #include <dlfcn.h>
-#include <iostream>
+
 #include <memory>
 #include <functional>
+#include <system_error>
 
 template <class Interface, class GetterFn, const char * getterFnName>
 class SharedObject {
@@ -15,12 +16,12 @@ public:
 
         handle_ = dlopen(objectName.c_str(), RTLD_NOW | RTLD_LOCAL);
         if (!handle_)
-            std::cerr << dlerror() << std::endl;
+            throw std::system_error { std::error_code{}, dlerror() };
 
         char *error;
         auto getterFn = reinterpret_cast<GetterFn>(dlsym(handle_, getterFnName));
         if ((error = dlerror()) != nullptr)
-            std::cerr << error << std::endl;
+            throw std::system_error { std::error_code{}, error };
 
         initF_ = std::bind(getterFn, args...);
     }

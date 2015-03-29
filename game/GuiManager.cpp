@@ -1,7 +1,7 @@
 #include "GuiManager.hpp"
 #include "GameEngine.hpp"
 
-// #include <algorithm>
+#include <cstdlib>
 
 static const char * LIBRARY_NAMES[] = {
     "./nibbler_gui_sdl.so",
@@ -23,16 +23,6 @@ GuiManager::GuiManager(void):
         });
 
     changeLibrary(rand() % LIBRARY_COUNT);
-}
-
-bool GuiManager::isValid() const
-{
-    // return std::all_of(
-    //     libraries_.begin(),
-    //     libraries_.end(),
-    //     [](const auto & lib) { return lib->isValid(); }
-    // );
-    return true;
 }
 
 void GuiManager::draw(const GameEngine & game) const {

@@ -15,7 +15,6 @@ public:
     gui::Inputs getInputs(void) const;
 
     void changeLibrary(size_t i);
-    bool isValid(void) const;
 
 private:
     using GraphicLibrary = SharedObject<
