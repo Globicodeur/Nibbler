@@ -7,12 +7,20 @@
 int GameEngine::width = 32;
 int GameEngine::height = 18;
 
+static const char * AUDIO_LIBRARY_NAMES[] = {
+    // "./nibbler_audio_sdl.so",
+    // "./nibbler_audio_sfml.so",
+    "./nibbler_audio_qt.so",
+};
+
 GameEngine::GameEngine(void):
     running { true },
     snake { width, height } {
     // Randomness
     srand(time(nullptr));
     spawnFood();
+
+    audio_.load(AUDIO_LIBRARY_NAMES);
 }
 
 void GameEngine::update(void) {
@@ -28,12 +36,15 @@ void GameEngine::updateImpl(void) {
 
     // Check arena bounds
     if (snake.head().x < 0 || snake.head().x >= width ||
-        snake.head().y < 0 || snake.head().y >= height)
+        snake.head().y < 0 || snake.head().y >= height) {
+        audio_->play(audio::Dead);
         running = false;
+    }
 
     // Check food collision
     if (snake.head() == food) {
         snake.eat();
+        audio_->play(audio::FoodEaten);
         spawnFood();
     }
 
@@ -43,8 +54,10 @@ void GameEngine::updateImpl(void) {
         snake.body().end(),
         snake.head()
     );
-    if (bodyIt != snake.body().end())
+    if (bodyIt != snake.body().end()) {
+        audio_->play(audio::Dead);
         running = false;
+    }
 }
 
 void GameEngine::spawnFood(void) {
