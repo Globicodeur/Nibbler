@@ -15,10 +15,11 @@ SDLCanvas::SDLCanvas(unsigned width, unsigned height):
         SDL_WINDOWPOS_CENTERED,
         gui::WINDOW_WIDTH,
         gui::WINDOW_HEIGHT,
-        SDL_WINDOW_HIDDEN
+        SDL_WINDOW_SHOWN
     );
 
     renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED);
+    SDL_SetRenderDrawColor(renderer_, 0, 0, 0, 255);
 
     auto snakeSurface = SDL_LoadBMP("gui/sdl/assets/pedobear.bmp");
     spSnake_ = SDL_CreateTextureFromSurface(renderer_, snakeSurface);
@@ -35,13 +36,6 @@ SDLCanvas::~SDLCanvas() {
     SDL_Quit();
 }
 
-void SDLCanvas::setVisible(bool visible) {
-    if (visible)
-        SDL_ShowWindow(window_);
-    else
-        SDL_HideWindow(window_);
-}
-
 void SDLCanvas::drawTexture(int x, int y, SDL_Texture * texture) {
     SDL_Rect rect {
         static_cast<int>(x * boxWidth_),
@@ -53,8 +47,6 @@ void SDLCanvas::drawTexture(int x, int y, SDL_Texture * texture) {
 }
 
 void SDLCanvas::draw(const gui::GameInfo & info) {
-    // Clear
-    SDL_SetRenderDrawColor(renderer_, 0, 0, 0, 255);
     SDL_RenderClear(renderer_);
 
     drawTexture(info.food.x, info.food.y, spFood_);

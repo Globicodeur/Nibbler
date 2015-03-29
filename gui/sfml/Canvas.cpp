@@ -24,12 +24,6 @@ SFMLCanvas::SFMLCanvas(unsigned width, unsigned height):
 
     snakeSp_.scale(boxWidth_, boxHeight_);
     foodSp_.scale(boxWidth_, boxHeight_);
-
-    setVisible(false);
-}
-
-void SFMLCanvas::setVisible(bool visible) {
-    window_.setVisible(visible);
 }
 
 void SFMLCanvas::draw(const gui::GameInfo & info) {

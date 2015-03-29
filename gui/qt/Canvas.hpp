@@ -12,7 +12,6 @@ public:
                         QtCanvas(unsigned width, unsigned height);
     virtual             ~QtCanvas(void) = default;
 
-    virtual void        setVisible(bool visible);
     virtual void        draw(const gui::GameInfo & info);
     virtual gui::Inputs getInputs(void);
 

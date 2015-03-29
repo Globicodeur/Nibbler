@@ -11,7 +11,6 @@ public:
                         SDLCanvas(unsigned width, unsigned height);
     virtual             ~SDLCanvas(void);
 
-    virtual void        setVisible(bool visible);
     virtual void        draw(const gui::GameInfo & info);
     virtual gui::Inputs getInputs(void);
 

@@ -10,7 +10,6 @@ public:
                         SFMLCanvas(unsigned width, unsigned height);
     virtual             ~SFMLCanvas(void) = default;
 
-    virtual void        setVisible(bool visible);
     virtual void        draw(const gui::GameInfo & info);
     virtual gui::Inputs getInputs(void);
 

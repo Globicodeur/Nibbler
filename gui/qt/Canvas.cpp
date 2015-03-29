@@ -13,16 +13,13 @@ QtCanvas::QtCanvas(unsigned width, unsigned height):
     boxHeight_ { (float)gui::WINDOW_HEIGHT / height } {
 
     scene_.setSceneRect(0, 0, gui::WINDOW_WIDTH, gui::WINDOW_HEIGHT);
+    window_.setWindowTitle((gui::WINDOW_TITLE_PREFIX + "Qt").c_str());
     window_.setScene(&scene_);
     window_.resize(gui::WINDOW_WIDTH, gui::WINDOW_HEIGHT);
     window_.installEventFilter(this);
-    // window_.show();
+    window_.show();
 
     app_.processEvents();
-}
-
-void QtCanvas::setVisible(bool visible) {
-    window_.setVisible(visible);
 }
 
 void QtCanvas::draw(const gui::GameInfo & info) {

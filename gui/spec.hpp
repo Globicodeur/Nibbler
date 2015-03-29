@@ -33,7 +33,6 @@ namespace gui {
 
         virtual             ~Canvas(void)           = default;
 
-        virtual void        setVisible(bool)        = 0;
         virtual void        draw(const GameInfo &)  = 0;
         virtual Inputs      getInputs(void)         = 0;
 
