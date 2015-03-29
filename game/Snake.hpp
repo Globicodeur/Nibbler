@@ -16,7 +16,7 @@ public:
 
     void                    eat();
     void                    move();
-    void                    changeDirection(Direction newDirection);
+    void                    turn(Direction newDirection);
 
     const Position &        head() const;
     const Body &            body() const;

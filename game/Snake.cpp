@@ -37,7 +37,7 @@ void Snake::eat() {
     body_.push_back(body_.back());
 }
 
-void Snake::changeDirection(Direction newDirection) {
+void Snake::turn(Direction newDirection) {
     if (canChangDirection_ && newDirection != OPPOSITES[direction_]) {
         direction_ = newDirection;
         canChangDirection_ = false;
