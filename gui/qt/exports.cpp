@@ -7,3 +7,11 @@ extern "C" {
     }
 
 }
+
+static_assert(
+    std::is_same<
+        decltype(&get),
+        gui::Canvas::SharedObjectInfo::Getter
+    >::value,
+    "Invalid exported function"
+);
