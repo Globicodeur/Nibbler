@@ -1,7 +1,7 @@
 NAME			=	nibbler_gui_sdl.so
 
 include ../../Makefile.common
-include ../Makefile.dylib
+include ../../Makefile.dylib
 
 SDL_PATH		=	$(HOME)/.brew/Cellar/sdl2/2.0.3
 SDL_IMAGE_PATH	=	$(HOME)/.brew/Cellar/sdl2_image/2.0.0_1

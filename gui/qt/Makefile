@@ -1,7 +1,7 @@
 NAME			=	nibbler_gui_qt.so
 
 include ../../Makefile.common
-include ../Makefile.dylib
+include ../../Makefile.dylib
 
 QT_INCLUDES		=		$(HOME)/.brew/Cellar/qt5/5.4.1/include/QtCore\
 						$(HOME)/.brew/Cellar/qt5/5.4.1/include/QtGui\

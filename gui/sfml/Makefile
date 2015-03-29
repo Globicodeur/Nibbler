@@ -1,7 +1,7 @@
 NAME			=	nibbler_gui_sfml.so
 
 include ../../Makefile.common
-include ../Makefile.dylib
+include ../../Makefile.dylib
 
 SFML_PATH		=	$(HOME)/.brew/Cellar/sfml/2.2
 SFML_LIBS		=	-lsfml-system -lsfml-graphics -lsfml-window
