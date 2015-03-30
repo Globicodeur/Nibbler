@@ -2,7 +2,7 @@ rwildcard		=	$(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2)\
 					$(filter $(subst *,%,$2),$d))
 
 COMPILER		=	clang++
-CFLAGS			=	-Wall -Wextra -Werror -std=c++1y -g3 -I .. -c
+CFLAGS			=	-Wall -Wextra -Werror -std=c++1y -O3 -I .. -c
 LFLAGS			=	-ldl
 
 OBJ_DIR			=	objs
