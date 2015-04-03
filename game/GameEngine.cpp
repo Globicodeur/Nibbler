@@ -4,8 +4,8 @@
 #include <algorithm>
 #include <cstdlib>
 
-int GameEngine::width = 32;
-int GameEngine::height = 18;
+int GameEngine::width { };
+int GameEngine::height { };
 
 static const char * AUDIO_LIBRARY_NAMES[] = {
     // "./nibbler_audio_sdl.so",
