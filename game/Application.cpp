@@ -1,7 +1,7 @@
 #include "Application.hpp"
 
 #include "GameEngine.hpp"
-#include "command_line.hpp"
+#include "GameOptions.hpp"
 
 #include <unordered_map>
 
@@ -12,19 +12,17 @@ static const char * GRAPHIC_LIBRARY_NAMES[] = {
 };
 
 Application::Application(int argc, char **argv) {
-    parseCommandLine(argc, argv);
+    GameOptions::parseFromCommandLine(argc, argv);
 }
 
-Application::~Application(void) {
-
-}
+Application::~Application(void) { } // forwarded unique_ptr
 
 void Application::run(void) {
     engine_.reset(new GameEngine);
     gui_.load(
         GRAPHIC_LIBRARY_NAMES,
-        GameEngine::width,
-        GameEngine::height
+        GameOptions::width,
+        GameOptions::height
     );
 
     while (engine_->running) {

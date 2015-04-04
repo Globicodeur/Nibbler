@@ -1,13 +1,9 @@
 #include "GameEngine.hpp"
+#include "GameOptions.hpp"
 #include "Snake.hpp"
 
 #include <algorithm>
 #include <cstdlib>
-
-int GameEngine::width { };
-int GameEngine::height { };
-bool GameEngine::torus = false;
-unsigned GameEngine::players = 1;
 
 static const char * AUDIO_LIBRARY_NAMES[] = {
     // "./nibbler_audio_sdl.so",
@@ -20,7 +16,7 @@ GameEngine::GameEngine(void):
     // Randomness
     srand(time(nullptr));
 
-    for (unsigned i = 0; i < players; ++i)
+    for (unsigned i = 0; i < GameOptions::players; ++i)
         spawnPlayer(i);
     spawnFood();
 
@@ -56,17 +52,17 @@ void GameEngine::updateSnake(Snake & snake) {
     snake.move();
 
     // Check arena bounds
-    if (snake.head().x < 0 || snake.head().x >= width ||
-        snake.head().y < 0 || snake.head().y >= height) {
-        if (!torus) {
+    if (snake.head().x < 0 || snake.head().x >= GameOptions::width ||
+        snake.head().y < 0 || snake.head().y >= GameOptions::height) {
+        if (!GameOptions::torus) {
             audio_->play(audio::Dead);
             snake.die();
         }
         else {
             auto head = snake.head();
             snake.setHeadPosition({
-                head.x < 0 ? head.x + width : head.x % width,
-                head.y < 0 ? head.y + height : head.y % height
+                head.x < 0 ? head.x + GameOptions::width : head.x % GameOptions::width,
+                head.y < 0 ? head.y + GameOptions::height : head.y % GameOptions::height
             });
         }
     }
@@ -130,7 +126,7 @@ void GameEngine::spawnFood(void) {
 
     bool inABody;
     do {
-        food = { rand() % width, rand() % height };
+        food = { rand() % GameOptions::width, rand() % GameOptions::height };
         inABody = std::any_of(
             snakes.begin(),
             snakes.end(),
@@ -146,7 +142,10 @@ void GameEngine::spawnPlayer(unsigned id) {
     Snake::Body body;
 
     for (unsigned i = 0; i < SNAKE_INITIAL_SIZE; ++i)
-        body.emplace_back(id * (width / players), height / 2 - 1 + i);
+        body.emplace_back(
+            id * (GameOptions::width / GameOptions::players),
+            GameOptions::height / 2 - 1 + i
+        );
 
     snakes.emplace_back(body);
 }

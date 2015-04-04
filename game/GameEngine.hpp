@@ -10,10 +10,6 @@
 class GameEngine {
 
 public:
-    static int          width, height;
-    static bool         torus;
-    static unsigned     players;
-
     bool                running;
     std::vector<Snake>  snakes;
     Position            food;

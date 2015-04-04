@@ -1,10 +1,14 @@
-#include "command_line.hpp"
-#include "GameEngine.hpp"
+#include "GameOptions.hpp"
 
 #include <boost/program_options.hpp>
 #include <iostream>
 
 namespace po = boost::program_options;
+
+int GameOptions::width { };
+int GameOptions::height { };
+bool GameOptions::torus = false;
+unsigned GameOptions::players = 1;
 
 template <class T>
 static auto validateRange(T minBound, T maxBound, const char * description) {
@@ -29,18 +33,17 @@ static po::options_description getUsage(void) {
 
     usage.add_options()
         ("help",        "Show this help message")
-        ("width,w",     po::value(&GameEngine::width)
+        ("width,w",     po::value(&GameOptions::width)
                             -> required()
                             -> notifier(validateRange(10, 192, "width")),
                         "The width of the game arena")
-        ("height,h",    po::value(&GameEngine::height)
+        ("height,h",    po::value(&GameOptions::height)
                             -> required()
                             -> notifier(validateRange(10, 108, "height")),
                         "The height of the game arena")
-        ("torus,t",     po::bool_switch(&GameEngine::torus)
-                            -> default_value(false),
+        ("torus,t",     po::bool_switch(&GameOptions::torus),
                         "Torus mode")
-        ("players,p",   po::value(&GameEngine::players)
+        ("players,p",   po::value(&GameOptions::players)
                             -> notifier(validateRange(1, 4, "players")),
                         "Number of players")
     ;
@@ -48,7 +51,7 @@ static po::options_description getUsage(void) {
     return usage;
 }
 
-void parseCommandLine(int argc, char **argv) {
+void GameOptions::parseFromCommandLine(int argc, char **argv) {
     po::variables_map options;
     po::command_line_parser parser { argc, argv };
 
