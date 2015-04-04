@@ -1,6 +1,7 @@
 #include "Canvas.hpp"
 
 #include <unordered_map>
+#include <iterator>
 
 SFMLCanvas::SFMLCanvas(unsigned width, unsigned height):
     window_ {
@@ -13,37 +14,41 @@ SFMLCanvas::SFMLCanvas(unsigned width, unsigned height):
     boxWidth_ { (float)gui::WINDOW_WIDTH / width },
     boxHeight_ { (float)gui::WINDOW_HEIGHT / height } {
 
-    snakeImg_.create(1, 1, sf::Color::Green);
+    headImg_.create(1, 1, sf::Color { 32, 128, 32 });
+    bodyImg_.create(1, 1, sf::Color::Green);
     foodImg_.create(1, 1, sf::Color::Yellow);
 
-    snakeTx_.loadFromImage(snakeImg_);
+    headTx_.loadFromImage(headImg_);
+    bodyTx_.loadFromImage(bodyImg_);
     foodTx_.loadFromImage(foodImg_);
 
-    snakeSp_.setTexture(snakeTx_);
+    headSp_.setTexture(headTx_);
+    bodySp_.setTexture(bodyTx_);
     foodSp_.setTexture(foodTx_);
 
-    snakeSp_.scale(boxWidth_, boxHeight_);
+    headSp_.scale(boxWidth_, boxHeight_);
+    bodySp_.scale(boxWidth_, boxHeight_);
     foodSp_.scale(boxWidth_, boxHeight_);
 }
 
 void SFMLCanvas::draw(const gui::GameInfo & info) {
     window_.clear();
 
-    foodSp_.setPosition(
-        info.food.x * boxWidth_,
-        info.food.y * boxHeight_
-    );
-    window_.draw(foodSp_);
+    drawSpriteAt(info.food, foodSp_);
+    drawSpriteAt(info.snake.front(), headSp_);
 
-    for (auto bodyPart: info.snake) {
-        snakeSp_.setPosition(
-            bodyPart.x * boxWidth_,
-            bodyPart.y * boxHeight_
-        );
-        window_.draw(snakeSp_);
-    }
+    for (auto it = std::next(info.snake.begin()); it != info.snake.end(); ++it)
+        drawSpriteAt(*it, bodySp_);
 
     window_.display();
+}
+
+void SFMLCanvas::drawSpriteAt(const Position & pos, sf::Sprite & sprite) {
+    sprite.setPosition(
+        pos.x * boxWidth_,
+        pos.y * boxHeight_
+    );
+    window_.draw(sprite);
 }
 
 using KeyMap = std::unordered_map<sf::Keyboard::Key, gui::InputType>;

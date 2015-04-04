@@ -18,9 +18,11 @@ private:
 
     float               boxWidth_, boxHeight_;
 
-    sf::Image           snakeImg_, foodImg_;
-    sf::Texture         snakeTx_, foodTx_;
-    sf::Sprite          snakeSp_, foodSp_;
+    sf::Image           headImg_, bodyImg_ , foodImg_;
+    sf::Texture         headTx_, bodyTx_ , foodTx_;
+    sf::Sprite          headSp_, bodySp_ , foodSp_;
+
+    void                drawSpriteAt(const Position & pos, sf::Sprite & sprite);
 
                         SFMLCanvas(void);
                         SFMLCanvas(const SFMLCanvas &);
