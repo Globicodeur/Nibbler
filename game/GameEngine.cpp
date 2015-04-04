@@ -4,6 +4,8 @@
 
 #include "tools/math.hpp"
 
+#include "PythonWrapper.hpp"
+
 #include <algorithm>
 #include <cstdlib>
 
@@ -53,6 +55,13 @@ void GameEngine::turnSnake(size_t i, Direction dir) {
 }
 
 void GameEngine::updateSnake(Snake & snake) {
+    if (!snake.isPlayer()) {
+        Python::exec([&snake](const auto & globals) {
+            auto ai = globals["ai"];
+            ai(boost::ref(snake));
+        });
+    }
+
     snake.move();
 
     auto & head = snake.head();

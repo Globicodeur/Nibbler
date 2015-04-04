@@ -5,11 +5,12 @@
 
 namespace po = boost::program_options;
 
-int GameOptions::width { };
-int GameOptions::height { };
-bool GameOptions::torus = false;
-unsigned GameOptions::snakeCount = 1;
-unsigned GameOptions::playerCount = 1;
+int         GameOptions::width          { };
+int         GameOptions::height         { };
+bool        GameOptions::torus =        false;
+unsigned    GameOptions::snakeCount =   1;
+unsigned    GameOptions::playerCount =  1;
+std::string GameOptions::aiFile =       "ai/idle.py";
 
 template <class T>
 static auto validateRange(T minBound, T maxBound, const char * description) {
@@ -50,6 +51,8 @@ static po::options_description getUsage(void) {
         ("players,p",   po::value(&GameOptions::playerCount)
                             -> notifier(validateRange(0, 2, "players")),
                         "Number of players")
+        ("script",      po::value(&GameOptions::aiFile),
+                        "Python script file for AIs")
     ;
 
     return usage;
