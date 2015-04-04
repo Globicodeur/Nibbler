@@ -40,6 +40,9 @@ static po::options_description getUsage(void) {
         ("torus,t",     po::bool_switch(&GameEngine::torus)
                             -> default_value(false),
                         "Torus mode")
+        ("players,p",   po::value(&GameEngine::players)
+                            -> notifier(validateRange(1, 4, "players")),
+                        "Number of players")
     ;
 
     return usage;

@@ -16,6 +16,10 @@ namespace gui {
         Down,
         Left,
         Right,
+        W,
+        S,
+        A,
+        D,
         ChangeGui1,
         ChangeGui2,
         ChangeGui3,
@@ -25,7 +29,10 @@ namespace gui {
     using Inputs = std::vector<InputType>;
 
     struct GameInfo {
-        std::vector<Position> snake;
+        using Snake = std::vector<Position>;
+        using Snakes = std::vector<Snake>;
+
+        Snakes snakes;
         Position food;
     };
 

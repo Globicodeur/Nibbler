@@ -23,6 +23,7 @@ private:
     GuiManager                  gui_;
 
     void                        handleInput(gui::InputType input);
+    void                        render(void);
 
                                 Application(void);
                                 Application(const Application &);

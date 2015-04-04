@@ -12,15 +12,17 @@ class GameEngine {
 public:
     static int          width, height;
     static bool         torus;
+    static unsigned     players;
 
     bool                running;
-    Snake               snake;
+    std::vector<Snake>  snakes;
     Position            food;
 
                         GameEngine(void);
                         ~GameEngine(void) = default;
 
     void                update(void);
+    void                turnSnake(size_t i, Direction dir);
 
 private:
     using StepTimer     = Timer<std::chrono::milliseconds>;
@@ -29,8 +31,10 @@ private:
     StepTimer           timer_;
     AudioManager        audio_;
 
-    void                updateImpl(void);
+    void                updateSnake(Snake & snake);
+    void                resolveSnakeCollisions(void);
     void                spawnFood(void);
+    void                spawnPlayer(unsigned id);
 
                         GameEngine(const GameEngine &copy);
     GameEngine &        operator=(const GameEngine &copy);

@@ -1,8 +1,5 @@
 #include "Snake.hpp"
 
-static const auto SNAKE_INITIAL_SIZE = 4u;
-static_assert(SNAKE_INITIAL_SIZE > 0, "Snake size cannot be zero");
-
 const Position Snake::DELTAS[] = {
     { 0, -1 },
     { 0,  1 },
@@ -10,13 +7,12 @@ const Position Snake::DELTAS[] = {
     { 1,  0 },
 };
 
-Snake::Snake(int height, int width):
+Snake::Snake(const Body & init):
+    body_ { init },
     direction_ { Up },
-    nextDirection_ { direction_ } {
-
-    for (unsigned i = 0; i < SNAKE_INITIAL_SIZE; ++i)
-        body_.emplace_back(width / 2 - 1, height / 2 - 1 + i);
-}
+    nextDirection_ { direction_ },
+    isAlive_ { true }
+{ }
 
 const Position & Snake::head() const {
     return body_.front();
@@ -43,4 +39,12 @@ void Snake::turn(Direction newDirection) {
 
 void Snake::setHeadPosition(const Position & pos) {
     body_.front() = pos;
+}
+
+bool Snake::isAlive(void) const {
+    return isAlive_;
+}
+
+void Snake::die(void) {
+    isAlive_ = false;
 }

@@ -39,10 +39,12 @@ void QtCanvas::draw(const gui::GameInfo & info) {
     scene_.addPixmap(spBackground_)->setOpacity(0.75);
 
     drawImageAt(info.food, spFood_);
-    drawImageAt(info.snake.front(), spHead_);
 
-    for (auto it = std::next(info.snake.begin()); it != info.snake.end(); ++it)
-        drawImageAt(*it, spBody_);
+    for (const auto & snake: info.snakes) {
+        drawImageAt(snake.front(), spHead_);
+        for (auto it = std::next(snake.begin()); it != snake.end(); ++it)
+            drawImageAt(*it, spBody_);
+    }
 }
 
 void QtCanvas::drawImageAt(const Position & pos, const QPixmap & pixmap) {
@@ -66,6 +68,10 @@ static const KeyMap KEY_MAP = {
     { Qt::Key_Down,   gui::InputType::Down       },
     { Qt::Key_Left,   gui::InputType::Left       },
     { Qt::Key_Right,  gui::InputType::Right      },
+    { Qt::Key_W,      gui::InputType::W          },
+    { Qt::Key_S,      gui::InputType::S          },
+    { Qt::Key_A,      gui::InputType::A          },
+    { Qt::Key_D,      gui::InputType::D          },
     { Qt::Key_Escape, gui::InputType::Exit       },
     { Qt::Key_1,      gui::InputType::ChangeGui1 },
     { Qt::Key_2,      gui::InputType::ChangeGui2 },

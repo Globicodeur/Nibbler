@@ -36,10 +36,11 @@ void SFMLCanvas::draw(const gui::GameInfo & info) {
     window_.clear();
 
     drawSpriteAt(info.food, foodSp_);
-    drawSpriteAt(info.snake.front(), headSp_);
-
-    for (auto it = std::next(info.snake.begin()); it != info.snake.end(); ++it)
-        drawSpriteAt(*it, bodySp_);
+    for (const auto & snake: info.snakes) {
+        drawSpriteAt(snake.front(), headSp_);
+        for (auto it = std::next(snake.begin()); it != snake.end(); ++it)
+            drawSpriteAt(*it, bodySp_);
+    }
 
     window_.display();
 }
@@ -58,6 +59,10 @@ static const KeyMap KEY_MAP = {
     { sf::Keyboard::Down,   gui::InputType::Down       },
     { sf::Keyboard::Left,   gui::InputType::Left       },
     { sf::Keyboard::Right,  gui::InputType::Right      },
+    { sf::Keyboard::W,      gui::InputType::W          },
+    { sf::Keyboard::S,      gui::InputType::S          },
+    { sf::Keyboard::A,      gui::InputType::A          },
+    { sf::Keyboard::D,      gui::InputType::D          },
     { sf::Keyboard::Escape, gui::InputType::Exit       },
     { sf::Keyboard::Num1,   gui::InputType::ChangeGui1 },
     { sf::Keyboard::Num2,   gui::InputType::ChangeGui2 },

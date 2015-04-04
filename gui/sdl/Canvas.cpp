@@ -53,9 +53,11 @@ void SDLCanvas::draw(const gui::GameInfo & info) {
     SDL_RenderClear(renderer_);
 
     drawTexture(info.food.x, info.food.y, spFood_);
-    drawTexture(info.snake.front().x, info.snake.front().y, spHead_);
-    for (auto it = std::next(info.snake.begin()); it != info.snake.end(); ++it)
-        drawTexture(it->x, it->y, spBody_);
+    for (const auto & snake: info.snakes) {
+        drawTexture(snake.front().x, snake.front().y, spHead_);
+        for (auto it = std::next(snake.begin()); it != snake.end(); ++it)
+            drawTexture(it->x, it->y, spBody_);
+    }
 
     SDL_RenderPresent(renderer_);
 }
@@ -66,6 +68,10 @@ static const KeyMap KEY_MAP = {
     { SDLK_DOWN,   gui::InputType::Down       },
     { SDLK_LEFT,   gui::InputType::Left       },
     { SDLK_RIGHT,  gui::InputType::Right      },
+    { SDLK_w,      gui::InputType::W          },
+    { SDLK_s,      gui::InputType::S          },
+    { SDLK_a,      gui::InputType::A          },
+    { SDLK_d,      gui::InputType::D          },
     { SDLK_ESCAPE, gui::InputType::Exit       },
     { SDLK_1,      gui::InputType::ChangeGui1 },
     { SDLK_2,      gui::InputType::ChangeGui2 },
