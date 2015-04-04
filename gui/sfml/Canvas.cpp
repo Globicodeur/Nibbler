@@ -9,7 +9,8 @@ SFMLCanvas::SFMLCanvas(unsigned width, unsigned height):
             gui::WINDOW_WIDTH,
             gui::WINDOW_HEIGHT
         },
-        gui::WINDOW_TITLE_PREFIX + "SFML"
+        gui::WINDOW_TITLE_PREFIX + "SFML",
+        sf::Style::Titlebar | sf::Style::Close
     },
     boxWidth_ { (float)gui::WINDOW_WIDTH / width },
     boxHeight_ { (float)gui::WINDOW_HEIGHT / height } {
