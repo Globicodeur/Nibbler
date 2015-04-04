@@ -18,8 +18,8 @@ GameEngine::GameEngine(void):
     // Randomness
     srand(time(nullptr));
 
-    for (unsigned i = 0; i < GameOptions::players; ++i)
-        spawnPlayer(i);
+    for (unsigned i = 0; i < GameOptions::snakeCount; ++i)
+        spawnPlayer(i, i < GameOptions::playerCount);
     spawnFood();
 
     audio_.load(AUDIO_LIBRARY_NAMES);
@@ -45,8 +45,11 @@ void GameEngine::update(void) {
 }
 
 void GameEngine::turnSnake(size_t i, Direction dir) {
-    if (i < snakes.size())
-        snakes.at(i).turn(dir);
+    if (i < snakes.size()) {
+        auto & snake = snakes.at(i);
+        if (snake.isPlayer())
+            snake.turn(dir);
+    }
 }
 
 void GameEngine::updateSnake(Snake & snake) {
@@ -136,7 +139,7 @@ void GameEngine::spawnFood(void) {
     } while (inABody);
 }
 
-void GameEngine::spawnPlayer(unsigned id) {
+void GameEngine::spawnPlayer(unsigned id, bool isPlayer) {
     static const auto SNAKE_INITIAL_SIZE = 4u;
     static_assert(SNAKE_INITIAL_SIZE > 0, "Snake size cannot be zero");
 
@@ -144,9 +147,9 @@ void GameEngine::spawnPlayer(unsigned id) {
 
     for (unsigned i = 0; i < SNAKE_INITIAL_SIZE; ++i)
         body.emplace_back(
-            id * (GameOptions::width / GameOptions::players),
+            id * (GameOptions::width / GameOptions::snakeCount),
             GameOptions::height / 2 - 1 + i
         );
 
-    snakes.emplace_back(body);
+    snakes.emplace_back(body, isPlayer);
 }

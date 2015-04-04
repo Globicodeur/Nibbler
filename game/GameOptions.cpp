@@ -8,7 +8,8 @@ namespace po = boost::program_options;
 int GameOptions::width { };
 int GameOptions::height { };
 bool GameOptions::torus = false;
-unsigned GameOptions::players = 1;
+unsigned GameOptions::snakeCount = 1;
+unsigned GameOptions::playerCount = 1;
 
 template <class T>
 static auto validateRange(T minBound, T maxBound, const char * description) {
@@ -43,8 +44,11 @@ static po::options_description getUsage(void) {
                         "The height of the game arena")
         ("torus,t",     po::bool_switch(&GameOptions::torus),
                         "Torus mode")
-        ("players,p",   po::value(&GameOptions::players)
-                            -> notifier(validateRange(1, 4, "players")),
+        ("snakes,s",    po::value(&GameOptions::snakeCount)
+                            -> notifier(validateRange(1, 4, "snakes")),
+                        "Number of snakes")
+        ("players,p",   po::value(&GameOptions::playerCount)
+                            -> notifier(validateRange(0, 2, "players")),
                         "Number of players")
     ;
 

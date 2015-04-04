@@ -3,7 +3,8 @@
 struct GameOptions {
     static int      width, height;
     static bool     torus;
-    static unsigned players;
+    static unsigned snakeCount;
+    static unsigned playerCount;
 
     static void     parseFromCommandLine(int argc, char **argv);
 };

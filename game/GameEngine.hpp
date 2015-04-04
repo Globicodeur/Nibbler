@@ -34,5 +34,5 @@ private:
     void                updateSnake(Snake & snake);
     void                resolveSnakeCollisions(void);
     void                spawnFood(void);
-    void                spawnPlayer(unsigned id);
+    void                spawnPlayer(unsigned id, bool isPlayer);
 };

@@ -1,10 +1,11 @@
 #include "Snake.hpp"
 
-Snake::Snake(const Body & init):
+Snake::Snake(const Body & init, bool isPlayer):
     body_           { init },
     direction_      { Up },
     nextDirection_  { direction_ },
-    isAlive_        { true }
+    isAlive_        { true },
+    isPlayer_       { isPlayer }
 { }
 
 const Position & Snake::head(void) const {
@@ -41,6 +42,10 @@ void Snake::setHeadPosition(const Position & pos) {
 
 bool Snake::isAlive(void) const {
     return isAlive_;
+}
+
+bool Snake::isPlayer(void) const {
+    return isPlayer_;
 }
 
 void Snake::die(void) {
