@@ -21,7 +21,7 @@ private:
 
     SDL_Window          *window_;
     SDL_Renderer        *renderer_;
-    SDL_Texture         *spSnake_, *spFood_;
+    SDL_Texture         *spHead_, *spBody_, *spFood_;
 
                         SDLCanvas(void);
                         SDLCanvas(const SDLCanvas &);

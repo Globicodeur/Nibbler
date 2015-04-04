@@ -1,6 +1,7 @@
 #include "Canvas.hpp"
 
 #include <unordered_map>
+#include <iterator>
 
 SDLCanvas::SDLCanvas(unsigned width, unsigned height):
     boxWidth_ { (float)gui::WINDOW_WIDTH / width },
@@ -21,14 +22,16 @@ SDLCanvas::SDLCanvas(unsigned width, unsigned height):
     renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED);
     SDL_SetRenderDrawColor(renderer_, 0, 0, 0, 255);
 
-    auto snakeSurface = SDL_LoadBMP("gui/sdl/assets/pedobear.bmp");
-    spSnake_ = SDL_CreateTextureFromSurface(renderer_, snakeSurface);
-    SDL_FreeSurface(snakeSurface);
+    auto headSurface = SDL_LoadBMP("gui/sdl/assets/pedobear.bmp");
+    spHead_ = SDL_CreateTextureFromSurface(renderer_, headSurface);
+    SDL_FreeSurface(headSurface);
+    spBody_ = IMG_LoadTexture(renderer_, "gui/sdl/assets/shinobu.png");
     spFood_ = IMG_LoadTexture(renderer_, "gui/sdl/assets/shinobu.png");
 }
 
 SDLCanvas::~SDLCanvas() {
-    SDL_DestroyTexture(spSnake_);
+    SDL_DestroyTexture(spHead_);
+    SDL_DestroyTexture(spBody_);
     SDL_DestroyTexture(spFood_);
     SDL_DestroyRenderer(renderer_);
     SDL_DestroyWindow(window_);
@@ -50,8 +53,9 @@ void SDLCanvas::draw(const gui::GameInfo & info) {
     SDL_RenderClear(renderer_);
 
     drawTexture(info.food.x, info.food.y, spFood_);
-    for (auto bodyPart: info.snake)
-        drawTexture(bodyPart.x, bodyPart.y, spSnake_);
+    drawTexture(info.snake.front().x, info.snake.front().y, spHead_);
+    for (auto it = std::next(info.snake.begin()); it != info.snake.end(); ++it)
+        drawTexture(it->x, it->y, spBody_);
 
     SDL_RenderPresent(renderer_);
 }
