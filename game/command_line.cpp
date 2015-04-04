@@ -37,6 +37,9 @@ static po::options_description getUsage(void) {
                             -> required()
                             -> notifier(validateRange(10, 108, "height")),
                         "The height of the game arena")
+        ("torus,t",     po::bool_switch(&GameEngine::torus)
+                            -> default_value(false),
+                        "Torus mode")
     ;
 
     return usage;

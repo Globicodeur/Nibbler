@@ -16,6 +16,7 @@ public:
     void                    eat(void);
     void                    move(void);
     void                    turn(Direction newDirection);
+    void                    setHeadPosition(const Position & pos);
 
     const Position &        head(void) const;
     const Body &            body(void) const;

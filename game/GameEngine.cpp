@@ -6,6 +6,7 @@
 
 int GameEngine::width { };
 int GameEngine::height { };
+bool GameEngine::torus = false;
 
 static const char * AUDIO_LIBRARY_NAMES[] = {
     // "./nibbler_audio_sdl.so",
@@ -37,8 +38,17 @@ void GameEngine::updateImpl(void) {
     // Check arena bounds
     if (snake.head().x < 0 || snake.head().x >= width ||
         snake.head().y < 0 || snake.head().y >= height) {
-        audio_->play(audio::Dead);
-        running = false;
+        if (!torus) {
+            audio_->play(audio::Dead);
+            running = false;
+        }
+        else {
+            auto head = snake.head();
+            snake.setHeadPosition({
+                head.x < 0 ? head.x + width : head.x % width,
+                head.y < 0 ? head.y + height : head.y % height
+            });
+        }
     }
 
     // Check food collision

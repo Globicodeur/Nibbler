@@ -11,6 +11,7 @@ class GameEngine {
 
 public:
     static int          width, height;
+    static bool         torus;
 
     bool                running;
     Snake               snake;

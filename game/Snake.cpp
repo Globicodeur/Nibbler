@@ -1,5 +1,4 @@
 #include "Snake.hpp"
-#include "GameEngine.hpp"
 
 static const auto SNAKE_INITIAL_SIZE = 4u;
 static_assert(SNAKE_INITIAL_SIZE > 0, "Snake size cannot be zero");
@@ -40,4 +39,8 @@ void Snake::eat() {
 void Snake::turn(Direction newDirection) {
     if (newDirection != OPPOSITES[direction_])
         nextDirection_ = newDirection;
+}
+
+void Snake::setHeadPosition(const Position & pos) {
+    body_.front() = pos;
 }
