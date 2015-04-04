@@ -11,7 +11,13 @@ class QtCanvas: public gui::Canvas, public QObject {
 
 public:
                         QtCanvas(unsigned width, unsigned height);
-    virtual             ~QtCanvas(void) = default;
+
+    // 42 norme
+    virtual             ~QtCanvas(void)             = default;
+                        QtCanvas(void)              = delete;
+                        QtCanvas(const QtCanvas &)  = delete;
+    QtCanvas &          operator=(const QtCanvas &) = delete;
+    //
 
     virtual void        draw(const gui::GameInfo & info);
     virtual gui::Inputs getInputs(void);
@@ -30,9 +36,4 @@ private:
     gui::Inputs         lastInputs_;
 
     void                drawImageAt(const Position & pos, const QPixmap & pixmap);
-
-                        QtCanvas(void);
-                        QtCanvas(const QtCanvas &);
-    QtCanvas &          operator=(const QtCanvas &);
-
 };

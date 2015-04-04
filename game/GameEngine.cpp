@@ -2,6 +2,8 @@
 #include "GameOptions.hpp"
 #include "Snake.hpp"
 
+#include "tools/math.hpp"
+
 #include <algorithm>
 #include <cstdlib>
 
@@ -48,27 +50,26 @@ void GameEngine::turnSnake(size_t i, Direction dir) {
 }
 
 void GameEngine::updateSnake(Snake & snake) {
-    // Move Snake
     snake.move();
 
+    auto & head = snake.head();
     // Check arena bounds
-    if (snake.head().x < 0 || snake.head().x >= GameOptions::width ||
-        snake.head().y < 0 || snake.head().y >= GameOptions::height) {
+    if (head.x < 0 || head.x >= GameOptions::width ||
+        head.y < 0 || head.y >= GameOptions::height) {
         if (!GameOptions::torus) {
             audio_->play(audio::Dead);
             snake.die();
         }
         else {
-            auto head = snake.head();
             snake.setHeadPosition({
-                head.x < 0 ? head.x + GameOptions::width : head.x % GameOptions::width,
-                head.y < 0 ? head.y + GameOptions::height : head.y % GameOptions::height
+                negativeMod(head.x, GameOptions::width),
+                negativeMod(head.y, GameOptions::height),
             });
         }
     }
 
     // Check food collision
-    if (snake.head() == food) {
+    if (head == food) {
         snake.eat();
         audio_->play(audio::FoodEaten);
         spawnFood();
@@ -78,7 +79,7 @@ void GameEngine::updateSnake(Snake & snake) {
     auto bodyIt = std::find(
         std::next(snake.body().begin()),
         snake.body().end(),
-        snake.head()
+        head
     );
     if (bodyIt != snake.body().end()) {
         audio_->play(audio::Dead);

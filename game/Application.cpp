@@ -59,7 +59,7 @@ void Application::handleInput(gui::InputType input) {
         actionIt->second();
 }
 
-void Application::render() {
+void Application::render(void) {
     gui::GameInfo::Snakes snakeBodies;
 
     for (const auto & snake: engine_->snakes) {

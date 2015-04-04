@@ -9,23 +9,28 @@ static int FAKE_ARGC = 0;
 static char * FAKE_ARGV[] = { nullptr };
 
 QtCanvas::QtCanvas(unsigned width, unsigned height):
-    QObject { },
-    app_ { FAKE_ARGC, FAKE_ARGV },
-    spHead_ { "gui/qt/assets/zergling.png" },
-    spBody_ { "gui/qt/assets/infested_terran.png" },
-    spFood_ { "gui/qt/assets/marine.png" },
-    spBackground_ { "gui/qt/assets/creep.jpg" },
-    boxWidth_ { (float)gui::WINDOW_WIDTH / width },
-    boxHeight_ { (float)gui::WINDOW_HEIGHT / height } {
+    QObject         { },
+    app_            { FAKE_ARGC, FAKE_ARGV },
+    spHead_         { "gui/qt/assets/zergling.png" },
+    spBody_         { "gui/qt/assets/infested_terran.png" },
+    spFood_         { "gui/qt/assets/marine.png" },
+    spBackground_   { "gui/qt/assets/creep.jpg" },
+    boxWidth_       { (float)gui::WINDOW_WIDTH / width },
+    boxHeight_      { (float)gui::WINDOW_HEIGHT / height } {
 
     spHead_ = spHead_.scaled(boxWidth_, boxHeight_, Qt::KeepAspectRatio);
     spBody_ = spBody_.scaled(boxWidth_, boxHeight_, Qt::KeepAspectRatio);
     spFood_ = spFood_.scaled(boxWidth_, boxHeight_, Qt::KeepAspectRatio);
-    spBackground_ = spBackground_.scaled(gui::WINDOW_WIDTH, gui::WINDOW_HEIGHT, Qt::KeepAspectRatioByExpanding);
+    spBackground_ = spBackground_.scaled(
+        gui::WINDOW_WIDTH,
+        gui::WINDOW_HEIGHT,
+        Qt::KeepAspectRatioByExpanding
+    );
 
     scene_.setSceneRect(0, 0, gui::WINDOW_WIDTH, gui::WINDOW_HEIGHT);
-    window_.setWindowTitle((gui::WINDOW_TITLE_PREFIX + "Qt").c_str());
+
     window_.setScene(&scene_);
+    window_.setWindowTitle((gui::WINDOW_TITLE_PREFIX + "Qt").c_str());
     window_.setFixedSize(gui::WINDOW_WIDTH, gui::WINDOW_HEIGHT);
     window_.installEventFilter(this);
     window_.show();

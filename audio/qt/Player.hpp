@@ -10,14 +10,16 @@ class QtPlayer: public audio::Player {
 
 public:
                     QtPlayer(void);
-    virtual         ~QtPlayer(void) = default;
+
+    // 42 norme
+    virtual         ~QtPlayer(void)             = default;
+                    QtPlayer(const QtPlayer &)  = delete;
+    QtPlayer &      operator=(const QtPlayer &) = delete;
+    //
 
     virtual void    play(audio::SoundType sound);
 
 private:
     QMediaPlayer    player;
     QMediaContent   eatSound_;
-
-                    QtPlayer(const QtPlayer &);
-    QtPlayer &      operator=(const QtPlayer &);
 };

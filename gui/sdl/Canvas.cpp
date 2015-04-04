@@ -20,11 +20,9 @@ SDLCanvas::SDLCanvas(unsigned width, unsigned height):
     );
 
     renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED);
-    SDL_SetRenderDrawColor(renderer_, 0, 0, 0, 255);
+    SDL_SetRenderDrawColor(renderer_, 255, 255, 255, 255);
 
-    auto headSurface = SDL_LoadBMP("gui/sdl/assets/pedobear.bmp");
-    spHead_ = SDL_CreateTextureFromSurface(renderer_, headSurface);
-    SDL_FreeSurface(headSurface);
+    spHead_ = IMG_LoadTexture(renderer_, "gui/sdl/assets/pedobear.png");
     spBody_ = IMG_LoadTexture(renderer_, "gui/sdl/assets/shinobu.png");
     spFood_ = IMG_LoadTexture(renderer_, "gui/sdl/assets/shinobu.png");
 }

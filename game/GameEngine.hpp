@@ -15,7 +15,11 @@ public:
     Position            food;
 
                         GameEngine(void);
-                        ~GameEngine(void) = default;
+    // 42 norme
+                        ~GameEngine(void)                   = default;
+                        GameEngine(const GameEngine &copy)  = delete;
+    GameEngine &        operator=(const GameEngine &copy)   = delete;
+    //
 
     void                update(void);
     void                turnSnake(size_t i, Direction dir);
@@ -31,7 +35,4 @@ private:
     void                resolveSnakeCollisions(void);
     void                spawnFood(void);
     void                spawnPlayer(unsigned id);
-
-                        GameEngine(const GameEngine &copy);
-    GameEngine &        operator=(const GameEngine &copy);
 };

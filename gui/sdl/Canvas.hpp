@@ -11,6 +11,12 @@ public:
                         SDLCanvas(unsigned width, unsigned height);
     virtual             ~SDLCanvas(void);
 
+    // 42 norme
+                        SDLCanvas(void)                 = delete;
+                        SDLCanvas(const SDLCanvas &)    = delete;
+    SDLCanvas &         operator=(const SDLCanvas &)    = delete;
+    //
+
     virtual void        draw(const gui::GameInfo & info);
     virtual gui::Inputs getInputs(void);
 
@@ -22,10 +28,6 @@ private:
     SDL_Window          *window_;
     SDL_Renderer        *renderer_;
     SDL_Texture         *spHead_, *spBody_, *spFood_;
-
-                        SDLCanvas(void);
-                        SDLCanvas(const SDLCanvas &);
-    SDLCanvas &         operator=(const SDLCanvas &);
 
 };
 

@@ -20,7 +20,7 @@ public:
     Application &               operator=(const Application &)      = delete;
     //
 
-                                void run();
+                                void run(void);
 
 private:
     using GuiManager            = SharedObjectCollection<gui::Canvas>;
