@@ -1,7 +1,9 @@
 #include "Canvas.hpp"
 
 #include <QKeyEvent>
+#include <QGraphicsPixmapItem>
 #include <unordered_map>
+#include <iterator>
 
 static int FAKE_ARGC = 0;
 static char * FAKE_ARGV[] = { nullptr };
@@ -9,13 +11,22 @@ static char * FAKE_ARGV[] = { nullptr };
 QtCanvas::QtCanvas(unsigned width, unsigned height):
     QObject { },
     app_ { FAKE_ARGC, FAKE_ARGV },
+    spHead_ { "gui/qt/assets/zergling.png" },
+    spBody_ { "gui/qt/assets/infested_terran.png" },
+    spFood_ { "gui/qt/assets/marine.png" },
+    spBackground_ { "gui/qt/assets/creep.jpg" },
     boxWidth_ { (float)gui::WINDOW_WIDTH / width },
     boxHeight_ { (float)gui::WINDOW_HEIGHT / height } {
+
+    spHead_ = spHead_.scaled(boxWidth_, boxHeight_, Qt::KeepAspectRatio);
+    spBody_ = spBody_.scaled(boxWidth_, boxHeight_, Qt::KeepAspectRatio);
+    spFood_ = spFood_.scaled(boxWidth_, boxHeight_, Qt::KeepAspectRatio);
+    spBackground_ = spBackground_.scaled(gui::WINDOW_WIDTH, gui::WINDOW_HEIGHT, Qt::KeepAspectRatioByExpanding);
 
     scene_.setSceneRect(0, 0, gui::WINDOW_WIDTH, gui::WINDOW_HEIGHT);
     window_.setWindowTitle((gui::WINDOW_TITLE_PREFIX + "Qt").c_str());
     window_.setScene(&scene_);
-    window_.resize(gui::WINDOW_WIDTH, gui::WINDOW_HEIGHT);
+    window_.setFixedSize(gui::WINDOW_WIDTH, gui::WINDOW_HEIGHT);
     window_.installEventFilter(this);
     window_.show();
 
@@ -24,25 +35,22 @@ QtCanvas::QtCanvas(unsigned width, unsigned height):
 
 void QtCanvas::draw(const gui::GameInfo & info) {
     scene_.clear();
-    scene_.addRect(
-        info.food.x * boxWidth_,
-        info.food.y * boxHeight_,
-        boxWidth_,
-        boxHeight_,
-        Qt::NoPen,
-        QBrush { QColor { 255, 0, 0 } }
-    );
 
-    for (auto bodyPart: info.snake) {
-        scene_.addRect(
-            bodyPart.x * boxWidth_,
-            bodyPart.y * boxHeight_,
-            boxWidth_,
-            boxHeight_,
-            Qt::NoPen,
-            QBrush { QColor { 0, 255, 0 } }
-        );
-    }
+    scene_.addPixmap(spBackground_)->setOpacity(0.75);
+
+    drawImageAt(info.food, spFood_);
+    drawImageAt(info.snake.front(), spHead_);
+
+    for (auto it = std::next(info.snake.begin()); it != info.snake.end(); ++it)
+        drawImageAt(*it, spBody_);
+}
+
+void QtCanvas::drawImageAt(const Position & pos, const QPixmap & pixmap) {
+    auto item = scene_.addPixmap(pixmap);
+    item->setOffset(
+        pos.x * boxWidth_,
+        pos.y * boxHeight_
+    );
 }
 
 gui::Inputs QtCanvas::getInputs(void) {

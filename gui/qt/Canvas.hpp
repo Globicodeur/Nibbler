@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QGraphicsView>
 #include <QGraphicsScene>
+#include <QPixmap>
 
 #include "spec.hpp"
 
@@ -19,12 +20,16 @@ public:
 
 private:
     QApplication        app_;
+
     QGraphicsView       window_;
     QGraphicsScene      scene_;
+    QPixmap             spHead_, spBody_, spFood_, spBackground_;
 
     float               boxWidth_, boxHeight_;
 
     gui::Inputs         lastInputs_;
+
+    void                drawImageAt(const Position & pos, const QPixmap & pixmap);
 
                         QtCanvas(void);
                         QtCanvas(const QtCanvas &);
