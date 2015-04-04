@@ -11,7 +11,12 @@ public:
     using Body              = std::vector<Position>;
 
                             Snake(const Body & init);
-                            ~Snake(void) = default;
+    // 42 norme
+                            ~Snake(void)                = default;
+                            Snake(void)                 = delete;
+                            Snake(const Snake &)        = default;
+    Snake &                 operator=(const Snake &)    = delete;
+    //
 
     void                    eat(void);
     void                    move(void);
@@ -28,10 +33,4 @@ private:
     Body                    body_;
     Direction               direction_, nextDirection_;
     bool                    isAlive_;
-
-    static const Position   DELTAS[];
-
-                            Snake(void);
-                            // Snake(const Snake &);
-    // Snake &                 operator=(const Snake &);
 };

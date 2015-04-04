@@ -1,34 +1,32 @@
 #include "Snake.hpp"
 
-const Position Snake::DELTAS[] = {
-    { 0, -1 },
-    { 0,  1 },
-    { -1, 0 },
-    { 1,  0 },
-};
-
 Snake::Snake(const Body & init):
-    body_ { init },
-    direction_ { Up },
-    nextDirection_ { direction_ },
-    isAlive_ { true }
+    body_           { init },
+    direction_      { Up },
+    nextDirection_  { direction_ },
+    isAlive_        { true }
 { }
 
-const Position & Snake::head() const {
+const Position & Snake::head(void) const {
     return body_.front();
 }
 
-const Snake::Body & Snake::body() const {
+const Snake::Body & Snake::body(void) const {
     return body_;
 }
 
-void Snake::move() {
+void Snake::move(void) {
+    static const Position deltas[] = {
+    //     Up        Down      Left       Right
+        { 0, -1 }, { 0, 1 }, { -1, 0 }, { 1, 0 },
+    };
+
     body_.pop_back();
-    body_.insert(body_.begin(), head() + DELTAS[nextDirection_]);
+    body_.insert(body_.begin(), head() + deltas[nextDirection_]);
     direction_ = nextDirection_;
 }
 
-void Snake::eat() {
+void Snake::eat(void) {
     body_.push_back(body_.back());
 }
 

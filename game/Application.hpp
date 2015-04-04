@@ -14,6 +14,12 @@ public:
                                 Application(int argc, char **argv);
                                 ~Application(void);
 
+    // 42 norme
+                                Application(void)                   = delete;
+                                Application(const Application &)    = delete;
+    Application &               operator=(const Application &)      = delete;
+    //
+
                                 void run();
 
 private:
@@ -24,9 +30,4 @@ private:
 
     void                        handleInput(gui::InputType input);
     void                        render(void);
-
-                                Application(void);
-                                Application(const Application &);
-    Application &               operator=(const Application &);
-
 };
