@@ -4,6 +4,7 @@ include ../../Makefile.common
 include ../../Makefile.dylib
 
 QT_INCLUDES		=		$(HOME)/.brew/Cellar/qt5/5.4.1/include/QtMultimedia\
+						$(HOME)/.brew/Cellar/qt5/5.4.1/include/QtCore\
 						$(HOME)/.brew/Cellar/qt5/5.4.1/include\
 
 QT_LIB_DIR		=		$(HOME)/.brew/Cellar/qt5/5.4.1/lib

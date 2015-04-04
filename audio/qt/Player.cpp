@@ -1,7 +1,13 @@
 #include "Player.hpp"
 
+QtPlayer::QtPlayer(void):
+    eatSound_ { QUrl::fromLocalFile(
+        QFileInfo("audio/qt/assets/ghost_death.mp3").absoluteFilePath()
+    ) }
+{ }
+
 void QtPlayer::play(audio::SoundType sound) {
     if (sound == audio::FoodEaten)
-        player.setMedia(QUrl { "https://www.freesound.org/data/previews/234/234269_4224126-lq.mp3" });
+        player.setMedia(eatSound_);
     player.play();
 }
