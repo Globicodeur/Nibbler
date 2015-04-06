@@ -15,7 +15,7 @@ static const char * AUDIO_LIBRARY_NAMES[] = {
     "./nibbler_audio_qt.so",
 };
 
-static const auto DEFAULT_STEP_INTERVAL = 10u;
+static const auto DEFAULT_STEP_INTERVAL = 100u;
 
 GameEngine::GameEngine(void):
     running { true },
@@ -82,7 +82,8 @@ void GameEngine::updateSnake(Snake & snake) {
     // Check food collision
     if (head == food) {
         snake.eat();
-        stepInterval_ *= 0.9;
+        stepInterval_ *= 0.98;
+        stepInterval_ = std::max(stepInterval_, 10u);
         audio_->play(audio::FoodEaten);
         spawnFood();
     }
@@ -103,10 +104,18 @@ void GameEngine::execAi(Snake & snake) {
     auto aiCount = GameOptions::snakeCount - GameOptions::playerCount;
     auto timeout = stepInterval_ / aiCount;
 
+    std::vector<Snake::Body> bodies;
+    std::transform(
+        snakes.begin(),
+        snakes.end(),
+        std::back_inserter(bodies),
+        std::mem_fn(&Snake::body)
+    );
+
     Python::exec(
-        [&snake](const auto & globals) {
+        [this, &snake, &bodies](const auto & globals) {
             auto ai = globals["ai"];
-            ai(boost::ref(snake));
+            ai(boost::ref(snake), bodies, food);
         },
         timeout / 2 // Being extra careful here
     );

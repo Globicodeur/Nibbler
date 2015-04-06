@@ -18,17 +18,18 @@ public:
     Snake &                 operator=(const Snake &)    = delete;
     //
 
-    void                    eat(void);
     void                    move(void);
+    void                    eat(void);
     void                    turn(Direction newDirection);
     void                    setHeadPosition(const Position & pos);
 
     bool                    isAlive(void) const;
     bool                    isPlayer(void) const;
-    void                    die(void);
-
     const Position &        head(void) const;
     const Body &            body(void) const;
+    Direction               direction(void) const;
+
+    void                    die(void);
 
 private:
     Body                    body_;

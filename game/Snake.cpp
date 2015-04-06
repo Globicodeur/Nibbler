@@ -8,14 +8,6 @@ Snake::Snake(const Body & init, bool isPlayer):
     isPlayer_       { isPlayer }
 { }
 
-const Position & Snake::head(void) const {
-    return body_.front();
-}
-
-const Snake::Body & Snake::body(void) const {
-    return body_;
-}
-
 void Snake::move(void) {
     static const Position deltas[] = {
     //     Up        Down      Left       Right
@@ -46,6 +38,18 @@ bool Snake::isAlive(void) const {
 
 bool Snake::isPlayer(void) const {
     return isPlayer_;
+}
+
+const Position & Snake::head(void) const {
+    return body_.front();
+}
+
+const Snake::Body & Snake::body(void) const {
+    return body_;
+}
+
+Direction Snake::direction(void) const {
+    return direction_;
 }
 
 void Snake::die(void) {
