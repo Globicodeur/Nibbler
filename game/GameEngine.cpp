@@ -4,7 +4,7 @@
 
 #include "tools/math.hpp"
 
-#include "PythonWrapper.hpp"
+#include "python/Wrapper.hpp"
 
 #include <algorithm>
 #include <cstdlib>
@@ -15,8 +15,11 @@ static const char * AUDIO_LIBRARY_NAMES[] = {
     "./nibbler_audio_qt.so",
 };
 
+static const auto DEFAULT_STEP_INTERVAL = 10u;
+
 GameEngine::GameEngine(void):
-    running { true } {
+    running { true },
+    stepInterval_ { DEFAULT_STEP_INTERVAL } {
     // Randomness
     srand(time(nullptr));
 
@@ -28,7 +31,9 @@ GameEngine::GameEngine(void):
 }
 
 void GameEngine::update(void) {
-    if (timer_.elapsed() >= 100) {
+    if (timer_.elapsed() >= stepInterval_) {
+        timer_.reset();
+
         for (auto & snake: snakes) {
             if (snake.isAlive())
                 updateSnake(snake);
@@ -41,8 +46,6 @@ void GameEngine::update(void) {
             snakes.end(),
             std::mem_fn(&Snake::isAlive)
         );
-
-        timer_.reset();
     }
 }
 
@@ -55,12 +58,8 @@ void GameEngine::turnSnake(size_t i, Direction dir) {
 }
 
 void GameEngine::updateSnake(Snake & snake) {
-    if (!snake.isPlayer()) {
-        Python::exec([&snake](const auto & globals) {
-            auto ai = globals["ai"];
-            ai(boost::ref(snake));
-        });
-    }
+    if (!snake.isPlayer())
+        execAi(snake);
 
     snake.move();
 
@@ -83,11 +82,12 @@ void GameEngine::updateSnake(Snake & snake) {
     // Check food collision
     if (head == food) {
         snake.eat();
+        stepInterval_ *= 0.9;
         audio_->play(audio::FoodEaten);
         spawnFood();
     }
 
-    // Check snake collision
+    // Check snake collision with itself
     auto bodyIt = std::find(
         std::next(snake.body().begin()),
         snake.body().end(),
@@ -97,6 +97,19 @@ void GameEngine::updateSnake(Snake & snake) {
         audio_->play(audio::Dead);
         snake.die();
     }
+}
+
+void GameEngine::execAi(Snake & snake) {
+    auto aiCount = GameOptions::snakeCount - GameOptions::playerCount;
+    auto timeout = stepInterval_ / aiCount;
+
+    Python::exec(
+        [&snake](const auto & globals) {
+            auto ai = globals["ai"];
+            ai(boost::ref(snake));
+        },
+        timeout / 2 // Being extra careful here
+    );
 }
 
 void GameEngine::resolveSnakeCollisions(void) {
