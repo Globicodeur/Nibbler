@@ -10,12 +10,12 @@
 #include <cstdlib>
 
 static const char * AUDIO_LIBRARY_NAMES[] = {
-    // "./nibbler_audio_sdl.so",
+    "./nibbler_audio_sdl.so",
     // "./nibbler_audio_sfml.so",
-    "./nibbler_audio_qt.so",
+    // "./nibbler_audio_qt.so",
 };
 
-static const auto DEFAULT_STEP_INTERVAL = 10u;
+static const auto DEFAULT_STEP_INTERVAL = 100;
 
 GameEngine::GameEngine(void):
     running { true },
@@ -137,7 +137,10 @@ void GameEngine::resolveSnakeCollisions(void) {
     }
 
     for (auto i: dead)
+    {
         snakes.at(i).die();
+        audio_->play(audio::Dead);
+    }
 }
 
 void GameEngine::spawnFood(void) {
