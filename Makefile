@@ -9,27 +9,32 @@ GUI_SDL_NAME	=	nibbler_gui_sdl.so
 GUI_SFML_TARGET	=	$(GUI_SUBDIR)/sfml
 GUI_SFML_NAME	=	nibbler_gui_sfml.so
 
-AUDIO_SUBDIR	=	audio
-AUDIO_QT_TARGET	=	$(AUDIO_SUBDIR)/qt
-AUDIO_QT_NAME	=	nibbler_audio_qt.so
+AUDIO_SUBDIR		=	audio
+AUDIO_QT_TARGET		=	$(AUDIO_SUBDIR)/qt
+AUDIO_QT_NAME		=	nibbler_audio_qt.so
+AUDIO_SDL_TARGET	=	$(AUDIO_SUBDIR)/sdl
+AUDIO_SDL_NAME		=	nibbler_audio_sdl.so
 
 TARGETS			=	$(GAME_TARGET)\
 					$(GUI_QT_TARGET)\
 					$(GUI_SDL_TARGET)\
 					$(GUI_SFML_TARGET)\
 					$(AUDIO_QT_TARGET)\
+					$(AUDIO_SDL_TARGET)\
 
 TARGET_NAMES	=	$(GAME_NAME)\
 					$(GUI_QT_NAME)\
 					$(GUI_SDL_NAME)\
 					$(GUI_SFML_NAME)\
 					$(AUDIO_QT_NAME)\
+					$(AUDIO_SDL_NAME)\
 
 TARGET_PATHS	=	$(GAME_TARGET)/$(GAME_NAME)\
 					$(GUI_QT_TARGET)/$(GUI_QT_NAME)\
 					$(GUI_SDL_TARGET)/$(GUI_SDL_NAME)\
 					$(GUI_SFML_TARGET)/$(GUI_SFML_NAME)\
 					$(AUDIO_QT_TARGET)/$(AUDIO_QT_NAME)\
+					$(AUDIO_SDL_TARGET)/$(AUDIO_SDL_NAME)\
 
 all:
 	@$(foreach target, $(TARGETS), $(MAKE) -C $(target);)
