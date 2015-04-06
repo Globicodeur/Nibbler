@@ -2,9 +2,10 @@
 
 #include <memory>
 
-#include "gui/spec.hpp"
-
 #include "tools/SharedObjectCollection.hpp"
+
+#include "gui/spec.hpp"
+#include "audio/spec.hpp"
 
 class GameEngine;
 
@@ -24,9 +25,12 @@ public:
 
 private:
     using GuiManager            = SharedObjectCollection<gui::Canvas>;
+    using AudioManager          = SharedObjectCollection<audio::Player>;
+
+    GuiManager                  gui_;
+    AudioManager                audio_;
 
     std::unique_ptr<GameEngine> engine_;
-    GuiManager                  gui_;
 
     void                        handleInput(gui::InputType input);
     void                        render(void);

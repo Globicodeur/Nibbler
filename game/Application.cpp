@@ -11,6 +11,13 @@ static const char * GRAPHIC_LIBRARY_NAMES[] = {
     "./nibbler_gui_qt.so",
 };
 
+static const char * AUDIO_LIBRARY_NAMES[] = {
+    "./nibbler_audio_sdl.so",
+    "./nibbler_audio_sdl.so",
+    // "./nibbler_audio_sfml.so",
+    "./nibbler_audio_qt.so",
+};
+
 Application::Application(int argc, char **argv) {
     GameOptions::parseFromCommandLine(argc, argv);
 }
@@ -18,12 +25,16 @@ Application::Application(int argc, char **argv) {
 Application::~Application(void) { } // forwarded unique_ptr
 
 void Application::run(void) {
-    engine_.reset(new GameEngine);
     gui_.load(
         GRAPHIC_LIBRARY_NAMES,
         GameOptions::width,
         GameOptions::height
     );
+    audio_.load(AUDIO_LIBRARY_NAMES);
+    auto playAudio = [this](audio::SoundType sound) {
+        audio_->play(sound);
+    };
+    engine_.reset(new GameEngine { playAudio });
 
     while (engine_->running) {
         for (auto input: gui_->getInputs())
@@ -49,9 +60,9 @@ void Application::handleInput(gui::InputType input) {
         { gui::InputType::A,          [this] { engine_->turnSnake(1, Left);  } },
         { gui::InputType::D,          [this] { engine_->turnSnake(1, Right); } },
         { gui::InputType::Exit,       [this] { engine_->running = false;     } },
-        { gui::InputType::ChangeGui1, [this] { gui_.swap(0);                 } },
-        { gui::InputType::ChangeGui2, [this] { gui_.swap(1);                 } },
-        { gui::InputType::ChangeGui3, [this] { gui_.swap(2);                 } },
+        { gui::InputType::ChangeGui1, [this] { gui_.swap(0); audio_.swap(0); } },
+        { gui::InputType::ChangeGui2, [this] { gui_.swap(1); audio_.swap(1); } },
+        { gui::InputType::ChangeGui3, [this] { gui_.swap(2); audio_.swap(2); } },
     };
 
     auto actionIt = ACTIONS.find(input);
