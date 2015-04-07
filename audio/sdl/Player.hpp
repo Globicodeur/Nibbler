@@ -8,7 +8,7 @@ class SDLPlayer: public audio::Player {
 
 public:
                     SDLPlayer(void);
-    virtual         ~SDLPlayer(void)             = default;
+    virtual         ~SDLPlayer(void);;
                     SDLPlayer(const SDLPlayer &) = delete;
     SDLPlayer &     operator=(const SDLPlayer &) = delete;
 
@@ -17,6 +17,7 @@ public:
 private:
     SDL_AudioSpec   eatSound_;
     SDL_AudioSpec   dieSound_;
+    SDL_AudioDeviceID   dev_;
 
     // void            audioCallback(void *userData, Uint8 *stream, int len);
 };
