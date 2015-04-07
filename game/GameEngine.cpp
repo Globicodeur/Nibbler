@@ -9,25 +9,18 @@
 #include <algorithm>
 #include <cstdlib>
 
-static const char * AUDIO_LIBRARY_NAMES[] = {
-    "./nibbler_audio_sdl.so",
-    // "./nibbler_audio_sfml.so",
-    // "./nibbler_audio_qt.so",
-};
+static const auto DEFAULT_STEP_INTERVAL = 100u;
 
-static const auto DEFAULT_STEP_INTERVAL = 100;
-
-GameEngine::GameEngine(void):
-    running { true },
-    stepInterval_ { DEFAULT_STEP_INTERVAL } {
+GameEngine::GameEngine(PlayAudioF playAudio):
+    running         { true },
+    stepInterval_   { DEFAULT_STEP_INTERVAL },
+    playAudio_      { playAudio } {
     // Randomness
     srand(time(nullptr));
 
     for (unsigned i = 0; i < GameOptions::snakeCount; ++i)
         spawnPlayer(i, i < GameOptions::playerCount);
     spawnFood();
-
-    audio_.load(AUDIO_LIBRARY_NAMES);
 }
 
 void GameEngine::update(void) {
@@ -41,11 +34,13 @@ void GameEngine::update(void) {
 
         resolveSnakeCollisions();
 
-        running = std::any_of(
+        bool anyAlive = std::any_of(
             snakes.begin(),
             snakes.end(),
             std::mem_fn(&Snake::isAlive)
         );
+        if (!anyAlive)
+            running = false;
     }
 }
 
@@ -68,7 +63,7 @@ void GameEngine::updateSnake(Snake & snake) {
     if (head.x < 0 || head.x >= GameOptions::width ||
         head.y < 0 || head.y >= GameOptions::height) {
         if (!GameOptions::torus) {
-            audio_->play(audio::Dead);
+            playAudio_(audio::Dead);
             snake.die();
         }
         else {
@@ -82,8 +77,9 @@ void GameEngine::updateSnake(Snake & snake) {
     // Check food collision
     if (head == food) {
         snake.eat();
-        stepInterval_ *= 0.9;
-        audio_->play(audio::FoodEaten);
+        stepInterval_ *= 0.98;
+        stepInterval_ = std::max(stepInterval_, 10u);
+        playAudio_(audio::FoodEaten);
         spawnFood();
     }
 
@@ -94,7 +90,7 @@ void GameEngine::updateSnake(Snake & snake) {
         head
     );
     if (bodyIt != snake.body().end()) {
-        audio_->play(audio::Dead);
+        playAudio_(audio::Dead);
         snake.die();
     }
 }
@@ -103,10 +99,18 @@ void GameEngine::execAi(Snake & snake) {
     auto aiCount = GameOptions::snakeCount - GameOptions::playerCount;
     auto timeout = stepInterval_ / aiCount;
 
+    std::vector<Snake::Body> bodies;
+    std::transform(
+        snakes.begin(),
+        snakes.end(),
+        std::back_inserter(bodies),
+        std::mem_fn(&Snake::body)
+    );
+
     Python::exec(
-        [&snake](const auto & globals) {
+        [this, &snake, &bodies](const auto & globals) {
             auto ai = globals["ai"];
-            ai(boost::ref(snake));
+            ai(boost::ref(snake), bodies, food);
         },
         timeout / 2 // Being extra careful here
     );
@@ -139,7 +143,7 @@ void GameEngine::resolveSnakeCollisions(void) {
     for (auto i: dead)
     {
         snakes.at(i).die();
-        audio_->play(audio::Dead);
+        playAudio_(audio::Dead);
     }
 }
 

@@ -18,9 +18,9 @@ QtCanvas::QtCanvas(unsigned width, unsigned height):
     boxWidth_       { (float)gui::WINDOW_WIDTH / width },
     boxHeight_      { (float)gui::WINDOW_HEIGHT / height } {
 
-    spHead_ = spHead_.scaled(boxWidth_, boxHeight_, Qt::KeepAspectRatio);
-    spBody_ = spBody_.scaled(boxWidth_, boxHeight_, Qt::KeepAspectRatio);
-    spFood_ = spFood_.scaled(boxWidth_, boxHeight_, Qt::KeepAspectRatio);
+    spHead_ = spHead_.scaled(boxWidth_, boxHeight_, Qt::KeepAspectRatioByExpanding);
+    spBody_ = spBody_.scaled(boxWidth_, boxHeight_, Qt::KeepAspectRatioByExpanding);
+    spFood_ = spFood_.scaled(boxWidth_, boxHeight_, Qt::KeepAspectRatioByExpanding);
     spBackground_ = spBackground_.scaled(
         gui::WINDOW_WIDTH,
         gui::WINDOW_HEIGHT,

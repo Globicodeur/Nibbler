@@ -1,2 +1,2 @@
-def ai(snake):
+def ai(snake, others, food):
     pass
