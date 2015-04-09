@@ -33,25 +33,30 @@ public:
         initF_ = std::bind(getterFn, args...);
     }
 
-    ~SharedObject() {
+    ~SharedObject(void) {
         release();
         dlclose(handle_);
     }
 
-    void init() {
+    // 42 norme
+    SharedObject(const SharedObject &)              = delete;
+    SharedObject & operator=(const SharedObject &)  = delete;
+    //
+
+    void init(void) {
         interface_.reset(initF_());
     }
 
-    Interface * get() {
+    Interface * get(void) {
         return interface_.get();
     }
 
-    void release() {
+    void release(void) {
         interface_.reset();
     }
 
 private:
-    using InitF                 = std::function<Interface * ()>;
+    using InitF                 = std::function<Interface * (void)>;
 
     void                        *handle_;
     InitF                       initF_;

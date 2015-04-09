@@ -14,7 +14,12 @@ public:
     SharedObjectCollection(void):
         currentObject_ { nullptr }
     { }
-    ~SharedObjectCollection(void) = default;
+
+    // 42 norme
+    ~SharedObjectCollection(void)                                       = default;
+    SharedObjectCollection(const SharedObjectCollection &)              = delete;
+    SharedObjectCollection & operator=(const SharedObjectCollection &)  = delete;
+    //
 
     template <class... Args, size_t n>
     void load(const char * (&libraryNames)[n], const Args &... args) {
@@ -29,8 +34,8 @@ public:
             if (newObject != currentObject_) {
                 if (currentObject_)
                     currentObject_->release();
+                newObject->init();
                 currentObject_ = newObject;
-                currentObject_->init();
             }
         }
     }
