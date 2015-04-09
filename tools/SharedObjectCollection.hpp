@@ -30,7 +30,7 @@ public:
                 if (currentObject_)
                     currentObject_->release();
                 currentObject_ = newObject;
-                currentObject_->get();
+                currentObject_->init();
             }
         }
     }

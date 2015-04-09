@@ -38,9 +38,11 @@ public:
         dlclose(handle_);
     }
 
+    void init() {
+        interface_.reset(initF_());
+    }
+
     Interface * get() {
-        if (!interface_)
-            interface_.reset(initF_());
         return interface_.get();
     }
 
