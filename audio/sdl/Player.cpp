@@ -11,7 +11,6 @@ SDLPlayer::~SDLPlayer(void) {
     for (const auto & i : sounds) {
         delete std::get<1>(i);
     }
-    SDL_Quit();
 }
 
 void            SDLPlayer::play(audio::SoundType sound) {

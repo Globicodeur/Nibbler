@@ -22,12 +22,12 @@ public:
 
 private:
     void                drawTexture(int x, int y, SDL_Texture * texture);
+    void                drawBackground(void);
 
     float               boxWidth_, boxHeight_;
 
     SDL_Window          *window_;
     SDL_Renderer        *renderer_;
-    SDL_Texture         *spHead_, *spBody_, *spFood_;
+    SDL_Texture         *spHead_, *spBody_, *spFood_, *background_;
 
 };
-

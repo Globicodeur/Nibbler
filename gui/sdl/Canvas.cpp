@@ -25,12 +25,14 @@ SDLCanvas::SDLCanvas(unsigned width, unsigned height):
     spHead_ = IMG_LoadTexture(renderer_, "gui/sdl/assets/pedobear.png");
     spBody_ = IMG_LoadTexture(renderer_, "gui/sdl/assets/shinobu.png");
     spFood_ = IMG_LoadTexture(renderer_, "gui/sdl/assets/shinobu.png");
+    background_ = IMG_LoadTexture(renderer_, "gui/sdl/assets/sakura.png");
 }
 
 SDLCanvas::~SDLCanvas() {
     SDL_DestroyTexture(spHead_);
     SDL_DestroyTexture(spBody_);
     SDL_DestroyTexture(spFood_);
+    SDL_DestroyTexture(background_);
     SDL_DestroyRenderer(renderer_);
     SDL_DestroyWindow(window_);
     IMG_Quit();
@@ -47,9 +49,20 @@ void SDLCanvas::drawTexture(int x, int y, SDL_Texture * texture) {
     SDL_RenderCopy(renderer_, texture, 0, &rect);
 }
 
+void SDLCanvas::drawBackground(void) {
+    SDL_Rect rect {
+        static_cast<int>(0),
+        static_cast<int>(0),
+        static_cast<int>(gui::WINDOW_WIDTH),
+        static_cast<int>(gui::WINDOW_HEIGHT)
+    };
+    SDL_RenderCopy(renderer_, background_, 0, &rect);
+}
+
 void SDLCanvas::draw(const gui::GameInfo & info) {
     SDL_RenderClear(renderer_);
 
+    drawBackground();
     drawTexture(info.food.x, info.food.y, spFood_);
     for (const auto & snake: info.snakes) {
         drawTexture(snake.front().x, snake.front().y, spHead_);
