@@ -1,23 +1,26 @@
 #pragma once
 
 #include <SDL2/SDL.h>
+#include <map>
 
 #include "spec.hpp"
+
+static const char EAT_PATH[] = "./audio/sdl/assets/nyan.wav";
+static const char DIE_PATH[] = "./audio/sdl/assets/cry.wav";
+
+class SDLSound;
 
 class SDLPlayer: public audio::Player {
 
 public:
                     SDLPlayer(void);
-    virtual         ~SDLPlayer(void);;
+    virtual         ~SDLPlayer(void);
                     SDLPlayer(const SDLPlayer &) = delete;
     SDLPlayer &     operator=(const SDLPlayer &) = delete;
 
     virtual void    play(audio::SoundType sound);
 
 private:
-    SDL_AudioSpec   eatSound_;
-    SDL_AudioSpec   dieSound_;
-    SDL_AudioDeviceID   dev_;
+	std::map<audio::SoundType, SDLSound*>	sounds;
 
-    // void            audioCallback(void *userData, Uint8 *stream, int len);
 };
