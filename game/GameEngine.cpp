@@ -15,8 +15,6 @@ GameEngine::GameEngine(PlayAudioF playAudio):
     running         { true },
     stepInterval_   { DEFAULT_STEP_INTERVAL },
     playAudio_      { playAudio } {
-    // Randomness
-    srand(time(nullptr));
 
     for (unsigned i = 0; i < GameOptions::snakeCount; ++i)
         spawnPlayer(i, i < GameOptions::playerCount);
