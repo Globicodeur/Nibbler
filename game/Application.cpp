@@ -14,8 +14,7 @@ constexpr size_t LIBRARY_COUNT = sizeof(GRAPHIC_LIBRARY_NAMES) / sizeof(char *);
 
 static const char * AUDIO_LIBRARY_NAMES[] = {
     "./nibbler_audio_sdl.so",
-    "./nibbler_audio_sdl.so",
-    // "./nibbler_audio_sfml.so",
+    "./nibbler_audio_sfml.so",
     "./nibbler_audio_qt.so",
 };
 
