@@ -25,7 +25,6 @@ public:
     void load(const char * (&libraryNames)[n], const Args &... args) {
         for (auto name: libraryNames)
             objects_.emplace_back(new Object { name, args... });
-        swap(rand() % n);
     }
 
     void swap(size_t i) {

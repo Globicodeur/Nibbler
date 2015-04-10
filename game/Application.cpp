@@ -10,6 +10,7 @@ static const char * GRAPHIC_LIBRARY_NAMES[] = {
     "./nibbler_gui_sfml.so",
     "./nibbler_gui_qt.so",
 };
+constexpr size_t LIBRARY_COUNT = sizeof(GRAPHIC_LIBRARY_NAMES) / sizeof(char *);
 
 static const char * AUDIO_LIBRARY_NAMES[] = {
     "./nibbler_audio_sdl.so",
@@ -18,6 +19,7 @@ static const char * AUDIO_LIBRARY_NAMES[] = {
     "./nibbler_audio_qt.so",
 };
 
+
 Application::Application(int argc, char **argv) {
     GameOptions::parseFromCommandLine(argc, argv);
 }
@@ -25,12 +27,12 @@ Application::Application(int argc, char **argv) {
 Application::~Application(void) { } // forwarded unique_ptr
 
 void Application::run(void) {
-    gui_.load(
-        GRAPHIC_LIBRARY_NAMES,
-        GameOptions::width,
-        GameOptions::height
-    );
+    gui_.load(GRAPHIC_LIBRARY_NAMES, GameOptions::width, GameOptions::height);
     audio_.load(AUDIO_LIBRARY_NAMES);
+    size_t i = rand() % LIBRARY_COUNT;
+    gui_.swap(i);
+    audio_.swap(i);
+
     auto playAudio = [this](audio::SoundType sound) {
         audio_->play(sound);
     };
