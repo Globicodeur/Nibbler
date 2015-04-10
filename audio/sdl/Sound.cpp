@@ -9,7 +9,7 @@ static void         audioCallback(void *userData, Uint8 *stream, int len) {
         return ;
     }
 
-    len = ((Uint32)len > sound->playLen ? sound->playLen : len);
+    len = std::min(static_cast<Uint32>(len), sound->playLen);
     memcpy(stream, sound->playPos, len);
     SDL_MixAudioFormat(stream, sound->playPos, AUDIO_S16, len, SDL_MIX_MAXVOLUME);
 
@@ -17,35 +17,22 @@ static void         audioCallback(void *userData, Uint8 *stream, int len) {
     sound->playLen -= len;
 }
 
-SDLSound::SDLSound(const std::string & sound) {
-    SDL_LoadWAV(sound.c_str(), &sound_, &buffer, &bufferLen);
+SDLSound::SDLSound(const std::string & sound):
+    dev { 0 } {
+    SDL_LoadWAV(sound.c_str(), &sound_, &buffer_, &bufferLen_);
     sound_.callback = &audioCallback;
     sound_.userdata = this;
-    dev = 0;
 }
 
 SDLSound::~SDLSound(void) {
-    SDL_FreeWAV(buffer);
+    SDL_FreeWAV(buffer_);
     SDL_CloseAudioDevice(dev);
 }
 
 void                SDLSound::play(void) {
     SDL_CloseAudioDevice(dev);
-    playPos = buffer;
-    playLen = bufferLen;
+    playPos = buffer_;
+    playLen = bufferLen_;
     dev = SDL_OpenAudioDevice(nullptr, 0, &sound_, nullptr, 0);
     SDL_PauseAudioDevice(dev, 0);
-}
-
-SDLSound &          SDLSound::operator=(const SDLSound & sound) {
-    if (this != &sound)
-    {
-        buffer = sound.buffer;
-        bufferLen = sound.bufferLen;
-        playPos = sound.playPos;
-        playLen = sound.playLen;
-        dev = sound.dev;
-        sound_ = sound.sound_;
-    }
-    return *this;
 }
