@@ -94,8 +94,14 @@ void GameEngine::updateSnake(Snake & snake) {
 }
 
 void GameEngine::execAi(Snake & snake) {
-    auto aiCount = GameOptions::snakeCount - GameOptions::playerCount;
-    auto timeout = stepInterval_ / aiCount;
+    auto aliveAis = std::count_if(
+        snakes.begin(),
+        snakes.end(),
+        [](const Snake & s) { return !s.isPlayer() && s.isAlive(); }
+    );
+    // We should never be dividing by zero because being in this function
+    // guarantees at least one Ai to be alive
+    auto timeout = stepInterval_ / aliveAis;
 
     std::vector<Snake::Body> bodies;
     std::transform(
@@ -110,7 +116,7 @@ void GameEngine::execAi(Snake & snake) {
             auto ai = globals["ai"];
             ai(boost::ref(snake), bodies, food);
         },
-        std::max(timeout / 2, 1u) // Being extra careful here
+        std::max(timeout / 2, 1l) // Being extra careful here
     );
 }
 
