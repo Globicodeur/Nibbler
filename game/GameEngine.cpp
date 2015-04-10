@@ -110,7 +110,7 @@ void GameEngine::execAi(Snake & snake) {
             auto ai = globals["ai"];
             ai(boost::ref(snake), bodies, food);
         },
-        timeout / 2 // Being extra careful here
+        std::max(timeout / 2, 1u) // Being extra careful here
     );
 }
 
