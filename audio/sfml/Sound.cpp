@@ -1,7 +1,8 @@
 #include "Sound.hpp"
 
 SFMLSound::SFMLSound(const std::string & fileName) {
-    sound_.openFromFile(fileName);
+    buff_.loadFromFile(fileName);
+    sound_.setBuffer(buff_);
 }
 
 void SFMLSound::play(void) {
