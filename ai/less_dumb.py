@@ -50,9 +50,10 @@ def goto_food_metric(metrics, snake, food):
         distLeft = (snake.head().x - food.x) % GameOptions.width
         distRight = (food.x - snake.head().x) % GameOptions.width
         metrics[Direction.Up] += distUp < distDown
-        metrics[Direction.Down] += distDown < distUp
+        metrics[Direction.Down] += distUp and distUp >= distDown
         metrics[Direction.Left] += distLeft < distRight
-        metrics[Direction.Right] += distRight < distLeft
+        metrics[Direction.Right] += distLeft and distLeft >= distRight
+
 
 def dont_die_metric(metrics, snake, snakes):
     for direction in ALL_DIRS:
@@ -66,10 +67,12 @@ def ai(snake, snakes, food):
     # resolve
     del metrics[OPPOSITES[snake.direction]]
     best_dir = max(metrics, key=metrics.get)
+    # either choose best_dir
+        # snake.turn(best_dir)
+    # or choose randomly among directions that have the same score as best_dir
     best_score = metrics[best_dir]
     dirs = []
     for d, v in metrics.items():
         if v == best_score:
             dirs.append(d)
-    # print metrics
     snake.turn(random.choice(dirs))
