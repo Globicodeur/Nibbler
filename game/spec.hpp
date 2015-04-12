@@ -5,14 +5,7 @@
 namespace spec {
 
     enum class Event {
-        UpP1,
-        DownP1,
-        LeftP1,
-        RightP1,
-        UpP2,
-        DownP2,
-        LeftP2,
-        RightP2,
+        ChangeDirection,
         Exit,
         ChangeGui1,
         ChangeGui2,

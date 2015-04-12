@@ -21,15 +21,10 @@ GameEngine::GameEngine(void):
     running_        { true },
     stepInterval_   { DEFAULT_STEP_INTERVAL } {
 
-    Dispatcher::on<Event::UpP1>    ([this] { turnSnake(0, Up);     });
-    Dispatcher::on<Event::DownP1>  ([this] { turnSnake(0, Down);   });
-    Dispatcher::on<Event::LeftP1>  ([this] { turnSnake(0, Left);   });
-    Dispatcher::on<Event::RightP1> ([this] { turnSnake(0, Right);  });
-    Dispatcher::on<Event::UpP2>    ([this] { turnSnake(1, Up);     });
-    Dispatcher::on<Event::DownP2>  ([this] { turnSnake(1, Down);   });
-    Dispatcher::on<Event::LeftP2>  ([this] { turnSnake(1, Left);   });
-    Dispatcher::on<Event::RightP2> ([this] { turnSnake(1, Right);  });
-    Dispatcher::on<Event::Exit>    ([this] { running_ = false;     });
+    Dispatcher::on_<Event::ChangeDirection>(
+        [this](size_t i, Direction dir) { turnSnake(i, dir); }
+    );
+    Dispatcher::on<Event::Exit>([this] { running_ = false; });
 
     for (unsigned i = 0; i < GameOptions::snakeCount; ++i)
         spawnPlayer(i, i < GameOptions::playerCount);
