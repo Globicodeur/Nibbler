@@ -2,7 +2,7 @@
 
 namespace audio {
 
-    enum SoundType {
+    enum class Sound {
         FoodEaten,
         Dead,
     };
@@ -14,8 +14,8 @@ namespace audio {
             static constexpr const char * getterName() { return "get"; }
         };
 
-        virtual         ~Player(void)           = default;
-        virtual void    play(SoundType sound)   = 0;
+        virtual         ~Player(void)       = default;
+        virtual void    play(Sound sound)   = 0;
 
     };
 

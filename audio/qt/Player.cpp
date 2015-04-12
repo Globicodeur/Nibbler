@@ -12,13 +12,13 @@ static QMediaContent buildContent(const char *filePath) {
     return QUrl::fromLocalFile(QFileInfo(filePath).absoluteFilePath());
 }
 
-using SoundMap = std::unordered_map<audio::SoundType, QMediaContent>;
+using SoundMap = std::unordered_map<audio::Sound, QMediaContent>;
 static const SoundMap SOUNDS = {
-    { audio::FoodEaten, buildContent(EAT_PATH) },
-    { audio::Dead,      buildContent(DIE_PATH) },
+    { audio::Sound::FoodEaten, buildContent(EAT_PATH) },
+    { audio::Sound::Dead,      buildContent(DIE_PATH) },
 };
 
-void QtPlayer::play(audio::SoundType sound) {
+void QtPlayer::play(audio::Sound sound) {
     auto soundIt = SOUNDS.find(sound);
     if (soundIt != SOUNDS.end()) {
         player.setMedia(soundIt->second);

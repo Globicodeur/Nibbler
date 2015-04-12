@@ -15,7 +15,7 @@ public:
     QtPlayer &      operator=(const QtPlayer &) = delete;
     //
 
-    virtual void    play(audio::SoundType sound);
+    virtual void    play(audio::Sound sound);
 
 private:
     QMediaPlayer    player;

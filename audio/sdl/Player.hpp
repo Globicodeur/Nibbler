@@ -13,6 +13,6 @@ public:
     SDLPlayer &     operator=(const SDLPlayer &)    = delete;
     //
 
-    virtual void    play(audio::SoundType sound);
+    virtual void    play(audio::Sound sound);
 
 };
