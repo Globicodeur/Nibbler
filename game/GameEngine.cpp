@@ -6,15 +6,30 @@
 
 #include "python/Wrapper.hpp"
 
+#include "spec.hpp"
+#include "audio/spec.hpp"
+
 #include <algorithm>
 #include <cstdlib>
 
 static const auto DEFAULT_STEP_INTERVAL = 100u;
 
-GameEngine::GameEngine(PlayAudioF playAudio):
-    running         { true },
-    stepInterval_   { DEFAULT_STEP_INTERVAL },
-    playAudio_      { playAudio } {
+using spec::Event;
+using Dispatcher = spec::EventDispatcher;
+
+GameEngine::GameEngine(void):
+    running_        { true },
+    stepInterval_   { DEFAULT_STEP_INTERVAL } {
+
+    Dispatcher::on<Event::UpP1>    ([this] { turnSnake(0, Up);     });
+    Dispatcher::on<Event::DownP1>  ([this] { turnSnake(0, Down);   });
+    Dispatcher::on<Event::LeftP1>  ([this] { turnSnake(0, Left);   });
+    Dispatcher::on<Event::RightP1> ([this] { turnSnake(0, Right);  });
+    Dispatcher::on<Event::UpP2>    ([this] { turnSnake(1, Up);     });
+    Dispatcher::on<Event::DownP2>  ([this] { turnSnake(1, Down);   });
+    Dispatcher::on<Event::LeftP2>  ([this] { turnSnake(1, Left);   });
+    Dispatcher::on<Event::RightP2> ([this] { turnSnake(1, Right);  });
+    Dispatcher::on<Event::Exit>    ([this] { running_ = false;     });
 
     for (unsigned i = 0; i < GameOptions::snakeCount; ++i)
         spawnPlayer(i, i < GameOptions::playerCount);
@@ -25,7 +40,7 @@ void GameEngine::update(void) {
     if (timer_.elapsed() >= stepInterval_) {
         timer_.reset();
 
-        for (auto & snake: snakes) {
+        for (auto & snake: snakes_) {
             if (snake.isAlive())
                 updateSnake(snake);
         }
@@ -33,18 +48,30 @@ void GameEngine::update(void) {
         resolveSnakeCollisions();
 
         bool anyAlive = std::any_of(
-            snakes.begin(),
-            snakes.end(),
+            snakes_.begin(),
+            snakes_.end(),
             std::mem_fn(&Snake::isAlive)
         );
         if (!anyAlive)
-            running = false;
+            running_ = false;
     }
 }
 
+bool GameEngine::isRunning(void) const {
+    return running_;
+}
+
+const GameEngine::Snakes & GameEngine::snakes(void) const {
+    return snakes_;
+}
+
+const Position & GameEngine::food(void) const {
+    return food_;
+}
+
 void GameEngine::turnSnake(size_t i, Direction dir) {
-    if (i < snakes.size()) {
-        auto & snake = snakes.at(i);
+    if (i < snakes_.size()) {
+        auto & snake = snakes_.at(i);
         if (snake.isPlayer())
             snake.turn(dir);
     }
@@ -60,10 +87,8 @@ void GameEngine::updateSnake(Snake & snake) {
     // Check arena bounds
     if (head.x < 0 || head.x >= GameOptions::width ||
         head.y < 0 || head.y >= GameOptions::height) {
-        if (!GameOptions::torus) {
-            playAudio_(audio::Dead);
-            snake.die();
-        }
+        if (!GameOptions::torus)
+            killSnake(snake);
         else {
             snake.setHeadPosition({
                 negativeMod(head.x, GameOptions::width),
@@ -73,11 +98,11 @@ void GameEngine::updateSnake(Snake & snake) {
     }
 
     // Check food collision
-    if (head == food) {
+    if (head == food_) {
         snake.eat();
         stepInterval_ *= 0.98;
         stepInterval_ = std::max(stepInterval_, 10u);
-        playAudio_(audio::FoodEaten);
+        Dispatcher::emit<Event::PlaySound>(audio::Sound::FoodEaten);
         spawnFood();
     }
 
@@ -87,16 +112,19 @@ void GameEngine::updateSnake(Snake & snake) {
         snake.body().end(),
         head
     );
-    if (bodyIt != snake.body().end()) {
-        playAudio_(audio::Dead);
-        snake.die();
-    }
+    if (bodyIt != snake.body().end())
+        killSnake(snake);
+}
+
+void GameEngine::killSnake(Snake & snake) {
+    snake.die();
+    Dispatcher::emit<Event::PlaySound>(audio::Sound::Dead);
 }
 
 void GameEngine::execAi(Snake & snake) {
     auto aliveAis = std::count_if(
-        snakes.begin(),
-        snakes.end(),
+        snakes_.begin(),
+        snakes_.end(),
         [](const Snake & s) { return !s.isPlayer() && s.isAlive(); }
     );
     // We should never be dividing by zero because being in this function
@@ -105,8 +133,8 @@ void GameEngine::execAi(Snake & snake) {
 
     std::vector<Snake::Body> bodies;
     std::transform(
-        snakes.begin(),
-        snakes.end(),
+        snakes_.begin(),
+        snakes_.end(),
         std::back_inserter(bodies),
         std::mem_fn(&Snake::body)
     );
@@ -114,7 +142,7 @@ void GameEngine::execAi(Snake & snake) {
     Python::exec(
         [this, &snake, &bodies](const auto & globals) {
             auto ai = globals["ai"];
-            ai(boost::ref(snake), bodies, food);
+            ai(boost::ref(snake), bodies, food_);
         },
         std::max(timeout / 2, 1l) // Being extra careful here
     );
@@ -123,13 +151,13 @@ void GameEngine::execAi(Snake & snake) {
 void GameEngine::resolveSnakeCollisions(void) {
     std::vector<unsigned> dead;
 
-    for (unsigned i = 0; i < snakes.size(); ++i) {
-        for (unsigned j = 0; j < snakes.size(); ++j) {
+    for (unsigned i = 0; i < snakes_.size(); ++i) {
+        for (unsigned j = 0; j < snakes_.size(); ++j) {
             if (i == j)
                 continue ;
 
-            auto & snake = snakes.at(i);
-            auto & other = snakes.at(j);
+            auto & snake = snakes_.at(i);
+            auto & other = snakes_.at(j);
 
             if (!snake.isAlive() || !other.isAlive())
                 continue ;
@@ -145,10 +173,7 @@ void GameEngine::resolveSnakeCollisions(void) {
     }
 
     for (auto i: dead)
-    {
-        snakes.at(i).die();
-        playAudio_(audio::Dead);
-    }
+        killSnake(snakes_.at(i));
 }
 
 void GameEngine::spawnFood(void) {
@@ -156,17 +181,17 @@ void GameEngine::spawnFood(void) {
         auto bodyIt = std::find(
             snake.body().begin(),
             snake.body().end(),
-            food
+            food_
         );
         return bodyIt != snake.body().end();
     };
 
     bool inABody;
     do {
-        food = { rand() % GameOptions::width, rand() % GameOptions::height };
+        food_ = { rand() % GameOptions::width, rand() % GameOptions::height };
         inABody = std::any_of(
-            snakes.begin(),
-            snakes.end(),
+            snakes_.begin(),
+            snakes_.end(),
             foodInSnake
         );
     } while (inABody);
@@ -184,5 +209,5 @@ void GameEngine::spawnPlayer(unsigned id, bool isPlayer) {
             GameOptions::height / 2 - 1 + i
         );
 
-    snakes.emplace_back(body, isPlayer);
+    snakes_.emplace_back(body, isPlayer);
 }
