@@ -11,7 +11,7 @@ namespace gui {
     static const auto WINDOW_HEIGHT = 1080u;
     static const std::string WINDOW_TITLE_PREFIX = "Nibbler ";
 
-    enum InputType {
+    enum class Input {
         Up,
         Down,
         Left,
@@ -20,13 +20,13 @@ namespace gui {
         S,
         A,
         D,
-        ChangeGui1,
-        ChangeGui2,
-        ChangeGui3,
+        Key1,
+        Key2,
+        Key3,
         Exit,
     };
 
-    using Inputs = std::vector<InputType>;
+    using Inputs = std::vector<Input>;
 
     struct GameInfo {
         using Snake = std::vector<Position>;

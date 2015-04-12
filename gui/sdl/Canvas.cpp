@@ -73,20 +73,20 @@ void SDLCanvas::draw(const gui::GameInfo & info) {
     SDL_RenderPresent(renderer_);
 }
 
-using KeyMap = std::unordered_map<SDL_Keycode, gui::InputType>;
+using KeyMap = std::unordered_map<SDL_Keycode, gui::Input>;
 static const KeyMap KEY_MAP = {
-    { SDLK_UP,     gui::InputType::Up         },
-    { SDLK_DOWN,   gui::InputType::Down       },
-    { SDLK_LEFT,   gui::InputType::Left       },
-    { SDLK_RIGHT,  gui::InputType::Right      },
-    { SDLK_w,      gui::InputType::W          },
-    { SDLK_s,      gui::InputType::S          },
-    { SDLK_a,      gui::InputType::A          },
-    { SDLK_d,      gui::InputType::D          },
-    { SDLK_ESCAPE, gui::InputType::Exit       },
-    { SDLK_1,      gui::InputType::ChangeGui1 },
-    { SDLK_2,      gui::InputType::ChangeGui2 },
-    { SDLK_3,      gui::InputType::ChangeGui3 },
+    { SDLK_UP,     gui::Input::Up    },
+    { SDLK_DOWN,   gui::Input::Down  },
+    { SDLK_LEFT,   gui::Input::Left  },
+    { SDLK_RIGHT,  gui::Input::Right },
+    { SDLK_w,      gui::Input::W     },
+    { SDLK_s,      gui::Input::S     },
+    { SDLK_a,      gui::Input::A     },
+    { SDLK_d,      gui::Input::D     },
+    { SDLK_ESCAPE, gui::Input::Exit  },
+    { SDLK_1,      gui::Input::Key1  },
+    { SDLK_2,      gui::Input::Key2  },
+    { SDLK_3,      gui::Input::Key3  },
 };
 
 gui::Inputs SDLCanvas::getInputs(void) {
@@ -97,7 +97,7 @@ gui::Inputs SDLCanvas::getInputs(void) {
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
             case SDL_QUIT:
-                inputs.push_back(gui::InputType::Exit);
+                inputs.push_back(gui::Input::Exit);
                 break ;
             case SDL_KEYDOWN:
                 inputIt = KEY_MAP.find(event.key.keysym.sym);

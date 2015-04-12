@@ -53,20 +53,20 @@ void SFMLCanvas::drawSpriteAt(const Position & pos, sf::Sprite & sprite) {
     window_.draw(sprite);
 }
 
-using KeyMap = std::unordered_map<sf::Keyboard::Key, gui::InputType>;
+using KeyMap = std::unordered_map<sf::Keyboard::Key, gui::Input>;
 static const KeyMap KEY_MAP = {
-    { sf::Keyboard::Up,     gui::InputType::Up         },
-    { sf::Keyboard::Down,   gui::InputType::Down       },
-    { sf::Keyboard::Left,   gui::InputType::Left       },
-    { sf::Keyboard::Right,  gui::InputType::Right      },
-    { sf::Keyboard::W,      gui::InputType::W          },
-    { sf::Keyboard::S,      gui::InputType::S          },
-    { sf::Keyboard::A,      gui::InputType::A          },
-    { sf::Keyboard::D,      gui::InputType::D          },
-    { sf::Keyboard::Escape, gui::InputType::Exit       },
-    { sf::Keyboard::Num1,   gui::InputType::ChangeGui1 },
-    { sf::Keyboard::Num2,   gui::InputType::ChangeGui2 },
-    { sf::Keyboard::Num3,   gui::InputType::ChangeGui3 },
+    { sf::Keyboard::Up,     gui::Input::Up    },
+    { sf::Keyboard::Down,   gui::Input::Down  },
+    { sf::Keyboard::Left,   gui::Input::Left  },
+    { sf::Keyboard::Right,  gui::Input::Right },
+    { sf::Keyboard::W,      gui::Input::W     },
+    { sf::Keyboard::S,      gui::Input::S     },
+    { sf::Keyboard::A,      gui::Input::A     },
+    { sf::Keyboard::D,      gui::Input::D     },
+    { sf::Keyboard::Escape, gui::Input::Exit  },
+    { sf::Keyboard::Num1,   gui::Input::Key1  },
+    { sf::Keyboard::Num2,   gui::Input::Key2  },
+    { sf::Keyboard::Num3,   gui::Input::Key3  },
 };
 
 gui::Inputs SFMLCanvas::getInputs(void) {
@@ -77,7 +77,7 @@ gui::Inputs SFMLCanvas::getInputs(void) {
     while (window_.pollEvent(event)) {
         switch (event.type) {
             case sf::Event::Closed:
-                inputs.push_back(gui::InputType::Exit);
+                inputs.push_back(gui::Input::Exit);
                 break ;
             case sf::Event::KeyPressed:
                 inputIt = KEY_MAP.find(event.key.code);

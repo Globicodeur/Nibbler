@@ -67,20 +67,20 @@ gui::Inputs QtCanvas::getInputs(void) {
     return inputs;
 }
 
-using KeyMap = std::unordered_map<int, gui::InputType>;
+using KeyMap = std::unordered_map<int, gui::Input>;
 static const KeyMap KEY_MAP = {
-    { Qt::Key_Up,     gui::InputType::Up         },
-    { Qt::Key_Down,   gui::InputType::Down       },
-    { Qt::Key_Left,   gui::InputType::Left       },
-    { Qt::Key_Right,  gui::InputType::Right      },
-    { Qt::Key_W,      gui::InputType::W          },
-    { Qt::Key_S,      gui::InputType::S          },
-    { Qt::Key_A,      gui::InputType::A          },
-    { Qt::Key_D,      gui::InputType::D          },
-    { Qt::Key_Escape, gui::InputType::Exit       },
-    { Qt::Key_1,      gui::InputType::ChangeGui1 },
-    { Qt::Key_2,      gui::InputType::ChangeGui2 },
-    { Qt::Key_3,      gui::InputType::ChangeGui3 },
+    { Qt::Key_Up,     gui::Input::Up    },
+    { Qt::Key_Down,   gui::Input::Down  },
+    { Qt::Key_Left,   gui::Input::Left  },
+    { Qt::Key_Right,  gui::Input::Right },
+    { Qt::Key_W,      gui::Input::W     },
+    { Qt::Key_S,      gui::Input::S     },
+    { Qt::Key_A,      gui::Input::A     },
+    { Qt::Key_D,      gui::Input::D     },
+    { Qt::Key_Escape, gui::Input::Exit  },
+    { Qt::Key_1,      gui::Input::Key1  },
+    { Qt::Key_2,      gui::Input::Key2  },
+    { Qt::Key_3,      gui::Input::Key3  },
 };
 
 bool QtCanvas::eventFilter(QObject *, QEvent * event) {
@@ -88,7 +88,7 @@ bool QtCanvas::eventFilter(QObject *, QEvent * event) {
 
     switch (event->type()) {
         case QEvent::Close:
-            lastInputs_.push_back(gui::InputType::Exit);
+            lastInputs_.push_back(gui::Input::Exit);
             break ;
         case QEvent::KeyPress:
             inputIt = KEY_MAP.find(static_cast<QKeyEvent *>(event)->key());
