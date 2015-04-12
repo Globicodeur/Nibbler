@@ -51,6 +51,10 @@ public:
         return interface_.get();
     }
 
+    Interface * operator->(void) {
+        return get();
+    }
+
     void release(void) {
         interface_.reset();
     }
