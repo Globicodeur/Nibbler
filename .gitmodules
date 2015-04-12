@@ -1,0 +1,3 @@
+[submodule "vendors/signals"]
+	path = vendors/signals
+	url = https://github.com/Globicodeur/signals.git
