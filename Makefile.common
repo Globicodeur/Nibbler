@@ -12,10 +12,12 @@ OBJS			=	$(addprefix $(OBJ_DIR)/, $(SRCS:.cpp=.o))
 
 OBJ_SUB_DIRS	=	$(dir $(OBJS))
 
-all: $(NAME)
+all:
+	@test -e $(NAME) || echo "$(bold)====== $(NAME) ======$(reset)"
+	@$(MAKE) $(NAME)
 
 $(NAME): $(OBJS)
-	@echo "linking $@"
+	@echo "$(bold)$(blue)linking		$(green)$@$(reset)"
 	@$(COMPILER) $^ $(LFLAGS) -o $@
 
 $(OBJS): | $(OBJ_DIR)
@@ -24,7 +26,7 @@ $(OBJ_DIR):
 	@$(foreach dir, $(OBJ_SUB_DIRS), mkdir -p $(dir);)
 
 $(OBJ_DIR)/%.o: %.cpp
-	@echo "compiling $(notdir $<)"
+	@echo "$(bold)$(cyan)compiling	$(white)$<$(reset)"
 	@$(COMPILER) $(CFLAGS) $< -o $@
 
 depend: .depend
@@ -36,14 +38,28 @@ depend: .depend
 -include .depend
 
 clean:
-	@echo "cleaning objects"
+	@echo "$(bold)$(red)cleaning	$(white)$(OBJ_DIR)$(reset)"
 	@rm -rf $(OBJ_DIR)
 	@rm -f ./.depend
 
 fclean: clean
-	@echo "cleaning $(NAME)"
+	@echo "$(bold)$(red)removing	$(green)$(NAME)$(reset)"
 	@rm -f $(NAME)
 
 re:
 	@$(MAKE) fclean
 	@$(MAKE) all
+
+# ANSI helpers
+ansi			=	\033[$1m
+
+bold			=	$(call ansi,1)
+fg_color		=	$(call ansi,38;5;$1)
+reset			=	$(call ansi,0)
+
+red				=	$(call fg_color,1)
+green			=	$(call fg_color,10)
+blue			=	$(call fg_color,27)
+cyan			=	$(call fg_color,6)
+yellow			=	$(call fg_color,11)
+white			=	$(call fg_color,255)
