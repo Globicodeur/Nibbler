@@ -2,11 +2,13 @@
 
 #include "GameEngine.hpp"
 #include "GameOptions.hpp"
+#include "GameServer.hpp"
 
 #include "UserInterface.hpp"
 
-#include "gui/spec.hpp"
 #include "spec.hpp"
+#include "gui/spec.hpp"
+#include "network/spec.hpp"
 
 #include <unordered_map>
 
@@ -17,7 +19,12 @@ Application::Application(int argc, char **argv) {
 Application::~Application(void) { } // forwarded unique_ptr
 
 void Application::run(void) {
-    runLocal();
+    if (GameOptions::server)
+        runServer();
+    else if (GameOptions::client)
+        runClient();
+    else
+        runLocal();
 }
 
 static void dispatchInput(gui::Input input) {
@@ -58,4 +65,43 @@ void Application::runLocal(void) {
 
         interface.render(engine);
     }
+}
+
+static void dispatchMessage(network::Message & message) {
+    using spec::Event;
+    using Dispatcher = spec::EventDispatcher;
+
+    Dispatcher::emit<Event::ChangeDirection>(
+        std::move(message.id),
+        std::move(message.direction)
+    );
+}
+
+void Application::runServer(void) {
+    GameEngine engine;
+    GameServer server;
+
+    while (engine.isRunning()) {
+        for (auto message: server.getMessages())
+            dispatchMessage(message);
+
+        engine.update();
+
+        server.sendGameState(engine);
+    }
+}
+
+void Application::runClient(void) {
+    // GameClient client;
+    // UserInterface interface;
+
+    // client.connect(GameOptions::host, GameOptions::port);
+    // while (client.isConnected()) {
+    //     for (auto input: interface.getInputs())
+    //         dispatchInput(input);
+
+    //     auto state = client.getGameState();
+
+    //     interface.render(state);
+    // }
 }

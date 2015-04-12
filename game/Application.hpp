@@ -16,4 +16,6 @@ public:
 
 private:
     void                        runLocal(void);
+    void                        runServer(void);
+    void                        runClient(void);
 };
