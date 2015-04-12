@@ -5,12 +5,16 @@
 
 namespace po = boost::program_options;
 
-int         GameOptions::width          { };
-int         GameOptions::height         { };
-bool        GameOptions::torus =        false;
-unsigned    GameOptions::snakeCount =   1;
-unsigned    GameOptions::playerCount =  1;
-std::string GameOptions::aiFile =       "ai/idle.py";
+int                 GameOptions::width          { };
+int                 GameOptions::height         { };
+bool                GameOptions::torus          { false };
+unsigned            GameOptions::snakeCount     { 1 };
+unsigned            GameOptions::playerCount    { 1 };
+std::string         GameOptions::aiFile         { "ai/idle.py" };
+bool                GameOptions::client         { false };
+bool                GameOptions::server         { false };
+std::string         GameOptions::host           { "localhost" };
+GameOptions::Port   GameOptions::port           { 1337 };
 
 template <class T>
 static auto validateRange(T minBound, T maxBound, const char * description) {
@@ -53,6 +57,14 @@ static po::options_description getUsage(void) {
                         "Number of players")
         ("script",      po::value(&GameOptions::aiFile),
                         "Python script file for AIs")
+        ("client",      po::bool_switch(&GameOptions::client),
+                        "Join a multiplayer game")
+        ("server",      po::bool_switch(&GameOptions::server),
+                        "Host a multiplayer game")
+        ("host",        po::value(&GameOptions::host),
+                        "The host address of the multiplayer game to join")
+        ("port",        po::value(&GameOptions::port),
+                        "The port of the multiplayer game to host/join")
     ;
 
     return usage;
