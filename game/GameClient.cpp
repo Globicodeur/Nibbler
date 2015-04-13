@@ -4,6 +4,8 @@
 
 #include "spec.hpp"
 
+#include <iostream>
+
 static const char * NETWORK_LIBRARY = "./nibbler_network_sfml.so";
 
 GameClient::GameClient(void):
@@ -22,7 +24,14 @@ GameClient::GameClient(void):
     Dispatcher::on<Event::Exit>([this] { exited_ = true; });
 
     client_.init();
-    client_->connect(GameOptions::host, GameOptions::port);
+    if (!client_->connect(GameOptions::host, GameOptions::port)) {
+        std::cerr << "Error connecting to "
+                  << GameOptions::host << ":" << GameOptions::port
+                  << std::endl;
+        throw std::system_error { errno, std::system_category() };
+    }
+
+    std::tie(GameOptions::width, GameOptions::height) = client_->getDimensions();
 }
 
 network::GameState GameClient::getGameState(void) {

@@ -6,10 +6,11 @@
 static const char * NETWORK_LIBRARY = "./nibbler_network_sfml.so";
 
 GameServer::GameServer(void):
-    server_ { NETWORK_LIBRARY } {
+    server_ { NETWORK_LIBRARY, GameOptions::width, GameOptions::height } {
 
     server_.init();
-    server_->listen(GameOptions::port);
+    if (!server_->listen(GameOptions::port))
+        throw std::system_error { errno, std::system_category() };
 }
 
 void GameServer::sendGameState(const GameEngine & engine) {

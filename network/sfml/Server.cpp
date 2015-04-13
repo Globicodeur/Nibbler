@@ -4,26 +4,36 @@
 
 size_t SFMLServer::idCounter { 0 };
 
-SFMLServer::SFMLServer(void) {
+SFMLServer::SFMLServer(unsigned width, unsigned height):
+    width_  { width },
+    height_ { height } {
+
     server_.setBlocking(false);
 }
 
 SFMLServer::~SFMLServer(void) {
-    for (const auto & client: clients_)
-        client.second->disconnect();
     server_.close();
+    for (const auto & client: clients_) {
+        sf::Packet dummy;
+        while (client.second->receive(dummy) == sf::Socket::Done)
+            ;
+        client.second->disconnect();
+    }
+    clients_.clear();
 }
 
 bool SFMLServer::listen(network::Port port) {
-    server_.listen(port);
-    return true;
+    if (server_.listen(port) == sf::Socket::Done)
+        return true;
+    return false;
 }
 
 void SFMLServer::sendGameState(const network::GameInfo & info) {
-    sf::Packet p;
-    p << info;
+    sf::Packet packet;
+
+    packet << info;
     for (const auto & client: clients_)
-        client.second->send(p);
+        client.second->send(packet);
 }
 
 network::Messages SFMLServer::getMessages(void) {
@@ -47,8 +57,10 @@ void SFMLServer::acceptNewConnection(void) {
 
     if (server_.accept(*client) == sf::Socket::Done)
     {
+        sf::Packet packet;
+        packet << width_ << height_;
+        client->send(packet);
         client->setBlocking(false);
-        // std::cout << client->getRemoteAddress() << std::endl;
         clients_.emplace(idCounter++, client);
     }
 }

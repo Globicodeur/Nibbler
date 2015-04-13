@@ -17,6 +17,7 @@ public:
 
     virtual bool                connect(const std::string & host, network::Port port);
     virtual network::GameState  getGameState(void);
+    virtual Dimensions          getDimensions(void);
     virtual void                sendDirection(Direction direction);
     virtual bool                isConnected(void);
 

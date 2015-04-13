@@ -8,10 +8,11 @@
 class SFMLServer: public network::Server {
 
 public:
-                                SFMLServer(void);
+                                SFMLServer(unsigned, unsigned);
     virtual                     ~SFMLServer(void);
 
     // 42 norme
+                                SFMLServer(void) = delete;
                                 SFMLServer(const SFMLServer &) = delete;
     SFMLServer &                operator=(const SFMLServer &) = delete;
     //
@@ -28,6 +29,8 @@ private:
     Clients                     clients_;
 
     static size_t               idCounter;
+
+    unsigned                    width_, height_;
 
     void                        acceptNewConnection(void);
 };

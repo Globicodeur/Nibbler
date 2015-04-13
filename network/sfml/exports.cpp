@@ -5,8 +5,8 @@
 
 extern "C" {
 
-    network::Server * getServer(void) {
-        return new SFMLServer;
+    network::Server * getServer(unsigned width, unsigned height) {
+        return new SFMLServer { width, height };
     }
 
     network::Client * getClient(void) {

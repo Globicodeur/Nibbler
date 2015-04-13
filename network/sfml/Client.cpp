@@ -4,7 +4,6 @@
 
 SFMLClient::SFMLClient(void):
     connected_ { false } {
-    socket_.setBlocking(false);
 }
 
 SFMLClient::~SFMLClient(void) {
@@ -12,29 +11,44 @@ SFMLClient::~SFMLClient(void) {
 }
 
 bool SFMLClient::connect(const std::string & host, network::Port port) {
-    socket_.connect(sf::IpAddress { host }, port);
-    connected_ = true;
-    return true;
+    if (socket_.connect(sf::IpAddress { host }, port) == sf::Socket::Done) {
+        connected_ = true;
+        return true;
+    }
+    return false;
 }
 
 network::GameState SFMLClient::getGameState(void) {
     network::GameState state;
+    sf::Packet packet;
 
-    sf::Packet p;
-    auto status = socket_.receive(p);
+    auto status = socket_.receive(packet);
     if (status == sf::Socket::Done) {
         state.reset(new network::GameInfo);
-        p >> *state;
+        packet >> *state;
     }
     else if (status != sf::Socket::NotReady)
         connected_ = false;
     return state;
 }
 
+SFMLClient::Dimensions SFMLClient::getDimensions(void) {
+    sf::Packet packet;
+    if (socket_.receive(packet) == sf::Socket::Done)
+    {
+        socket_.setBlocking(false);
+        unsigned width, height;
+        packet >> width;
+        packet >> height;
+        return { width, height };
+    }
+    return { 10, 10 };
+}
+
 void SFMLClient::sendDirection(Direction direction) {
-    sf::Packet p;
-    p << direction;
-    socket_.send(p);
+    sf::Packet packet;
+    packet << direction;
+    socket_.send(packet);
 }
 
 bool SFMLClient::isConnected(void) {

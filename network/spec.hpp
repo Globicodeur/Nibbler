@@ -21,7 +21,7 @@ namespace network {
     struct Server {
 
         struct SharedObjectInfo {
-            using Getter = Server * (*)(void);
+            using Getter = Server * (*)(unsigned, unsigned);
             static constexpr const char * getterName() { return "getServer"; }
         };
 
@@ -35,6 +35,8 @@ namespace network {
 
     struct Client {
 
+        using Dimensions = std::pair<unsigned, unsigned>;
+
         struct SharedObjectInfo {
             using Getter = Client * (*)(void);
             static constexpr const char * getterName() { return "getClient"; }
@@ -42,6 +44,7 @@ namespace network {
 
         virtual bool        connect(const std::string & host, Port port)    = 0;
         virtual GameState   getGameState(void)                              = 0;
+        virtual Dimensions  getDimensions(void)                             = 0;
         virtual void        sendDirection(Direction direction)              = 0;
         virtual bool        isConnected(void)                               = 0;
 
