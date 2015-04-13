@@ -7,9 +7,7 @@ namespace spec {
     enum class Event {
         ChangeDirection,
         Exit,
-        ChangeGui1,
-        ChangeGui2,
-        ChangeGui3,
+        ChangeGui,
         PlaySound,
     };
 

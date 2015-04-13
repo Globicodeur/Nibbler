@@ -19,16 +19,17 @@ static const char * AUDIO_LIBRARY_NAMES[] = {
 
 constexpr auto LIBRARY_COUNT = sizeof(GRAPHIC_LIBRARY_NAMES) / sizeof(char *);
 
-using spec::Event;
-using Dispatcher = spec::EventDispatcher;
-
 UserInterface::UserInterface(void) {
-    auto swap = [this](auto i) { graphics_.swap(i), audio_.swap(i); };
-    Dispatcher::on<Event::ChangeGui1>(std::bind(swap, 0));
-    Dispatcher::on<Event::ChangeGui2>(std::bind(swap, 1));
-    Dispatcher::on<Event::ChangeGui3>(std::bind(swap, 2));
-    Dispatcher::on<Event::PlaySound, audio::Sound>(
-        [this](auto sound) { audio_->play(sound); }
+    using spec::Event;
+    using Dispatcher = spec::EventDispatcher;
+
+    auto swapInterface = [this](auto i) {
+        graphics_.swap(i), audio_.swap(i);
+    };
+
+    Dispatcher::on<Event::ChangeGui, size_t>(swapInterface);
+    Dispatcher::on_<Event::PlaySound>(
+        [this](audio::Sound sound) { audio_->play(sound); }
     );
 
     graphics_.load(
@@ -38,7 +39,7 @@ UserInterface::UserInterface(void) {
     );
     audio_.load(AUDIO_LIBRARY_NAMES);
 
-    swap(rand() % LIBRARY_COUNT);
+    swapInterface(rand() % LIBRARY_COUNT);
 }
 
 gui::Inputs UserInterface::getInputs(void) {

@@ -12,8 +12,7 @@ OBJS			=	$(addprefix $(OBJ_DIR)/, $(SRCS:.cpp=.o))
 
 OBJ_SUB_DIRS	=	$(dir $(OBJS))
 
-all:
-	@test -e $(NAME) || echo "$(bold)====== $(NAME) ======$(reset)"
+all: show_fancy_name
 	@$(MAKE) $(NAME)
 
 $(NAME): $(OBJS)
@@ -37,7 +36,7 @@ depend: .depend
 
 -include .depend
 
-clean:
+clean: show_fancy_name
 	@echo "$(bold)$(red)cleaning	$(white)$(OBJ_DIR)$(reset)"
 	@rm -rf $(OBJ_DIR)
 	@rm -f ./.depend
@@ -49,6 +48,9 @@ fclean: clean
 re:
 	@$(MAKE) fclean
 	@$(MAKE) all
+
+show_fancy_name:
+	@echo "\n$(bold)$(yellow)==> $(NAME)$(reset)"
 
 # ANSI helpers
 ansi			=	\033[$1m

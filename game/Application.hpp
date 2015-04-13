@@ -4,9 +4,9 @@ class Application {
 
 public:
                                 Application(int argc, char **argv);
-                                ~Application(void);
 
     // 42 norme
+                                ~Application(void)                  = default;
                                 Application(void)                   = delete;
                                 Application(const Application &)    = delete;
     Application &               operator=(const Application &)      = delete;

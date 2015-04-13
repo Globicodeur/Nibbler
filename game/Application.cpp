@@ -1,6 +1,7 @@
 #include "Application.hpp"
 
 #include "GameOptions.hpp"
+
 #include "GameEngine.hpp"
 #include "GameServer.hpp"
 #include "GameClient.hpp"
@@ -17,8 +18,6 @@ Application::Application(int argc, char **argv) {
     GameOptions::parseFromCommandLine(argc, argv);
 }
 
-Application::~Application(void) { } // forwarded unique_ptr
-
 void Application::run(void) {
     if (GameOptions::server)
         runServer();
@@ -28,31 +27,7 @@ void Application::run(void) {
         runLocal();
 }
 
-static void dispatchInput(gui::Input input) {
-    using spec::Event;
-    using Dispatcher = spec::EventDispatcher;
-    using Emitter = std::function<void ()>;
-    using DispatchMap = std::unordered_map<gui::Input, Emitter>;
-
-    static const DispatchMap DISPATCH = {
-        { gui::Input::Up,    [] { Dispatcher::emit<Event::ChangeDirection>(0ul, Up);    } },
-        { gui::Input::Down,  [] { Dispatcher::emit<Event::ChangeDirection>(0ul, Down);  } },
-        { gui::Input::Left,  [] { Dispatcher::emit<Event::ChangeDirection>(0ul, Left);  } },
-        { gui::Input::Right, [] { Dispatcher::emit<Event::ChangeDirection>(0ul, Right); } },
-        { gui::Input::W,     [] { Dispatcher::emit<Event::ChangeDirection>(1ul, Up);    } },
-        { gui::Input::S,     [] { Dispatcher::emit<Event::ChangeDirection>(1ul, Down);  } },
-        { gui::Input::A,     [] { Dispatcher::emit<Event::ChangeDirection>(1ul, Left);  } },
-        { gui::Input::D,     [] { Dispatcher::emit<Event::ChangeDirection>(1ul, Right); } },
-        { gui::Input::Exit,  Dispatcher::emit<Event::Exit>                                },
-        { gui::Input::Key1,  Dispatcher::emit<Event::ChangeGui1>                          },
-        { gui::Input::Key2,  Dispatcher::emit<Event::ChangeGui2>                          },
-        { gui::Input::Key3,  Dispatcher::emit<Event::ChangeGui3>                          },
-    };
-
-    auto actionIt = DISPATCH.find(input);
-    if (actionIt != DISPATCH.end())
-        actionIt->second();
-}
+static void dispatchInput(gui::Input);
 
 void Application::runLocal(void) {
     GameEngine engine;
@@ -68,15 +43,21 @@ void Application::runLocal(void) {
     }
 }
 
-static void dispatchMessage(network::Message & message) {
-    using spec::Event;
-    using Dispatcher = spec::EventDispatcher;
+void Application::runClient(void) {
+    GameClient client;
+    UserInterface interface;
 
-    Dispatcher::emit<Event::ChangeDirection>(
-        std::move(message.id),
-        std::move(message.direction)
-    );
+    while (client.isRunning()) {
+        for (auto input: interface.getInputs())
+            dispatchInput(input);
+
+        auto state = client.getGameState();
+        if (state)
+            interface.render(*state);
+    }
 }
+
+static void dispatchMessage(const network::Message &);
 
 void Application::runServer(void) {
     GameEngine engine;
@@ -91,16 +72,38 @@ void Application::runServer(void) {
     }
 }
 
-void Application::runClient(void) {
-    GameClient client;
-    UserInterface interface;
+using spec::Event;
+using Dispatcher = spec::EventDispatcher;
 
-    while (client.isRunning()) {
-        for (auto input: interface.getInputs())
-            dispatchInput(input);
+template <Event event, class...Args>
+static auto lazyDispatch(Args... args) {
+    return [=] { Dispatcher::emit<event>(args...); };
+}
 
-        auto state = client.getGameState();
-        if (state)
-            interface.render(*state);
-    }
+static void dispatchInput(gui::Input input) {
+    using Emitter = std::function<void ()>;
+    using DispatchMap = std::unordered_map<gui::Input, Emitter>;
+
+    static const DispatchMap DISPATCHERS = {
+        { gui::Input::Up,    lazyDispatch<Event::ChangeDirection>(0ul, Up)    },
+        { gui::Input::Down,  lazyDispatch<Event::ChangeDirection>(0ul, Down)  },
+        { gui::Input::Left,  lazyDispatch<Event::ChangeDirection>(0ul, Left)  },
+        { gui::Input::Right, lazyDispatch<Event::ChangeDirection>(0ul, Right) },
+        { gui::Input::W,     lazyDispatch<Event::ChangeDirection>(1ul, Up)    },
+        { gui::Input::S,     lazyDispatch<Event::ChangeDirection>(1ul, Down)  },
+        { gui::Input::A,     lazyDispatch<Event::ChangeDirection>(1ul, Left)  },
+        { gui::Input::D,     lazyDispatch<Event::ChangeDirection>(1ul, Right) },
+        { gui::Input::Key1,  lazyDispatch<Event::ChangeGui>(0ul)              },
+        { gui::Input::Key2,  lazyDispatch<Event::ChangeGui>(1ul)              },
+        { gui::Input::Key3,  lazyDispatch<Event::ChangeGui>(2ul)              },
+        { gui::Input::Exit,  Dispatcher::emit<Event::Exit>                    },
+    };
+
+    auto actionIt = DISPATCHERS.find(input);
+    if (actionIt != DISPATCHERS.end())
+        actionIt->second();
+}
+
+static void dispatchMessage(const network::Message & message) {
+    Dispatcher::emit<Event::ChangeDirection>(message.id, message.direction);
 }
