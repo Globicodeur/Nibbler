@@ -11,7 +11,7 @@ static const char DIE_PATH[] = "./audio/sdl/assets/cry.wav";
 using SoundMap = std::unordered_map<audio::Sound, std::shared_ptr<SDLSound>>;
 static const SoundMap SOUNDS = {
     { audio::Sound::FoodEaten, std::make_shared<SDLSound>(EAT_PATH) },
-    { audio::Sound::FoodEaten,      std::make_shared<SDLSound>(DIE_PATH) },
+    { audio::Sound::Dead,      std::make_shared<SDLSound>(DIE_PATH) },
 };
 
 SDLPlayer::SDLPlayer(void) {
