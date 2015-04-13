@@ -5,8 +5,8 @@
 
 namespace po = boost::program_options;
 
-int                 GameOptions::width          { };
-int                 GameOptions::height         { };
+int                 GameOptions::width          { 32 };
+int                 GameOptions::height         { 18 };
 bool                GameOptions::torus          { false };
 unsigned            GameOptions::snakeCount     { 1 };
 unsigned            GameOptions::playerCount    { 1 };
@@ -40,11 +40,9 @@ static po::options_description getUsage(void) {
     usage.add_options()
         ("help",        "Show this help message")
         ("width,w",     po::value(&GameOptions::width)
-                            -> required()
                             -> notifier(validateRange(10, 192, "width")),
                         "The width of the game arena")
         ("height,h",    po::value(&GameOptions::height)
-                            -> required()
                             -> notifier(validateRange(10, 108, "height")),
                         "The height of the game arena")
         ("torus,t",     po::bool_switch(&GameOptions::torus),
