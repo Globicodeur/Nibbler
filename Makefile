@@ -17,6 +17,10 @@ AUDIO_SDL_NAME		=	nibbler_audio_sdl.so
 AUDIO_SFML_TARGET	=	$(AUDIO_SUBDIR)/sfml
 AUDIO_SFML_NAME		=	nibbler_audio_sfml.so
 
+NETWORK_SUBDIR		=	network
+NETWORK_SFML_TARGET	=	$(NETWORK_SUBDIR)/sfml
+NETWORK_SFML_NAME	=	nibbler_network_sfml.so
+
 TARGETS			=	$(GAME_TARGET)\
 					$(GUI_QT_TARGET)\
 					$(GUI_SDL_TARGET)\
@@ -24,6 +28,7 @@ TARGETS			=	$(GAME_TARGET)\
 					$(AUDIO_QT_TARGET)\
 					$(AUDIO_SDL_TARGET)\
 					$(AUDIO_SFML_TARGET)\
+					$(NETWORK_SFML_TARGET)\
 
 TARGET_NAMES	=	$(GAME_NAME)\
 					$(GUI_QT_NAME)\
@@ -32,6 +37,7 @@ TARGET_NAMES	=	$(GAME_NAME)\
 					$(AUDIO_QT_NAME)\
 					$(AUDIO_SDL_NAME)\
 					$(AUDIO_SFML_NAME)\
+					$(NETWORK_SFML_NAME)\
 
 TARGET_PATHS	=	$(GAME_TARGET)/$(GAME_NAME)\
 					$(GUI_QT_TARGET)/$(GUI_QT_NAME)\
@@ -40,6 +46,7 @@ TARGET_PATHS	=	$(GAME_TARGET)/$(GAME_NAME)\
 					$(AUDIO_QT_TARGET)/$(AUDIO_QT_NAME)\
 					$(AUDIO_SDL_TARGET)/$(AUDIO_SDL_NAME)\
 					$(AUDIO_SFML_TARGET)/$(AUDIO_SFML_NAME)\
+					$(NETWORK_SFML_TARGET)/$(NETWORK_SFML_NAME)\
 
 all:
 	@$(foreach target, $(TARGETS), $(MAKE) -C $(target);)

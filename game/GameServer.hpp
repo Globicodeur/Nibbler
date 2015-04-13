@@ -23,5 +23,5 @@ public:
 private:
     using Server        = SharedObject<network::Server>;
 
-    // Server              server_;
+    Server              server_;
 };

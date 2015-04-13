@@ -53,5 +53,9 @@ void UserInterface::render(const GameEngine & engine) {
             snakeBodies.push_back(snake.body());
     }
 
-    graphics_->draw({ snakeBodies, engine.food() });
+    render({ snakeBodies, engine.food() });
+}
+
+void UserInterface::render(const gui::GameInfo & info) {
+    graphics_->draw(info);
 }

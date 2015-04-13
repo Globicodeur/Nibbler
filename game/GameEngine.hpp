@@ -18,7 +18,7 @@ public:
     GameEngine &        operator=(const GameEngine &)   = delete;
     //
 
-    void                update(void);
+    bool                update(void);
 
     bool                isRunning(void) const;
     const Snakes &      snakes(void) const;

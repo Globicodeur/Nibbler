@@ -16,9 +16,9 @@ namespace network {
 
     using Messages = std::vector<Message>;
 
-    struct Server {
+    using Port = unsigned short;
 
-        using Port      = unsigned short;
+    struct Server {
 
         struct SharedObjectInfo {
             using Getter = Server * (*)(void);
@@ -31,12 +31,19 @@ namespace network {
 
     };
 
+    using GameState = std::shared_ptr<GameInfo>;
+
     struct Client {
 
         struct SharedObjectInfo {
             using Getter = Client * (*)(void);
             static constexpr const char * getterName() { return "getClient"; }
         };
+
+        virtual bool        connect(const std::string & host, Port port)    = 0;
+        virtual GameState   getGameState(void)                              = 0;
+        virtual void        sendDirection(Direction direction)              = 0;
+        virtual bool        isConnected(void)                               = 0;
 
     };
 

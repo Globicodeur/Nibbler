@@ -3,11 +3,13 @@
 #include "GameEngine.hpp"
 #include "GameOptions.hpp"
 
-// static const char * NETWORK_LIBRARY = "./nibbler_network_sfml.so";
+static const char * NETWORK_LIBRARY = "./nibbler_network_sfml.so";
 
-GameServer::GameServer(void){
+GameServer::GameServer(void):
+    server_ { NETWORK_LIBRARY } {
 
-    // server_->listen(GameOptions::port);
+    server_.init();
+    server_->listen(GameOptions::port);
 }
 
 void GameServer::sendGameState(const GameEngine & engine) {
@@ -18,11 +20,10 @@ void GameServer::sendGameState(const GameEngine & engine) {
             snakeBodies.push_back(snake.body());
     }
 
-    // server_->sendGameState({ snakeBodies, engine.food() });
+    server_->sendGameState({ snakeBodies, engine.food() });
 }
 
 network::Messages GameServer::getMessages(void) {
-    // Mocking for now
-    return { network::Message { 0, Right } };
+    return server_->getMessages();
 }
 

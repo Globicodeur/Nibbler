@@ -1,8 +1,9 @@
 #include "Application.hpp"
 
-#include "GameEngine.hpp"
 #include "GameOptions.hpp"
+#include "GameEngine.hpp"
 #include "GameServer.hpp"
+#include "GameClient.hpp"
 
 #include "UserInterface.hpp"
 
@@ -85,23 +86,21 @@ void Application::runServer(void) {
         for (auto message: server.getMessages())
             dispatchMessage(message);
 
-        engine.update();
-
-        server.sendGameState(engine);
+        if (engine.update())
+            server.sendGameState(engine);
     }
 }
 
 void Application::runClient(void) {
-    // GameClient client;
-    // UserInterface interface;
+    GameClient client;
+    UserInterface interface;
 
-    // client.connect(GameOptions::host, GameOptions::port);
-    // while (client.isConnected()) {
-    //     for (auto input: interface.getInputs())
-    //         dispatchInput(input);
+    while (client.isRunning()) {
+        for (auto input: interface.getInputs())
+            dispatchInput(input);
 
-    //     auto state = client.getGameState();
-
-    //     interface.render(state);
-    // }
+        auto state = client.getGameState();
+        if (state)
+            interface.render(*state);
+    }
 }

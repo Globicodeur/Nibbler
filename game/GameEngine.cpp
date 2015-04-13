@@ -31,7 +31,7 @@ GameEngine::GameEngine(void):
     spawnFood();
 }
 
-void GameEngine::update(void) {
+bool GameEngine::update(void) {
     if (timer_.elapsed() >= stepInterval_) {
         timer_.reset();
 
@@ -49,7 +49,9 @@ void GameEngine::update(void) {
         );
         if (!anyAlive)
             running_ = false;
+        return true;
     }
+    return false;
 }
 
 bool GameEngine::isRunning(void) const {
