@@ -37,9 +37,8 @@ void Application::runLocal(void) {
         for (auto input: interface.getInputs())
             dispatchInput(input);
 
-        engine.update();
-
-        interface.render(engine);
+        if (engine.update())
+            interface.render(engine);
     }
 }
 
