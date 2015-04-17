@@ -10,7 +10,7 @@ class Snake {
 public:
     using Body              = std::vector<Position>;
 
-                            Snake(const Body & init, bool isPlayer);
+                            Snake(const Body &, bool, Direction);
     // 42 norme
                             ~Snake(void)                = default;
                             Snake(void)                 = delete;

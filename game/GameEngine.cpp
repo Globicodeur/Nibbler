@@ -196,15 +196,15 @@ void GameEngine::spawnFood(void) {
 
 void GameEngine::spawnPlayer(unsigned id, bool isPlayer) {
     static const auto SNAKE_INITIAL_SIZE = 4u;
-    static_assert(SNAKE_INITIAL_SIZE > 0, "Snake size cannot be zero");
 
     Snake::Body body;
 
     for (unsigned i = 0; i < SNAKE_INITIAL_SIZE; ++i)
         body.emplace_back(
-            id * (GameOptions::width / GameOptions::snakeCount),
-            GameOptions::height / 2 - 1 + i
+            id * (GameOptions::width / 2 / GameOptions::snakeCount) +
+                GameOptions::width / 4,
+            GameOptions::height / 2 - 1 + i * (id % 2 ? 1 : -1)
         );
 
-    snakes_.emplace_back(body, isPlayer);
+    snakes_.emplace_back(body, isPlayer, id % 2 ? Up : Down);
 }

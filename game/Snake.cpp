@@ -1,9 +1,9 @@
 #include "Snake.hpp"
 
-Snake::Snake(const Body & init, bool isPlayer):
+Snake::Snake(const Body & init, bool isPlayer, Direction dir):
     body_           { init },
-    direction_      { Up },
-    nextDirection_  { direction_ },
+    direction_      { dir },
+    nextDirection_  { dir },
     isAlive_        { true },
     isPlayer_       { isPlayer }
 { }
