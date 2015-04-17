@@ -3,9 +3,18 @@
 #include <unordered_map>
 #include <iterator>
 
+static const std::string SPRITES_PATH_PREFIX = "gui/sdl/assets/";
+
+static const std::string SPRITES[][2] = {
+    { { "pedobear_1.png" }, { "shinobu_1.png" } },
+    { { "pedobear_2.png" }, { "shinobu_2.png" } },
+    { { "pedobear_3.png" }, { "shinobu_3.png" } },
+    { { "pedobear_4.png" }, { "shinobu_4.png" } },
+};
+
 SDLCanvas::SDLCanvas(unsigned width, unsigned height):
-    boxWidth_ { (float)gui::WINDOW_WIDTH / width },
-    boxHeight_ { (float)gui::WINDOW_HEIGHT / height } {
+    boxWidth_   { (float)gui::WINDOW_WIDTH / width },
+    boxHeight_  { (float)gui::WINDOW_HEIGHT / height } {
 
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
     IMG_Init(IMG_INIT_PNG);
@@ -22,52 +31,49 @@ SDLCanvas::SDLCanvas(unsigned width, unsigned height):
     renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED);
     SDL_SetRenderDrawColor(renderer_, 255, 255, 255, 255);
 
-    spHead_ = IMG_LoadTexture(renderer_, "gui/sdl/assets/pedobear.png");
-    spBody_ = IMG_LoadTexture(renderer_, "gui/sdl/assets/shinobu.png");
-    spFood_ = IMG_LoadTexture(renderer_, "gui/sdl/assets/shinobu.png");
-    background_ = IMG_LoadTexture(renderer_, "gui/sdl/assets/sakura.png");
+    food_.reset(new Sprite { SPRITES_PATH_PREFIX + "shinobu.png", renderer_ });
+    background_.reset(new Sprite { SPRITES_PATH_PREFIX + "sakura.png", renderer_ });
+
+    for (auto spritePair: SPRITES)
+        snakes_.emplace_back(new GraphicSnake {
+            { SPRITES_PATH_PREFIX + spritePair[0], renderer_ },
+            { SPRITES_PATH_PREFIX + spritePair[1], renderer_ },
+        });
 }
 
 SDLCanvas::~SDLCanvas() {
-    SDL_DestroyTexture(spHead_);
-    SDL_DestroyTexture(spBody_);
-    SDL_DestroyTexture(spFood_);
-    SDL_DestroyTexture(background_);
     SDL_DestroyRenderer(renderer_);
     SDL_DestroyWindow(window_);
     IMG_Quit();
     SDL_Quit();
 }
 
-void SDLCanvas::drawTexture(int x, int y, SDL_Texture * texture) {
+void SDLCanvas::drawSprite(int x, int y, const Sprite & sprite) {
     SDL_Rect rect {
         static_cast<int>(x * boxWidth_),
         static_cast<int>(y * boxHeight_),
         static_cast<int>(boxWidth_),
         static_cast<int>(boxHeight_)
     };
-    SDL_RenderCopy(renderer_, texture, 0, &rect);
+    SDL_RenderCopy(renderer_, sprite.texture(), 0, &rect);
 }
 
 void SDLCanvas::drawBackground(void) {
-    SDL_Rect rect {
-        static_cast<int>(0),
-        static_cast<int>(0),
-        static_cast<int>(gui::WINDOW_WIDTH),
-        static_cast<int>(gui::WINDOW_HEIGHT)
-    };
-    SDL_RenderCopy(renderer_, background_, 0, &rect);
+    static SDL_Rect rect { 0, 0, gui::WINDOW_WIDTH, gui::WINDOW_WIDTH };
+    SDL_RenderCopy(renderer_, background_->texture(), 0, &rect);
 }
 
 void SDLCanvas::draw(const gui::GameInfo & info) {
     SDL_RenderClear(renderer_);
 
     drawBackground();
-    drawTexture(info.food.x, info.food.y, spFood_);
+    drawSprite(info.food.x, info.food.y, *food_);
+    int i = 0;
     for (const auto & snake: info.snakes) {
-        drawTexture(snake.front().x, snake.front().y, spHead_);
+        drawSprite(snake.front().x, snake.front().y, snakes_[i]->head);
         for (auto it = std::next(snake.begin()); it != snake.end(); ++it)
-            drawTexture(it->x, it->y, spBody_);
+            drawSprite(it->x, it->y, snakes_[i]->body);
+        ++i %= snakes_.size();
     }
 
     SDL_RenderPresent(renderer_);

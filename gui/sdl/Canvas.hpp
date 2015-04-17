@@ -1,7 +1,6 @@
 #pragma once
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
+#include "Sprite.hpp"
 
 #include "spec.hpp"
 
@@ -21,13 +20,17 @@ public:
     virtual gui::Inputs getInputs(void);
 
 private:
-    void                drawTexture(int x, int y, SDL_Texture * texture);
+    struct GraphicSnake { Sprite head, body; };
+    using GraphicSnakes = std::vector<std::unique_ptr<GraphicSnake>>;
+    using SpritePtr     = std::unique_ptr<Sprite>;
+
+    void                drawSprite(int x, int y, const Sprite & sprite);
     void                drawBackground(void);
 
     float               boxWidth_, boxHeight_;
 
     SDL_Window          *window_;
     SDL_Renderer        *renderer_;
-    SDL_Texture         *spHead_, *spBody_, *spFood_, *background_;
-
+    SpritePtr           food_, background_;
+    GraphicSnakes       snakes_;
 };
