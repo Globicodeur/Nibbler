@@ -14,14 +14,14 @@ GameServer::GameServer(void):
 }
 
 void GameServer::sendGameState(const GameEngine & engine) {
-    gui::GameInfo::Snakes snakeBodies;
+    gui::GameInfo::Snakes snakes;
 
     for (const auto & snake: engine.snakes()) {
         if (snake.isAlive())
-            snakeBodies.push_back(snake.body());
+            snakes.push_back(gui::GameInfo::Snake { snake.id(), snake.body() });
     }
 
-    server_->sendGameState({ snakeBodies, engine.food() });
+    server_->sendGameState({ snakes, engine.food() });
 }
 
 network::Messages GameServer::getMessages(void) {

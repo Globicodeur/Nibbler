@@ -1,11 +1,12 @@
 #include "Snake.hpp"
 
-Snake::Snake(const Body & init, bool isPlayer, Direction dir):
+Snake::Snake(const Body & init, bool isPlayer, Direction dir, unsigned id):
     body_           { init },
     direction_      { dir },
     nextDirection_  { dir },
     isAlive_        { true },
-    isPlayer_       { isPlayer }
+    isPlayer_       { isPlayer },
+    id_             { id }
 { }
 
 void Snake::move(void) {
@@ -50,6 +51,10 @@ const Snake::Body & Snake::body(void) const {
 
 Direction Snake::direction(void) const {
     return direction_;
+}
+
+unsigned Snake::id(void) const {
+    return id_;
 }
 
 void Snake::die(void) {

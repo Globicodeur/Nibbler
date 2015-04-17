@@ -47,14 +47,14 @@ gui::Inputs UserInterface::getInputs(void) {
 }
 
 void UserInterface::render(const GameEngine & engine) {
-    gui::GameInfo::Snakes snakeBodies;
+    gui::GameInfo::Snakes snakes;
 
     for (const auto & snake: engine.snakes()) {
         if (snake.isAlive())
-            snakeBodies.push_back(snake.body());
+            snakes.push_back(gui::GameInfo::Snake { snake.id(), snake.body() });
     }
 
-    render({ snakeBodies, engine.food() });
+    render({ snakes, engine.food() });
 }
 
 void UserInterface::render(const gui::GameInfo & info) {

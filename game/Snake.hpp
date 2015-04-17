@@ -10,7 +10,7 @@ class Snake {
 public:
     using Body              = std::vector<Position>;
 
-                            Snake(const Body &, bool, Direction);
+                            Snake(const Body &, bool, Direction, unsigned);
     // 42 norme
                             ~Snake(void)                = default;
                             Snake(void)                 = delete;
@@ -28,6 +28,7 @@ public:
     const Position &        head(void) const;
     const Body &            body(void) const;
     Direction               direction(void) const;
+    unsigned                id(void) const;
 
     void                    die(void);
 
@@ -36,4 +37,5 @@ private:
     Direction               direction_, nextDirection_;
     bool                    isAlive_;
     bool                    isPlayer_;
+    unsigned                id_;
 };

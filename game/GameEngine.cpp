@@ -206,5 +206,5 @@ void GameEngine::spawnPlayer(unsigned id, bool isPlayer) {
             GameOptions::height / 2 - 1 + i * (id % 2 ? 1 : -1)
         );
 
-    snakes_.emplace_back(body, isPlayer, id % 2 ? Up : Down);
+    snakes_.emplace_back(body, isPlayer, id % 2 ? Up : Down, id);
 }

@@ -29,7 +29,12 @@ namespace gui {
     using Inputs = std::vector<Input>;
 
     struct GameInfo {
-        using Snake = std::vector<Position>;
+        struct Snake {
+            using Body = std::vector<Position>;
+
+            unsigned id;
+            Body body;
+        };
         using Snakes = std::vector<Snake>;
 
         Snakes snakes;

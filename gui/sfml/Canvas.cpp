@@ -10,8 +10,6 @@ static const sf::Color COLORS[][2] = {
     { { 128, 32, 128 }, sf::Color::Magenta },
 };
 
-#include <iostream>
-
 SFMLCanvas::SFMLCanvas(unsigned width, unsigned height):
     window_     {
         sf::VideoMode {
@@ -36,12 +34,11 @@ void SFMLCanvas::draw(const gui::GameInfo & info) {
     window_.clear();
 
     drawSpriteAt(info.food, food_);
-    int i = 0;
     for (const auto & snake: info.snakes) {
-        drawSpriteAt(snake.front(), snakes_[i]->head);
-        for (auto it = std::next(snake.begin()); it != snake.end(); ++it)
-            drawSpriteAt(*it, snakes_[i]->body);
-        ++i %= snakes_.size();
+        auto & graphicSnake = snakes_[snake.id % snakes_.size()];
+        drawSpriteAt(snake.body.front(), graphicSnake->head);
+        for (auto it = std::next(snake.body.begin()); it != snake.body.end(); ++it)
+            drawSpriteAt(*it, graphicSnake->body);
     }
 
     window_.display();

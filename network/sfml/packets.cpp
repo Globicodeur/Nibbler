@@ -32,3 +32,33 @@ sf::Packet & operator>>(sf::Packet & p, network::GameInfo & info) {
     p >> info.snakes;
     return p;
 }
+
+sf::Packet & operator<<(sf::Packet & p, const network::GameInfo::Snake & snake) {
+    p << snake.id;
+    p << snake.body;
+    return p;
+}
+
+sf::Packet & operator>>(sf::Packet & p, network::GameInfo::Snake & snake) {
+    p >> snake.id;
+    p >> snake.body;
+    return p;
+}
+
+template <class T>
+sf::Packet & operator>>(sf::Packet & p, std::vector<T> & v) {
+    sf::Uint64 size;
+    p >> size;
+    v.resize(size);
+    for (sf::Uint64 i = 0; i < size; ++i)
+        p >> v[i];
+    return p;
+}
+
+template <class T>
+sf::Packet & operator<<(sf::Packet & p, const std::vector<T> & v) {
+    p << static_cast<sf::Uint64>(v.size());
+    for (const auto & t: v)
+        p << t;
+    return p;
+}

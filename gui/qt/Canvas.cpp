@@ -57,12 +57,11 @@ void QtCanvas::draw(const gui::GameInfo & info) {
     scene_.addPixmap(background_)->setOpacity(0.75);
 
     drawImageAt(info.food, food_);
-    int i = 0;
     for (const auto & snake: info.snakes) {
-        drawImageAt(snake.front(), snakes_[i].head);
-        for (auto it = std::next(snake.begin()); it != snake.end(); ++it)
-            drawImageAt(*it, snakes_[i].body);
-        ++i %= snakes_.size();
+        auto & graphicSnake = snakes_[snake.id % snakes_.size()];
+        drawImageAt(snake.body.front(), graphicSnake.head);
+        for (auto it = std::next(snake.body.begin()); it != snake.body.end(); ++it)
+            drawImageAt(*it, graphicSnake.body);
     }
 }
 
