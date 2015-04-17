@@ -25,11 +25,15 @@ public:
     virtual bool        eventFilter(QObject *, QEvent * event);
 
 private:
+    struct GraphicSnake { QPixmap head, body; };
+    using GraphicSnakes = std::vector<GraphicSnake>;
+
     QApplication        app_;
 
     QGraphicsView       window_;
     QGraphicsScene      scene_;
-    QPixmap             spHead_, spBody_, spFood_, spBackground_;
+    QPixmap             food_, background_;
+    GraphicSnakes       snakes_;
 
     float               boxWidth_, boxHeight_;
 

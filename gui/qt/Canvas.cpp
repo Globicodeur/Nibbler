@@ -2,30 +2,43 @@
 
 #include <QKeyEvent>
 #include <QGraphicsPixmapItem>
+
 #include <unordered_map>
 #include <iterator>
 
 static int FAKE_ARGC = 0;
 static char * FAKE_ARGV[] = { nullptr };
 
+static const std::string SPRITES_PATH_PREFIX = "gui/qt/assets/";
+
+static const std::string SPRITES[][2] = {
+    { "zergling_1.png", "infested_terran_1.png" },
+    { "zergling_2.png", "infested_terran_2.png" },
+    { "zergling_3.png", "infested_terran_3.png" },
+    { "zergling_4.png", "infested_terran_4.png" },
+};
+
 QtCanvas::QtCanvas(unsigned width, unsigned height):
     QObject         { },
     app_            { FAKE_ARGC, FAKE_ARGV },
-    spHead_         { "gui/qt/assets/zergling.png" },
-    spBody_         { "gui/qt/assets/infested_terran.png" },
-    spFood_         { "gui/qt/assets/marine.png" },
-    spBackground_   { "gui/qt/assets/creep.jpg" },
+    food_           { (SPRITES_PATH_PREFIX + "marine.png").c_str() },
+    background_     { (SPRITES_PATH_PREFIX + "creep.jpg").c_str() },
     boxWidth_       { (float)gui::WINDOW_WIDTH / width },
     boxHeight_      { (float)gui::WINDOW_HEIGHT / height } {
 
-    spHead_ = spHead_.scaled(boxWidth_, boxHeight_, Qt::KeepAspectRatioByExpanding);
-    spBody_ = spBody_.scaled(boxWidth_, boxHeight_, Qt::KeepAspectRatioByExpanding);
-    spFood_ = spFood_.scaled(boxWidth_, boxHeight_, Qt::KeepAspectRatioByExpanding);
-    spBackground_ = spBackground_.scaled(
+    food_ = food_.scaled(boxWidth_, boxHeight_, Qt::KeepAspectRatioByExpanding);
+    background_ = background_.scaled(
         gui::WINDOW_WIDTH,
         gui::WINDOW_HEIGHT,
         Qt::KeepAspectRatioByExpanding
     );
+    for (auto spritePair: SPRITES) {
+        QPixmap head { (SPRITES_PATH_PREFIX + spritePair[0]).c_str() };
+        QPixmap body { (SPRITES_PATH_PREFIX + spritePair[1]).c_str() };
+        head = head.scaled(boxWidth_, boxHeight_, Qt::KeepAspectRatioByExpanding);
+        body = body.scaled(boxWidth_, boxHeight_, Qt::KeepAspectRatioByExpanding);
+        snakes_.push_back(GraphicSnake { head, body });
+    }
 
     scene_.setSceneRect(0, 0, gui::WINDOW_WIDTH, gui::WINDOW_HEIGHT);
 
@@ -41,14 +54,15 @@ QtCanvas::QtCanvas(unsigned width, unsigned height):
 void QtCanvas::draw(const gui::GameInfo & info) {
     scene_.clear();
 
-    scene_.addPixmap(spBackground_)->setOpacity(0.75);
+    scene_.addPixmap(background_)->setOpacity(0.75);
 
-    drawImageAt(info.food, spFood_);
-
+    drawImageAt(info.food, food_);
+    int i = 0;
     for (const auto & snake: info.snakes) {
-        drawImageAt(snake.front(), spHead_);
+        drawImageAt(snake.front(), snakes_[i].head);
         for (auto it = std::next(snake.begin()); it != snake.end(); ++it)
-            drawImageAt(*it, spBody_);
+            drawImageAt(*it, snakes_[i].body);
+        ++i %= snakes_.size();
     }
 }
 
