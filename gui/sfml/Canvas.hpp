@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
+#include "Sprite.hpp"
 
 #include "spec.hpp"
 
@@ -20,13 +20,14 @@ public:
     virtual gui::Inputs getInputs(void);
 
 private:
+    struct GraphicSnake { Sprite head, body; };
+    using GraphicSnakes = std::vector<std::unique_ptr<GraphicSnake>>;
+
     sf::RenderWindow    window_;
 
     float               boxWidth_, boxHeight_;
-
-    sf::Image           headImg_, bodyImg_ , foodImg_;
-    sf::Texture         headTx_, bodyTx_ , foodTx_;
-    sf::Sprite          headSp_, bodySp_ , foodSp_;
+    GraphicSnakes       snakes_;
+    Sprite              food_;
 
     void                drawSpriteAt(const Position & pos, sf::Sprite & sprite);
 };

@@ -3,8 +3,17 @@
 #include <unordered_map>
 #include <iterator>
 
+static const sf::Color COLORS[][2] = {
+    { { 32, 128, 32 },  sf::Color::Green   },
+    { { 128, 32, 32 },  sf::Color::Red     },
+    { { 32, 32, 128 },  sf::Color::Blue    },
+    { { 128, 32, 128 }, sf::Color::Magenta },
+};
+
+#include <iostream>
+
 SFMLCanvas::SFMLCanvas(unsigned width, unsigned height):
-    window_ {
+    window_     {
         sf::VideoMode {
             gui::WINDOW_WIDTH,
             gui::WINDOW_HEIGHT
@@ -12,34 +21,27 @@ SFMLCanvas::SFMLCanvas(unsigned width, unsigned height):
         gui::WINDOW_TITLE_PREFIX + "SFML",
         sf::Style::Titlebar | sf::Style::Close
     },
-    boxWidth_ { (float)gui::WINDOW_WIDTH / width },
-    boxHeight_ { (float)gui::WINDOW_HEIGHT / height } {
+    boxWidth_   { (float)gui::WINDOW_WIDTH / width },
+    boxHeight_  { (float)gui::WINDOW_HEIGHT / height },
+    food_       { sf::Color::Yellow, boxWidth_, boxHeight_ } {
 
-    headImg_.create(1, 1, sf::Color { 32, 128, 32 });
-    bodyImg_.create(1, 1, sf::Color::Green);
-    foodImg_.create(1, 1, sf::Color::Yellow);
-
-    headTx_.loadFromImage(headImg_);
-    bodyTx_.loadFromImage(bodyImg_);
-    foodTx_.loadFromImage(foodImg_);
-
-    headSp_.setTexture(headTx_);
-    bodySp_.setTexture(bodyTx_);
-    foodSp_.setTexture(foodTx_);
-
-    headSp_.scale(boxWidth_, boxHeight_);
-    bodySp_.scale(boxWidth_, boxHeight_);
-    foodSp_.scale(boxWidth_, boxHeight_);
+    for (auto colorPair: COLORS)
+        snakes_.emplace_back(new GraphicSnake {
+            { colorPair[0], boxWidth_, boxHeight_ },
+            { colorPair[1], boxWidth_, boxHeight_ },
+        });
 }
 
 void SFMLCanvas::draw(const gui::GameInfo & info) {
     window_.clear();
 
-    drawSpriteAt(info.food, foodSp_);
+    drawSpriteAt(info.food, food_);
+    int i = 0;
     for (const auto & snake: info.snakes) {
-        drawSpriteAt(snake.front(), headSp_);
+        drawSpriteAt(snake.front(), snakes_[i]->head);
         for (auto it = std::next(snake.begin()); it != snake.end(); ++it)
-            drawSpriteAt(*it, bodySp_);
+            drawSpriteAt(*it, snakes_[i]->body);
+        ++i %= snakes_.size();
     }
 
     window_.display();
