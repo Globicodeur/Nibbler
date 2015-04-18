@@ -15,7 +15,10 @@ OBJS			=	$(addprefix $(OBJ_DIR)/, $(SRCS:.cpp=.o))
 
 OBJ_SUB_DIRS	=	$(dir $(OBJS))
 
+DEPENDENCIES	=	boost
+
 all: show_fancy_name
+	@$(foreach dependency, $(DEPENDENCIES), brew ls $(dependency) 2> /dev/null > /dev/null || brew install $(dependency);)
 	@$(MAKE) $(NAME)
 
 $(NAME): $(OBJS)

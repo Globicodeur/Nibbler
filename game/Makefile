@@ -8,6 +8,8 @@ BOOST_PATH		=	$(HOME)/.brew/Cellar/boost/1.57.0
 BOOST_PYTHON	=	$(HOME)/.brew/Cellar/boost-python/1.57.0
 BOOST_LIBS		=	-lboost_program_options -lboost_python
 
+DEPENDENCIES	+=	boost-python
+
 CFLAGS			+=	-I /usr/include/python2.7\
 					-Wno-unused-parameter -Wno-missing-field-initializers
 

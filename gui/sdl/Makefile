@@ -7,6 +7,9 @@ SDL_PATH		=	$(HOME)/.brew/Cellar/sdl2/2.0.3
 SDL_IMAGE_PATH	=	$(HOME)/.brew/Cellar/sdl2_image/2.0.0_1
 SDL_LIBS		=	-lSDL2-2.0.0 -lSDL2_image
 
+DEPENDENCIES	+=	sdl2 sdl2_image
+
+
 CFLAGS			+=	-I $(SDL_PATH)/include \
 					-I $(SDL_IMAGE_PATH)/include \
 					-I $(SDL_PATH)/include/SDL2

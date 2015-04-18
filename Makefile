@@ -31,6 +31,7 @@ TARGET_PATHS		=	$(GAME_TARGET)/$(GAME_NAME)\
 						$(NETWORK_SFML_TARGET)/$(NETWORK_SFML_NAME)\
 
 all:
+	@git submodule init && git submodule update
 	@$(foreach path,$(TARGET_PATHS),\
 		$(MAKE) -C $(dir $(path)) &&\
 		(test -e $(notdir $(path)) || ln -s $(path));\
