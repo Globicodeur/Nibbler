@@ -10,6 +10,8 @@ static const sf::Color COLORS[][2] = {
     { { 128, 32, 128 }, sf::Color::Magenta },
 };
 
+static const std::string FONT_FILE = "./gui/sfml/assets/arial.ttf";
+
 SFMLCanvas::SFMLCanvas(unsigned width, unsigned height):
     window_     {
         sf::VideoMode {
@@ -28,20 +30,33 @@ SFMLCanvas::SFMLCanvas(unsigned width, unsigned height):
             { colorPair[0], boxWidth_, boxHeight_ },
             { colorPair[1], boxWidth_, boxHeight_ },
         });
+
+    font_.loadFromFile(FONT_FILE);
 }
 
 void SFMLCanvas::draw(const gui::GameState & info) {
     window_.clear();
 
     drawSpriteAt(info.food, food_);
-    for (const auto & snake: info.snakes) {
-        auto & graphicSnake = snakes_[snake.id % snakes_.size()];
-        drawSpriteAt(snake.body.front(), graphicSnake->head);
-        for (auto it = std::next(snake.body.begin()); it != snake.body.end(); ++it)
-            drawSpriteAt(*it, graphicSnake->body);
-    }
+    for (const auto & snake: info.snakes)
+        drawSnake(snake);
 
     window_.display();
+}
+
+void SFMLCanvas::drawSnake(const gui::GameState::Snake & snake) {
+    unsigned colorId = snake.id % snakes_.size();
+
+    auto & graphicSnake = snakes_.at(colorId);
+    drawSpriteAt(snake.body.front(), graphicSnake->head);
+    for (auto it = std::next(snake.body.begin()); it != snake.body.end(); ++it)
+        drawSpriteAt(*it, graphicSnake->body);
+
+    auto score = (snake.body.size() - 4) * 10;
+    sf::Text scoreText { std::to_string(score), font_ };
+    scoreText.setPosition(0, snake.id * 30);
+    scoreText.setColor(COLORS[colorId][1]);
+    window_.draw(scoreText);
 }
 
 void SFMLCanvas::drawSpriteAt(const Position & pos, sf::Sprite & sprite) {

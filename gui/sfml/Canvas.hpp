@@ -28,6 +28,8 @@ private:
     float               boxWidth_, boxHeight_;
     GraphicSnakes       snakes_;
     Sprite              food_;
+    sf::Font            font_;
 
+    void                drawSnake(const gui::GameState::Snake & snake);
     void                drawSpriteAt(const Position & pos, sf::Sprite & sprite);
 };
