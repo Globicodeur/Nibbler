@@ -21,14 +21,14 @@ bool SFMLClient::connect(const std::string & host, network::Port port) {
 network::ServerMessages SFMLClient::getMessages(void) {
     network::ServerMessages messages;
     sf::Packet packet;
+    sf::Socket::Status status;
 
-    auto status = socket_.receive(packet);
-    if (status == sf::Socket::Done) {
+    while ((status = socket_.receive(packet)) == sf::Socket::Done) {
         network::ServerMessage message;
         packet >> message;
         messages.push_back(message);
     }
-    else if (status != sf::Socket::NotReady)
+    if (status == sf::Socket::Disconnected || status == sf::Socket::Error)
         connected_ = false;
     return messages;
 }
