@@ -57,12 +57,32 @@ void QtCanvas::draw(const gui::GameState & info) {
     scene_.addPixmap(background_)->setOpacity(0.75);
 
     drawImageAt(info.food, food_);
-    for (const auto & snake: info.snakes) {
-        auto & graphicSnake = snakes_[snake.id % snakes_.size()];
-        drawImageAt(snake.body.front(), graphicSnake.head);
-        for (auto it = std::next(snake.body.begin()); it != snake.body.end(); ++it)
-            drawImageAt(*it, graphicSnake.body);
-    }
+    for (const auto & snake: info.snakes)
+        drawSnake(snake);
+}
+
+static const QColor COLORS[] = {
+    Qt::green,
+    Qt::red,
+    Qt::blue,
+    Qt::magenta,
+};
+
+static const QFont FONT { "Arial", 20 };
+
+void QtCanvas::drawSnake(const gui::GameState::Snake & snake) {
+    unsigned colorId = snake.id % snakes_.size();
+
+    auto & graphicSnake = snakes_[colorId];
+    drawImageAt(snake.body.front(), graphicSnake.head);
+    for (auto it = std::next(snake.body.begin()); it != snake.body.end(); ++it)
+        drawImageAt(*it, graphicSnake.body);
+
+    auto score = (snake.body.size() - 4) * 10;
+    auto scoreItem = scene_.addText(std::to_string(score).c_str());
+    scoreItem->setPos(0, 30 * snake.id);
+    scoreItem->setFont(FONT);
+    scoreItem->setDefaultTextColor(COLORS[colorId]);
 }
 
 void QtCanvas::drawImageAt(const Position & pos, const QPixmap & pixmap) {

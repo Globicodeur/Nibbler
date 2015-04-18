@@ -39,5 +39,6 @@ private:
 
     gui::Inputs         lastInputs_;
 
+    void                drawSnake(const gui::GameState::Snake &);
     void                drawImageAt(const Position & pos, const QPixmap & pixmap);
 };
