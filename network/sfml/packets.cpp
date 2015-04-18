@@ -10,55 +10,39 @@ sf::Packet & operator>>(sf::Packet & p, Position & pos) {
     return p;
 }
 
-sf::Packet & operator<<(sf::Packet & p, const Direction & dir) {
-    return p << static_cast<int>(dir);
-}
-
-sf::Packet & operator>>(sf::Packet & p, Direction & dir) {
-    int raw;
-    p >> raw;
-    dir = static_cast<Direction>(raw);
-    return p;
-}
-
-sf::Packet & operator<<(sf::Packet & p, const network::GameInfo & info) {
+sf::Packet & operator<<(sf::Packet & p, const gui::GameState & info) {
     p << info.food;
     p << info.snakes;
     return p;
 }
 
-sf::Packet & operator>>(sf::Packet & p, network::GameInfo & info) {
+sf::Packet & operator>>(sf::Packet & p, gui::GameState & info) {
     p >> info.food;
     p >> info.snakes;
     return p;
 }
 
-sf::Packet & operator<<(sf::Packet & p, const network::GameInfo::Snake & snake) {
+sf::Packet & operator<<(sf::Packet & p, const gui::GameState::Snake & snake) {
     p << snake.id;
     p << snake.body;
     return p;
 }
 
-sf::Packet & operator>>(sf::Packet & p, network::GameInfo::Snake & snake) {
+sf::Packet & operator>>(sf::Packet & p, gui::GameState::Snake & snake) {
     p >> snake.id;
     p >> snake.body;
     return p;
 }
 
-template <class T>
-sf::Packet & operator>>(sf::Packet & p, std::vector<T> & v) {
-    sf::Uint64 size;
-    p >> size;
-    v.resize(size);
-    for (sf::Uint64 i = 0; i < size; ++i)
-        p >> v[i];
+sf::Packet & operator<<(sf::Packet & p, const network::ServerMessage & var) {
+    p << var.which();
+    boost::apply_visitor(Serializer { p }, var);
     return p;
 }
 
-template <class T>
-sf::Packet & operator<<(sf::Packet & p, const std::vector<T> & v) {
-    p << static_cast<sf::Uint64>(v.size());
-    for (const auto & t: v)
-        p << t;
+sf::Packet & operator>>(sf::Packet & p, network::ServerMessage & var) {
+    int which;
+    p >> which;
+    build<audio::Sound, gui::GameState>(which, p, var);
     return p;
 }

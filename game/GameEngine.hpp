@@ -18,11 +18,9 @@ public:
     GameEngine &        operator=(const GameEngine &)   = delete;
     //
 
-    bool                update(void);
+    void                update(void);
 
     bool                isRunning(void) const;
-    const Snakes &      snakes(void) const;
-    const Position &    food(void) const;
 
 private:
     using StepTimer     = Timer<std::chrono::milliseconds>;
@@ -41,4 +39,5 @@ private:
     void                resolveSnakeCollisions(void);
     void                spawnFood(void);
     void                spawnPlayer(unsigned id, bool isPlayer);
+    void                notifyDraw(void);
 };

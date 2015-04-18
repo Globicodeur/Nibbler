@@ -19,7 +19,7 @@ public:
     QtCanvas &          operator=(const QtCanvas &) = delete;
     //
 
-    virtual void        draw(const gui::GameInfo & info);
+    virtual void        draw(const gui::GameState & info);
     virtual gui::Inputs getInputs(void);
 
     virtual bool        eventFilter(QObject *, QEvent * event);

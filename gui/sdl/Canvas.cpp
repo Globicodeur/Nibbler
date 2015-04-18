@@ -63,7 +63,7 @@ void SDLCanvas::drawBackground(void) {
     SDL_RenderCopy(renderer_, background_->texture(), 0, &rect);
 }
 
-void SDLCanvas::draw(const gui::GameInfo & info) {
+void SDLCanvas::draw(const gui::GameState & info) {
     SDL_RenderClear(renderer_);
 
     drawBackground();

@@ -28,7 +28,7 @@ namespace gui {
 
     using Inputs = std::vector<Input>;
 
-    struct GameInfo {
+    struct GameState {
         struct Snake {
             using Body = std::vector<Position>;
 
@@ -51,7 +51,7 @@ namespace gui {
 
         virtual             ~Canvas(void)           = default;
 
-        virtual void        draw(const GameInfo &)  = 0;
+        virtual void        draw(const GameState &)  = 0;
         virtual Inputs      getInputs(void)         = 0;
 
     };

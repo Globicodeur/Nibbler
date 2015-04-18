@@ -9,6 +9,7 @@ namespace spec {
         Exit,
         ChangeGui,
         PlaySound,
+        Draw,
     };
 
     using EventDispatcher = signals::literal::from<Event>;

@@ -18,18 +18,19 @@ bool SFMLClient::connect(const std::string & host, network::Port port) {
     return false;
 }
 
-network::GameState SFMLClient::getGameState(void) {
-    network::GameState state;
+network::ServerMessages SFMLClient::getMessages(void) {
+    network::ServerMessages messages;
     sf::Packet packet;
 
     auto status = socket_.receive(packet);
     if (status == sf::Socket::Done) {
-        state.reset(new network::GameInfo);
-        packet >> *state;
+        network::ServerMessage message;
+        packet >> message;
+        messages.push_back(message);
     }
     else if (status != sf::Socket::NotReady)
         connected_ = false;
-    return state;
+    return messages;
 }
 
 SFMLClient::Dimensions SFMLClient::getDimensions(void) {

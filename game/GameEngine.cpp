@@ -8,6 +8,7 @@
 
 #include "spec.hpp"
 #include "audio/spec.hpp"
+#include "gui/spec.hpp"
 
 #include <algorithm>
 #include <cstdlib>
@@ -21,17 +22,19 @@ GameEngine::GameEngine(void):
     running_        { true },
     stepInterval_   { DEFAULT_STEP_INTERVAL } {
 
-    Dispatcher::on_<Event::ChangeDirection>(
-        [this](size_t i, Direction dir) { turnSnake(i, dir); }
-    );
-    Dispatcher::on<Event::Exit>([this] { running_ = false; });
+    Dispatcher::on_<Event::ChangeDirection>([this](size_t i, Direction dir) {
+        turnSnake(i, dir);
+    });
+    Dispatcher::on<Event::Exit>([this] {
+        running_ = false;
+    });
 
     for (unsigned i = 0; i < GameOptions::snakeCount; ++i)
         spawnPlayer(i, i < GameOptions::playerCount);
     spawnFood();
 }
 
-bool GameEngine::update(void) {
+void GameEngine::update(void) {
     if (timer_.elapsed() >= stepInterval_) {
         timer_.reset();
 
@@ -49,21 +52,13 @@ bool GameEngine::update(void) {
         );
         if (!anyAlive)
             running_ = false;
-        return true;
+
+        notifyDraw();
     }
-    return false;
 }
 
 bool GameEngine::isRunning(void) const {
     return running_;
-}
-
-const GameEngine::Snakes & GameEngine::snakes(void) const {
-    return snakes_;
-}
-
-const Position & GameEngine::food(void) const {
-    return food_;
 }
 
 void GameEngine::turnSnake(size_t i, Direction dir) {
@@ -207,4 +202,15 @@ void GameEngine::spawnPlayer(unsigned id, bool isPlayer) {
         );
 
     snakes_.emplace_back(body, isPlayer, id % 2 ? Up : Down, id);
+}
+
+void GameEngine::notifyDraw() {
+    gui::GameState::Snakes snakes;
+
+    for (const auto & snake: snakes_) {
+        if (snake.isAlive())
+            snakes.push_back(gui::GameState::Snake { snake.id(), snake.body() });
+    }
+
+    Dispatcher::emit<Event::Draw>(gui::GameState { snakes, food_ });
 }

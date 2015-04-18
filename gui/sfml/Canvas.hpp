@@ -16,7 +16,7 @@ public:
     SFMLCanvas &        operator=(const SFMLCanvas &)   = delete;
     //
 
-    virtual void        draw(const gui::GameInfo & info);
+    virtual void        draw(const gui::GameState & info);
     virtual gui::Inputs getInputs(void);
 
 private:

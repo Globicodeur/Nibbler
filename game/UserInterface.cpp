@@ -1,7 +1,6 @@
 #include "UserInterface.hpp"
 
 #include "GameOptions.hpp"
-#include "GameEngine.hpp"
 
 #include "spec.hpp"
 
@@ -27,10 +26,13 @@ UserInterface::UserInterface(void) {
         graphics_.swap(i), audio_.swap(i);
     };
 
+    Dispatcher::on_<Event::Draw>([this](const gui::GameState & info) {
+        graphics_->draw(info);
+    });
+    Dispatcher::on_<Event::PlaySound>([this](audio::Sound sound) {
+        audio_->play(sound);
+    });
     Dispatcher::on<Event::ChangeGui, size_t>(swapInterface);
-    Dispatcher::on_<Event::PlaySound>(
-        [this](audio::Sound sound) { audio_->play(sound); }
-    );
 
     graphics_.load(
         GRAPHIC_LIBRARY_NAMES,
@@ -44,19 +46,4 @@ UserInterface::UserInterface(void) {
 
 gui::Inputs UserInterface::getInputs(void) {
     return graphics_->getInputs();
-}
-
-void UserInterface::render(const GameEngine & engine) {
-    gui::GameInfo::Snakes snakes;
-
-    for (const auto & snake: engine.snakes()) {
-        if (snake.isAlive())
-            snakes.push_back(gui::GameInfo::Snake { snake.id(), snake.body() });
-    }
-
-    render({ snakes, engine.food() });
-}
-
-void UserInterface::render(const gui::GameInfo & info) {
-    graphics_->draw(info);
 }

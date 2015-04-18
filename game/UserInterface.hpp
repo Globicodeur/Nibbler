@@ -5,8 +5,6 @@
 #include "gui/spec.hpp"
 #include "audio/spec.hpp"
 
-class GameEngine;
-
 class UserInterface {
 
     using GraphicsManager   = SharedObjectCollection<gui::Canvas>;
@@ -21,8 +19,6 @@ public:
     //
 
     gui::Inputs             getInputs(void);
-    void                    render(const GameEngine &);
-    void                    render(const gui::GameInfo &);
 
 private:
     GraphicsManager         graphics_;

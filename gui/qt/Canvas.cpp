@@ -51,7 +51,7 @@ QtCanvas::QtCanvas(unsigned width, unsigned height):
     app_.processEvents();
 }
 
-void QtCanvas::draw(const gui::GameInfo & info) {
+void QtCanvas::draw(const gui::GameState & info) {
     scene_.clear();
 
     scene_.addPixmap(background_)->setOpacity(0.75);

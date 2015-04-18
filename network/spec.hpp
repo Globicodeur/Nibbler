@@ -1,22 +1,28 @@
 #pragma once
 
 #include <vector>
+#include <boost/variant/variant.hpp>
 
 #include "../gui/spec.hpp"
+#include "../audio/spec.hpp"
 #include "../Tools/Direction.hpp"
 
 namespace network {
 
-    using gui::GameInfo;
+    using Port = unsigned short;
 
-    struct Message {
+    struct ClientMessage {
         size_t id;
         Direction direction;
     };
 
-    using Messages = std::vector<Message>;
+    using ClientMessages = std::vector<ClientMessage>;
 
-    using Port = unsigned short;
+    using ServerMessage = boost::variant<
+        audio::Sound,
+        gui::GameState
+    >;
+    using ServerMessages = std::vector<ServerMessage>;
 
     struct Server {
 
@@ -25,13 +31,11 @@ namespace network {
             static constexpr const char * getterName() { return "getServer"; }
         };
 
-        virtual bool        listen(Port port)                       = 0;
-        virtual void        sendGameState(const GameInfo & info)    = 0;
-        virtual Messages    getMessages(void)                       = 0;
+        virtual bool            listen(Port port)                           = 0;
+        virtual void            sendMessage(const ServerMessage & message)  = 0;
+        virtual ClientMessages  getMessages(void)                           = 0;
 
     };
-
-    using GameState = std::shared_ptr<GameInfo>;
 
     struct Client {
 
@@ -42,11 +46,11 @@ namespace network {
             static constexpr const char * getterName() { return "getClient"; }
         };
 
-        virtual bool        connect(const std::string & host, Port port)    = 0;
-        virtual GameState   getGameState(void)                              = 0;
-        virtual Dimensions  getDimensions(void)                             = 0;
-        virtual void        sendDirection(Direction direction)              = 0;
-        virtual bool        isConnected(void)                               = 0;
+        virtual bool            connect(const std::string & host, Port port)    = 0;
+        virtual Dimensions      getDimensions(void)                             = 0;
+        virtual ServerMessages  getMessages(void)                               = 0;
+        virtual void            sendDirection(Direction direction)              = 0;
+        virtual bool            isConnected(void)                               = 0;
 
     };
 

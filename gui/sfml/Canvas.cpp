@@ -30,7 +30,7 @@ SFMLCanvas::SFMLCanvas(unsigned width, unsigned height):
         });
 }
 
-void SFMLCanvas::draw(const gui::GameInfo & info) {
+void SFMLCanvas::draw(const gui::GameState & info) {
     window_.clear();
 
     drawSpriteAt(info.food, food_);

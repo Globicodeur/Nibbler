@@ -28,22 +28,22 @@ bool SFMLServer::listen(network::Port port) {
     return false;
 }
 
-void SFMLServer::sendGameState(const network::GameInfo & info) {
+void SFMLServer::sendMessage(const network::ServerMessage & message) {
     sf::Packet packet;
 
-    packet << info;
+    packet << message;
     for (const auto & client: clients_)
         client.second->send(packet);
 }
 
-network::Messages SFMLServer::getMessages(void) {
+network::ClientMessages SFMLServer::getMessages(void) {
     acceptNewConnection();
 
-    network::Messages messages;
+    network::ClientMessages messages;
     for (const auto & client: clients_) {
         sf::Packet packet;
         while (client.second->receive(packet) == sf::Socket::Done) {
-            network::Message message;
+            network::ClientMessage message;
             message.id = client.first;
             packet >> message.direction;
             messages.push_back(message);
