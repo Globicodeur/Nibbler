@@ -45,6 +45,8 @@ public:
 
     void init(void) {
         interface_.reset(initF_());
+        if (!interface_)
+            throw std::runtime_error { "Null shared object interface" };
     }
 
     Interface * get(void) {
