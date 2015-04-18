@@ -51,7 +51,7 @@ static po::options_description getUsage(void) {
                             -> notifier(validateRange(1, 4, "snakes")),
                         "Number of snakes")
         ("players,p",   po::value(&GameOptions::playerCount)
-                            -> notifier(validateRange(0, 2, "players")),
+                            -> notifier(validateRange(0, 4, "players")),
                         "Number of players")
         ("script",      po::value(&GameOptions::aiFile),
                         "Python script file for AIs")
