@@ -33,16 +33,3 @@ sf::Packet & operator>>(sf::Packet & p, gui::GameState::Snake & snake) {
     p >> snake.body;
     return p;
 }
-
-sf::Packet & operator<<(sf::Packet & p, const network::ServerMessage & var) {
-    p << var.which();
-    boost::apply_visitor(Serializer { p }, var);
-    return p;
-}
-
-sf::Packet & operator>>(sf::Packet & p, network::ServerMessage & var) {
-    int which;
-    p >> which;
-    build<audio::Sound, gui::GameState>(which, p, var);
-    return p;
-}
