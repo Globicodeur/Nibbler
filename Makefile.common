@@ -38,7 +38,7 @@ depend: .depend
 
 .depend: $(SRCS)
 	@rm -f ./.depend
-	@$(foreach src, $^, $(COMPILER) $(CFLAGS) -MM -MT $(OBJ_DIR)/./$(src:.cpp=.o) $(src) >> ./.depend;)
+	@$(foreach src, $^, $(COMPILER) $(CFLAGS) -MM -MT $(OBJ_DIR)/./$(src:.cpp=.o) $(src) >> ./.depend 2> /dev/null;)
 
 -include .depend
 
@@ -57,6 +57,7 @@ re:
 
 show_fancy_name:
 	@echo "\n$(bold)$(yellow)==> $(NAME)$(reset)"
+
 
 # ANSI helpers
 ansi			=	\033[$1m
