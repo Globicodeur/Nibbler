@@ -1,4 +1,4 @@
-def ai(snake, others, food):
+def ai(*args):
     # Mhhh what to do...
     while True:
         pass

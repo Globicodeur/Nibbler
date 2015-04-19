@@ -16,7 +16,7 @@ OPPOSITES = [
     Direction.Left,
 ]
 
-def ai(snake, others, food):
+def ai(snake, others, food, obstacles):
     metrics = dict()
     metrics[Direction.Up] = food.y < snake.head().y
     metrics[Direction.Down] = food.y > snake.head().y

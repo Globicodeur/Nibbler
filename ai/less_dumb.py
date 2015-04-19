@@ -24,7 +24,7 @@ DELTAS = [
     Position(1,  0),
 ]
 
-def is_obstacle(pos, snakes):
+def is_obstacle(pos, snakes, obstacles):
     # Borders
     if not GameOptions.torus:
         if pos.x < 0 or pos.x >= GameOptions.width or\
@@ -33,9 +33,14 @@ def is_obstacle(pos, snakes):
     else:
         pos = Position(pos.x % GameOptions.width, pos.y % GameOptions.height)
 
+    # Snakes
     for snake in snakes:
         if pos in snake:
             return True
+    # Obstacles
+    if pos in obstacles:
+        return True
+
     return False
 
 def goto_food_metric(metrics, snake, food):
@@ -55,15 +60,15 @@ def goto_food_metric(metrics, snake, food):
         metrics[Direction.Right] += distLeft and distLeft >= distRight
 
 
-def dont_die_metric(metrics, snake, snakes):
+def dont_die_metric(metrics, snake, snakes, obstacles):
     for direction in ALL_DIRS:
         next_head = snake.head() + DELTAS[direction]
-        metrics[direction] += (not is_obstacle(next_head, snakes)) * 2
+        metrics[direction] += (not is_obstacle(next_head, snakes, obstacles)) * 2
 
-def ai(snake, snakes, food):
+def ai(snake, snakes, food, obstacles):
     metrics = defaultdict(float)
     goto_food_metric(metrics, snake, food)
-    dont_die_metric(metrics, snake, snakes)
+    dont_die_metric(metrics, snake, snakes, obstacles)
     # resolve
     del metrics[OPPOSITES[snake.direction]]
     best_dir = max(metrics, key=metrics.get)

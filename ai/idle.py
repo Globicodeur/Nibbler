@@ -1,2 +1,2 @@
-def ai(snake, others, food):
+def ai(*args):
     pass

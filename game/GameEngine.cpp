@@ -140,7 +140,7 @@ void GameEngine::execAi(Snake & snake) {
     Python::exec(
         [this, &snake, &bodies](const auto & globals) {
             auto ai = globals["ai"];
-            ai(boost::ref(snake), bodies, food_);
+            ai(boost::ref(snake), bodies, food_, obstacles_);
         },
         std::max(timeout / 2, 1l) // Being extra careful here
     );
