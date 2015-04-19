@@ -32,7 +32,7 @@ private:
 
     QGraphicsView       window_;
     QGraphicsScene      scene_;
-    QPixmap             food_, background_;
+    QPixmap             food_, obstacle_, background_;
     GraphicSnakes       snakes_;
 
     float               boxWidth_, boxHeight_;

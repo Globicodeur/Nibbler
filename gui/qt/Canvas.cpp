@@ -22,11 +22,13 @@ QtCanvas::QtCanvas(unsigned width, unsigned height):
     QObject         { },
     app_            { FAKE_ARGC, FAKE_ARGV },
     food_           { (SPRITES_PATH_PREFIX + "marine.png").c_str() },
+    obstacle_       { (SPRITES_PATH_PREFIX + "immortal.png").c_str() },
     background_     { (SPRITES_PATH_PREFIX + "creep.jpg").c_str() },
     boxWidth_       { (float)gui::WINDOW_WIDTH / width },
     boxHeight_      { (float)gui::WINDOW_HEIGHT / height } {
 
     food_ = food_.scaled(boxWidth_, boxHeight_, Qt::KeepAspectRatioByExpanding);
+    obstacle_ = obstacle_.scaled(boxWidth_, boxHeight_, Qt::KeepAspectRatioByExpanding);
     background_ = background_.scaled(
         gui::WINDOW_WIDTH,
         gui::WINDOW_HEIGHT,
@@ -59,6 +61,8 @@ void QtCanvas::draw(const gui::GameState & info) {
     drawImageAt(info.food, food_);
     for (const auto & snake: info.snakes)
         drawSnake(snake);
+    for (const auto & obstacle: info.obstacles)
+        drawImageAt(obstacle, obstacle_);
 }
 
 static const QColor COLORS[] = {
