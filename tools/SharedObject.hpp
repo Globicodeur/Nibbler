@@ -23,7 +23,7 @@ public:
 
         // Acquiring the interface creation function
         auto getterFn = reinterpret_cast<typename SOInfo::Getter>(
-            dlsym(handle_, SOInfo::getterName())
+            dlsym(handle_, SOInfo::getterName)
         );
         char *error = dlerror();
         if (error)
@@ -39,6 +39,7 @@ public:
     }
 
     // 42 norme
+    SharedObject(void)                              = delete;
     SharedObject(const SharedObject &)              = delete;
     SharedObject & operator=(const SharedObject &)  = delete;
     //

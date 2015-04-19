@@ -28,7 +28,7 @@ namespace network {
 
         struct SharedObjectInfo {
             using Getter = Server * (*)(unsigned, unsigned);
-            static constexpr const char * getterName() { return "getServer"; }
+            static constexpr const char * getterName = "getServer";
         };
 
         virtual bool            listen(Port port)                           = 0;
@@ -44,7 +44,7 @@ namespace network {
 
         struct SharedObjectInfo {
             using Getter = Client * (*)(void);
-            static constexpr const char * getterName() { return "getClient"; }
+            static constexpr const char * getterName = "getClient";
         };
 
         virtual bool            connect(const std::string & host, Port port)    = 0;

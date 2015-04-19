@@ -48,12 +48,12 @@ namespace gui {
         // Dependent type for SharedObject usability
         struct SharedObjectInfo {
             using Getter = Canvas * (*)(unsigned, unsigned);
-            static constexpr const char * getterName() { return "get"; };
+            static constexpr const char * getterName = "get";
         };
 
         virtual             ~Canvas(void)           = default;
 
-        virtual void        draw(const GameState &)  = 0;
+        virtual void        draw(const GameState &) = 0;
         virtual Inputs      getInputs(void)         = 0;
 
     };

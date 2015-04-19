@@ -7,19 +7,21 @@ class Timer {
 
 public:
 
-    Timer():
+    Timer(void):
         t0_ { clock::now() }
     { }
 
-    ~Timer() = default;
+    // 42 norme
+    ~Timer(void) = default;
     Timer(const Timer &) = default;
     Timer & operator=(const Timer &) = default;
+    //
 
-    void reset() {
+    void reset(void) {
         t0_ = clock::now();
     }
 
-    typename Precision::rep elapsed() {
+    typename Precision::rep elapsed(void) {
         auto t1 = clock::now();
         auto duration = std::chrono::duration_cast<Precision>(t1 - t0_);
 

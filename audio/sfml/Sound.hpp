@@ -9,6 +9,7 @@ public:
                     SFMLSound(const std::string &);
 
     // 42 norme
+                    SFMLSound(void)                 = delete;
                     ~SFMLSound(void)                = default;
                     SFMLSound(const SFMLSound &)    = delete;
     SFMLSound &     operator=(const SFMLSound &)    = delete;

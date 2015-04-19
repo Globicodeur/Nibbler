@@ -11,7 +11,7 @@ namespace audio {
 
         struct SharedObjectInfo {
             using Getter = Player * (*)(void);
-            static constexpr const char * getterName() { return "get"; }
+            static constexpr const char * getterName = "get";
         };
 
         virtual         ~Player(void)       = default;
