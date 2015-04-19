@@ -18,6 +18,7 @@ public:
     //
 
     virtual bool                    listen(network::Port port);
+    virtual void                    waitFor(unsigned players);
     virtual void                    sendMessage(const network::ServerMessage &);
     virtual network::ClientMessages getMessages(void);
 
@@ -32,5 +33,5 @@ private:
 
     unsigned                        width_, height_;
 
-    void                            acceptNewConnection(void);
+    bool                            acceptNewConnection(void);
 };

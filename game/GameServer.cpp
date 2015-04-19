@@ -23,6 +23,8 @@ GameServer::GameServer(void):
 
     if (!server_->listen(GameOptions::port))
         throw std::system_error { errno, std::system_category() };
+
+    server_->waitFor(GameOptions::playerCount);
 }
 
 network::ClientMessages GameServer::getMessages(void) {

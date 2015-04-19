@@ -32,6 +32,7 @@ namespace network {
         };
 
         virtual bool            listen(Port port)                           = 0;
+        virtual void            waitFor(unsigned players)                   = 0;
         virtual void            sendMessage(const ServerMessage & message)  = 0;
         virtual ClientMessages  getMessages(void)                           = 0;
 

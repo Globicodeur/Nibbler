@@ -2,6 +2,8 @@
 
 #include "packets.hpp"
 
+#include <unistd.h>
+
 size_t SFMLServer::idCounter { 0 };
 
 SFMLServer::SFMLServer(unsigned width, unsigned height):
@@ -12,7 +14,6 @@ SFMLServer::SFMLServer(unsigned width, unsigned height):
 }
 
 SFMLServer::~SFMLServer(void) {
-    server_.close();
     for (const auto & client: clients_) {
         sf::Packet dummy;
         while (client.second->receive(dummy) == sf::Socket::Done)
@@ -20,12 +21,21 @@ SFMLServer::~SFMLServer(void) {
         client.second->disconnect();
     }
     clients_.clear();
+    server_.close();
 }
 
 bool SFMLServer::listen(network::Port port) {
     if (server_.listen(port) == sf::Socket::Done)
         return true;
     return false;
+}
+
+void SFMLServer::waitFor(unsigned players) {
+    while (players) {
+        if (acceptNewConnection())
+            --players;
+        usleep(10000);
+    }
 }
 
 void SFMLServer::sendMessage(const network::ServerMessage & message) {
@@ -37,7 +47,7 @@ void SFMLServer::sendMessage(const network::ServerMessage & message) {
 }
 
 network::ClientMessages SFMLServer::getMessages(void) {
-    acceptNewConnection();
+    acceptNewConnection(); // Allowing viewers
 
     network::ClientMessages messages;
     for (const auto & client: clients_) {
@@ -52,7 +62,7 @@ network::ClientMessages SFMLServer::getMessages(void) {
     return messages;
 }
 
-void SFMLServer::acceptNewConnection(void) {
+bool SFMLServer::acceptNewConnection(void) {
     Client client { new sf::TcpSocket };
 
     if (server_.accept(*client) == sf::Socket::Done)
@@ -62,5 +72,7 @@ void SFMLServer::acceptNewConnection(void) {
         client->send(packet);
         client->setBlocking(false);
         clients_.emplace(idCounter++, client);
+        return true;
     }
+    return false;
 }
