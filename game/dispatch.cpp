@@ -34,10 +34,22 @@ namespace spec {
     }
 
     void dispatchMessage(const network::ClientMessage & message) {
-        EventDispatcher::emit<Event::ChangeDirection>(
-            message.id,
-            message.direction
-        );
+        static struct Visitor: boost::static_visitor<> {
+
+            void operator()(const network::ChangeDirection & message) const {
+                EventDispatcher::emit<Event::ChangeDirection>(
+                    message.id,
+                    message.direction
+                );
+            }
+
+            void operator()(const network::Left & left) const {
+                EventDispatcher::emit<Event::NetworkPlayerLeft>(left.id);
+            }
+
+        } visitor;
+
+        boost::apply_visitor(visitor, message);
     }
 
     void dispatchMessage(const network::ServerMessage & message) {

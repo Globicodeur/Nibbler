@@ -10,6 +10,7 @@ namespace spec {
         ChangeGui,
         PlaySound,
         Draw,
+        NetworkPlayerLeft,
     };
 
     using EventDispatcher = signals::literal::from<Event>;

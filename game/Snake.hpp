@@ -31,6 +31,7 @@ public:
     unsigned                id(void) const;
 
     void                    die(void);
+    void                    installAi(void);
 
 private:
     Body                    body_;

@@ -11,10 +11,19 @@ namespace network {
 
     using Port = unsigned short;
 
-    struct ClientMessage {
+    struct ChangeDirection {
         size_t id;
         Direction direction;
     };
+
+    struct Left {
+        size_t id;
+    };
+
+    using ClientMessage = boost::variant<
+        ChangeDirection,
+        Left
+    >;
 
     using ClientMessages = std::vector<ClientMessage>;
 

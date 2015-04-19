@@ -50,16 +50,28 @@ void SFMLServer::sendMessage(const network::ServerMessage & message) {
 network::ClientMessages SFMLServer::getMessages(void) {
     acceptNewConnection(); // Allowing viewers
 
+    std::vector<size_t> leftIds;
+
     network::ClientMessages messages;
     for (const auto & client: clients_) {
         sf::Packet packet;
-        while (client.second->receive(packet) == sf::Socket::Done) {
-            network::ClientMessage message;
+        sf::Socket::Status status;
+        while ((status = client.second->receive(packet)) == sf::Socket::Done) {
+            network::ChangeDirection message;
             message.id = client.first;
             packet >> message.direction;
             messages.push_back(message);
         }
+        if (status == sf::Socket::Disconnected) {
+            messages.push_back(network::Left { client.first });
+            leftIds.push_back(client.first);
+        }
     }
+
+    // Removing clients that left
+    for (auto id: leftIds)
+        clients_.erase(id);
+
     return messages;
 }
 

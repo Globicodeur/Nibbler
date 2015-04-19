@@ -28,6 +28,9 @@ GameEngine::GameEngine(void):
     Dispatcher::on<Event::Exit>([this] {
         running_ = false;
     });
+    Dispatcher::on_<Event::NetworkPlayerLeft>([this](size_t i) {
+        snakes_[i].installAi();
+    });
 
     for (unsigned i = 0; i < GameOptions::snakeCount; ++i)
         spawnPlayer(i, i < GameOptions::playerCount);

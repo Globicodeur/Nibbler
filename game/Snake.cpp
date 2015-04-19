@@ -60,3 +60,7 @@ unsigned Snake::id(void) const {
 void Snake::die(void) {
     isAlive_ = false;
 }
+
+void Snake::installAi(void) {
+    isPlayer_ = false;
+}
