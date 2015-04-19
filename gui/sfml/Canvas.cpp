@@ -39,10 +39,10 @@ void SFMLCanvas::draw(const gui::GameState & info) {
     window_.clear();
 
     drawSpriteAt(info.food, food_);
-    for (const auto & snake: info.snakes)
-        drawSnake(snake);
     for (const auto & obstacle: info.obstacles)
         drawSpriteAt(obstacle, obstacle_);
+    for (const auto & snake: info.snakes)
+        drawSnake(snake);
 
     window_.display();
 }

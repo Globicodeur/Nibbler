@@ -59,10 +59,10 @@ void QtCanvas::draw(const gui::GameState & info) {
     scene_.addPixmap(background_)->setOpacity(0.75);
 
     drawImageAt(info.food, food_);
-    for (const auto & snake: info.snakes)
-        drawSnake(snake);
     for (const auto & obstacle: info.obstacles)
         drawImageAt(obstacle, obstacle_);
+    for (const auto & snake: info.snakes)
+        drawSnake(snake);
 }
 
 static const QColor COLORS[] = {

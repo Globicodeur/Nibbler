@@ -69,14 +69,14 @@ void SDLCanvas::draw(const gui::GameState & info) {
 
     drawBackground();
     drawSprite(info.food, *food_);
+    for (const auto & obstacle: info.obstacles)
+        drawSprite(obstacle, *obstacle_);
     for (const auto & snake: info.snakes) {
         auto & graphicSnake = snakes_[snake.id % snakes_.size()];
         drawSprite(snake.body.front(), graphicSnake->head);
         for (auto it = std::next(snake.body.begin()); it != snake.body.end(); ++it)
             drawSprite(*it, graphicSnake->body);
     }
-    for (const auto & obstacle: info.obstacles)
-        drawSprite(obstacle, *obstacle_);
 
     SDL_RenderPresent(renderer_);
 }
