@@ -8,6 +8,7 @@ namespace po = boost::program_options;
 int                 GameOptions::width          { 32 };
 int                 GameOptions::height         { 18 };
 bool                GameOptions::torus          { false };
+bool                GameOptions::obstacles      { false };
 unsigned            GameOptions::snakeCount     { 1 };
 unsigned            GameOptions::playerCount    { 1 };
 std::string         GameOptions::aiFile         { "ai/idle.py" };
@@ -47,6 +48,8 @@ static po::options_description getUsage(void) {
                         "The height of the game arena")
         ("torus,t",     po::bool_switch(&GameOptions::torus),
                         "Torus mode")
+        ("obstacles,o", po::bool_switch(&GameOptions::obstacles),
+                        "Add obstacles on the map")
         ("snakes,s",    po::value(&GameOptions::snakeCount)
                             -> notifier(validateRange(1, 4, "snakes")),
                         "Number of snakes")

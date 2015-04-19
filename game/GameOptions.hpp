@@ -7,6 +7,7 @@ struct GameOptions {
 
     static int          width, height;
     static bool         torus;
+    static bool         obstacles;
     static unsigned     snakeCount;
     static unsigned     playerCount;
     static std::string  aiFile;

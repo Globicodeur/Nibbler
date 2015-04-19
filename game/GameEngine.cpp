@@ -31,6 +31,8 @@ GameEngine::GameEngine(void):
 
     for (unsigned i = 0; i < GameOptions::snakeCount; ++i)
         spawnPlayer(i, i < GameOptions::playerCount);
+    if (GameOptions::obstacles)
+        spawnObstacles();
     spawnFood();
 }
 
@@ -97,6 +99,10 @@ void GameEngine::updateSnake(Snake & snake) {
         Dispatcher::emit<Event::PlaySound>(audio::Sound::FoodEaten);
         spawnFood();
     }
+
+    // Check obstacle collision
+    if (inObstacle(head))
+        killSnake(snake);
 
     // Check snake collision with itself
     auto bodyIt = std::find(
@@ -168,25 +174,35 @@ void GameEngine::resolveSnakeCollisions(void) {
         killSnake(snakes_.at(i));
 }
 
-void GameEngine::spawnFood(void) {
-    static const auto foodInSnake = [this](const auto & snake) {
+bool GameEngine::inSnakes(const Position & position) const {
+    auto inSnake = [&](const auto & snake) {
         auto bodyIt = std::find(
             snake.body().begin(),
             snake.body().end(),
-            food_
+            position
         );
         return bodyIt != snake.body().end();
     };
 
-    bool inABody;
+    return std::any_of(snakes_.begin(), snakes_.end(), inSnake);
+}
+
+bool GameEngine::inObstacle(const Position & position) const {
+    auto obstacleIt = std::find(
+        obstacles_.begin(),
+        obstacles_.end(),
+        position
+    );
+    return obstacleIt != obstacles_.end();
+}
+
+void GameEngine::spawnFood(void) {
     do {
-        food_ = { rand() % GameOptions::width, rand() % GameOptions::height };
-        inABody = std::any_of(
-            snakes_.begin(),
-            snakes_.end(),
-            foodInSnake
-        );
-    } while (inABody);
+        food_ = {
+            rand() % GameOptions::width,
+            rand() % GameOptions::height
+        };
+    } while (inSnakes(food_) || inObstacle(food_));
 }
 
 void GameEngine::spawnPlayer(unsigned id, bool isPlayer) {
@@ -204,13 +220,53 @@ void GameEngine::spawnPlayer(unsigned id, bool isPlayer) {
     snakes_.emplace_back(body, isPlayer, id % 2 ? Up : Down, id);
 }
 
-void GameEngine::notifyDraw() {
+void GameEngine::spawnObstacles(void) {
+    static const auto OBSTACLE_RATIO = 0.03;
+    static const auto tooCloseToSnakes = [this](const Position & pos) {
+        auto tooClose = [&pos](const Position & other) {
+            auto dist = std::hypot(pos.x - other.x, pos.y - other.y);
+            return dist < 5.;
+        };
+        auto tooCloseToSnake = [&tooClose](const Snake & snake) {
+            return std::any_of(
+                snake.body().begin(),
+                snake.body().end(),
+                tooClose
+            );
+        };
+        return std::any_of(snakes_.begin(), snakes_.end(), tooCloseToSnake);
+    };
+
+    Position obstacle;
+    unsigned obstacleCount = GameOptions::width * GameOptions::height * OBSTACLE_RATIO;
+
+    while (obstacleCount--) {
+        auto maxRetries = 20; // Avoid infinite loops on small maps
+        do {
+            obstacle = {
+                rand() % GameOptions::width,
+                rand() % GameOptions::height
+            };
+            if (!--maxRetries)
+                break ;
+        } while (tooCloseToSnakes(obstacle) || inObstacle(obstacle));
+
+        if (maxRetries)
+            obstacles_.push_back(obstacle);
+    }
+}
+
+void GameEngine::notifyDraw() const {
     gui::GameState::Snakes snakes;
 
     for (const auto & snake: snakes_) {
         if (snake.isAlive())
-            snakes.push_back(gui::GameState::Snake { snake.id(), snake.body() });
+            snakes.push_back({ snake.id(), snake.body() });
     }
 
-    Dispatcher::emit<Event::Draw>(gui::GameState { snakes, food_ });
+    Dispatcher::emit<Event::Draw, gui::GameState>({
+        snakes,
+        food_,
+        obstacles_
+    });
 }

@@ -36,9 +36,11 @@ namespace gui {
             Body body;
         };
         using Snakes = std::vector<Snake>;
+        using Obstacles = std::vector<Position>;
 
         Snakes snakes;
         Position food;
+        Obstacles obstacles;
     };
 
     struct Canvas {
