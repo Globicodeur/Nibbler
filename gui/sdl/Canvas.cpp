@@ -33,6 +33,7 @@ SDLCanvas::SDLCanvas(unsigned width, unsigned height):
 
     food_.reset(new Sprite { SPRITES_PATH_PREFIX + "shinobu.png", renderer_ });
     background_.reset(new Sprite { SPRITES_PATH_PREFIX + "sakura.png", renderer_ });
+    obstacle_.reset(new Sprite { SPRITES_PATH_PREFIX + "???.png", renderer_ });
 
     for (auto spritePair: SPRITES)
         snakes_.emplace_back(new GraphicSnake {
@@ -48,10 +49,10 @@ SDLCanvas::~SDLCanvas() {
     SDL_Quit();
 }
 
-void SDLCanvas::drawSprite(int x, int y, const Sprite & sprite) {
+void SDLCanvas::drawSprite(const Position & pos, const Sprite & sprite) {
     SDL_Rect rect {
-        static_cast<int>(x * boxWidth_),
-        static_cast<int>(y * boxHeight_),
+        static_cast<int>(pos.x * boxWidth_),
+        static_cast<int>(pos.y * boxHeight_),
         static_cast<int>(boxWidth_),
         static_cast<int>(boxHeight_)
     };
@@ -67,13 +68,15 @@ void SDLCanvas::draw(const gui::GameState & info) {
     SDL_RenderClear(renderer_);
 
     drawBackground();
-    drawSprite(info.food.x, info.food.y, *food_);
+    drawSprite(info.food, *food_);
     for (const auto & snake: info.snakes) {
         auto & graphicSnake = snakes_[snake.id % snakes_.size()];
-        drawSprite(snake.body.front().x, snake.body.front().y, graphicSnake->head);
+        drawSprite(snake.body.front(), graphicSnake->head);
         for (auto it = std::next(snake.body.begin()); it != snake.body.end(); ++it)
-            drawSprite(it->x, it->y, graphicSnake->body);
+            drawSprite(*it, graphicSnake->body);
     }
+    for (const auto & obstacle: info.obstacles)
+        drawSprite(obstacle, *obstacle_);
 
     SDL_RenderPresent(renderer_);
 }

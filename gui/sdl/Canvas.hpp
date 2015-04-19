@@ -24,13 +24,13 @@ private:
     using GraphicSnakes = std::vector<std::unique_ptr<GraphicSnake>>;
     using SpritePtr     = std::unique_ptr<Sprite>;
 
-    void                drawSprite(int x, int y, const Sprite & sprite);
+    void                drawSprite(const Position &, const Sprite & sprite);
     void                drawBackground(void);
 
     float               boxWidth_, boxHeight_;
 
     SDL_Window          *window_;
     SDL_Renderer        *renderer_;
-    SpritePtr           food_, background_;
+    SpritePtr           food_, obstacle_, background_;
     GraphicSnakes       snakes_;
 };
