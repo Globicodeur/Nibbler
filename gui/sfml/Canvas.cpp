@@ -23,7 +23,8 @@ SFMLCanvas::SFMLCanvas(unsigned width, unsigned height):
     },
     boxWidth_   { (float)gui::WINDOW_WIDTH / width },
     boxHeight_  { (float)gui::WINDOW_HEIGHT / height },
-    food_       { sf::Color::Yellow, boxWidth_, boxHeight_ } {
+    food_       { sf::Color::Yellow, boxWidth_, boxHeight_ },
+    obstacle_   { sf::Color::White, boxWidth_, boxHeight_ } {
 
     for (auto colorPair: COLORS)
         snakes_.emplace_back(new GraphicSnake {
@@ -40,6 +41,8 @@ void SFMLCanvas::draw(const gui::GameState & info) {
     drawSpriteAt(info.food, food_);
     for (const auto & snake: info.snakes)
         drawSnake(snake);
+    for (const auto & obstacle: info.obstacles)
+        drawSpriteAt(obstacle, obstacle_);
 
     window_.display();
 }
