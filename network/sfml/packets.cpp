@@ -13,12 +13,14 @@ sf::Packet & operator>>(sf::Packet & p, Position & pos) {
 sf::Packet & operator<<(sf::Packet & p, const gui::GameState & info) {
     p << info.food;
     p << info.snakes;
+    p << info.obstacles;
     return p;
 }
 
 sf::Packet & operator>>(sf::Packet & p, gui::GameState & info) {
     p >> info.food;
     p >> info.snakes;
+    p >> info.obstacles;
     return p;
 }
 
