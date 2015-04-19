@@ -10,7 +10,7 @@ static const sf::Color COLORS[][2] = {
     { { 128, 32, 128 }, sf::Color::Magenta },
 };
 
-static const std::string FONT_FILE = "./gui/sfml/assets/arial.ttf";
+static const std::string FONT_FILE = "./gui/sfml/assets/Arial.ttf";
 
 SFMLCanvas::SFMLCanvas(unsigned width, unsigned height):
     window_     {
