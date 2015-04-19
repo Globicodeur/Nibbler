@@ -33,7 +33,7 @@ SDLCanvas::SDLCanvas(unsigned width, unsigned height):
 
     food_.reset(new Sprite { SPRITES_PATH_PREFIX + "shinobu.png", renderer_ });
     background_.reset(new Sprite { SPRITES_PATH_PREFIX + "sakura.png", renderer_ });
-    obstacle_.reset(new Sprite { SPRITES_PATH_PREFIX + "???.png", renderer_ });
+    obstacle_.reset(new Sprite { SPRITES_PATH_PREFIX + "mako.png", renderer_ });
 
     for (auto spritePair: SPRITES)
         snakes_.emplace_back(new GraphicSnake {
