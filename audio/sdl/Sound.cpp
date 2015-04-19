@@ -1,5 +1,7 @@
 #include "Sound.hpp"
 
+#include <iostream>
+
 static void         audioCallback(void *userData, Uint8 *stream, int len) {
     auto sound = static_cast<SDLSound*>(userData);
 
@@ -18,14 +20,17 @@ static void         audioCallback(void *userData, Uint8 *stream, int len) {
 }
 
 SDLSound::SDLSound(const std::string & sound):
-    dev { 0 } {
-    SDL_LoadWAV(sound.c_str(), &sound_, &buffer_, &bufferLen_);
+    dev { 0 },
+    buffer_ { nullptr } {
+    if (!SDL_LoadWAV(sound.c_str(), &sound_, &buffer_, &bufferLen_))
+        std::cerr << SDL_GetError() << std::endl;
     sound_.callback = &audioCallback;
     sound_.userdata = this;
 }
 
 SDLSound::~SDLSound(void) {
-    SDL_FreeWAV(buffer_);
+    if (buffer_)
+        SDL_FreeWAV(buffer_);
     SDL_CloseAudioDevice(dev);
 }
 
