@@ -5,7 +5,7 @@
 
 #include "../gui/spec.hpp"
 #include "../audio/spec.hpp"
-#include "../Tools/Direction.hpp"
+#include "../tools/Direction.hpp"
 
 namespace network {
 

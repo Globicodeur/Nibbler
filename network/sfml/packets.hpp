@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SFML/network.hpp>
+#include <SFML/Network.hpp>
 
 #include <boost/mpl/size.hpp>
 
