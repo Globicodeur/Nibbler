@@ -4,6 +4,8 @@
 
 #include <future>
 #include <iostream>
+#include <fstream>
+#include <streambuf>
 
 extern "C" void initsnake(void);
 
@@ -16,7 +18,12 @@ Python::Python(void) {
     globals_ = bp::import("__main__").attr("__dict__");
 
     try {
-        bp::exec_file(GameOptions::aiFile.c_str(), globals_);
+        std::ifstream file { GameOptions::aiFile.c_str() };
+        std::string code {
+            std::istreambuf_iterator<char> { file },
+            std::istreambuf_iterator<char> { }
+        };
+        bp::exec(code.c_str(), globals_);
     }
     catch(...) {
         PyErr_Print();
