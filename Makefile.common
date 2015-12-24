@@ -1,13 +1,16 @@
 rwildcard		=	$(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2)\
 					$(filter $(subst *,%,$2),$d))
 
-BOOST_PATH		=	$(HOME)/.brew/Cellar/boost/1.57.0
+INCLUDE_DIRS	=	.. ../vendors/signals $(BOOST_PATH)/include
+LIB_DIRS		=
+LIB_NAMES		=	dl jpeg
 
-COMPILER		=	clang++
-CFLAGS			=	-Wall -Wextra -Werror -std=c++1y -O3 \
-					-I .. -I ../vendors/signals -I $(BOOST_PATH)/include\
-					-c
-LFLAGS			=	-ldl
+COMPILER		=	g++
+CFLAGS			=	-Wall -Wextra -Werror -std=c++1z -O3 \
+					$(foreach dir, $(INCLUDE_DIRS), -I $(dir))
+
+LFLAGS			=	$(foreach dir, $(LIB_DIRS), -L $(dir)) \
+					$(foreach name, $(LIB_NAMES), -l$(name))
 
 OBJ_DIR			=	objs
 SRCS			=	$(call rwildcard, ./, *.cpp)
@@ -15,15 +18,12 @@ OBJS			=	$(addprefix $(OBJ_DIR)/, $(SRCS:.cpp=.o))
 
 OBJ_SUB_DIRS	=	$(dir $(OBJS))
 
-DEPENDENCIES	=	boost
-
 all: show_fancy_name
-	@$(foreach dependency, $(DEPENDENCIES), brew ls $(dependency) 2> /dev/null > /dev/null || brew install $(dependency);)
 	@$(MAKE) $(NAME)
 
 $(NAME): $(OBJS)
 	@echo "$(bold)$(blue)linking		$(green)$@$(reset)"
-	@$(COMPILER) $^ $(LFLAGS) -o $@
+	$(COMPILER) $^ $(LFLAGS) -o $@
 
 $(OBJS): | $(OBJ_DIR)
 
@@ -32,7 +32,7 @@ $(OBJ_DIR):
 
 $(OBJ_DIR)/%.o: %.cpp
 	@echo "$(bold)$(cyan)compiling	$(white)$<$(reset)"
-	@$(COMPILER) $(CFLAGS) $< -o $@
+	@$(COMPILER) $(CFLAGS) -c $< -o $@
 
 depend: .depend
 

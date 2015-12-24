@@ -3,17 +3,11 @@ NAME			=	nibbler_gui_qt.so
 include ../../Makefile.common
 include ../../Makefile.dylib
 
-DEPENDENCIES	+=	qt5
+QT_INCLUDES		=	/usr/include/x86_64-linux-gnu/qt5/QtCore\
+					/usr/include/x86_64-linux-gnu/qt5/QtGui\
+					/usr/include/x86_64-linux-gnu/qt5/QtWidgets\
+					/usr/include/x86_64-linux-gnu/qt5
 
-QT_INCLUDES		=	$(HOME)/.brew/Cellar/qt5/5.4.1/include/QtCore\
-					$(HOME)/.brew/Cellar/qt5/5.4.1/include/QtGui\
-					$(HOME)/.brew/Cellar/qt5/5.4.1/include/QtWidgets\
-					$(HOME)/.brew/Cellar/qt5/5.4.1/include
-
-QT_LIB_DIR		=	$(HOME)/.brew/Cellar/qt5/5.4.1/lib
 
 CFLAGS			+=	$(foreach inc, $(QT_INCLUDES), -I$(inc))
-LFLAGS			+=	-F$(QT_LIB_DIR)\
-					-framework QtCore\
-					-framework QtGui\
-					-framework QtWidgets
+LFLAGS			+=	-lQt5Core -lQt5Gui -lQt5Widgets
