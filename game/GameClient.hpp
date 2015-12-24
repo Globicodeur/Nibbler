@@ -9,12 +9,6 @@ class GameClient {
 public:
                             GameClient(void);
 
-    // 42 norme
-                            ~GameClient(void)               = default;
-                            GameClient(const GameClient &)  = delete;
-    GameClient &            operator=(const GameClient &)   = delete;
-    //
-
     network::ServerMessages getMessages(void);
     bool                    isRunning(void);
 

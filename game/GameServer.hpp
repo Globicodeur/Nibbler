@@ -9,12 +9,6 @@ class GameServer {
 public:
                             GameServer(void);
 
-    // 42 norme
-                            ~GameServer(void)               = default;
-                            GameServer(const GameServer &)  = delete;
-    GameServer &            operator=(const GameServer &)   = delete;
-    //
-
     network::ClientMessages getMessages(void);
 
 private:

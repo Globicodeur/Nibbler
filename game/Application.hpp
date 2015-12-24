@@ -5,13 +5,6 @@ class Application {
 public:
                                 Application(int argc, char **argv);
 
-    // 42 norme
-                                ~Application(void)                  = default;
-                                Application(void)                   = delete;
-                                Application(const Application &)    = delete;
-    Application &               operator=(const Application &)      = delete;
-    //
-
     void                        run(void);
 
 private:

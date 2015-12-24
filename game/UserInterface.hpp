@@ -12,11 +12,6 @@ class UserInterface {
 
 public:
                             UserInterface(void);
-    // 42 norme
-                            ~UserInterface(void)                    = default;
-                            UserInterface(const UserInterface &)    = delete;
-    UserInterface &         operator=(const UserInterface &)        = delete;
-    //
 
     gui::Inputs             getInputs(void);
 

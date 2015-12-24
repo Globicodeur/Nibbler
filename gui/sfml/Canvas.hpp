@@ -11,13 +11,6 @@ class SFMLCanvas: public gui::Canvas {
 public:
                         SFMLCanvas(unsigned width, unsigned height);
 
-    // 42 norme
-    virtual             ~SFMLCanvas(void)               = default;
-                        SFMLCanvas(void)                = delete;
-                        SFMLCanvas(const SFMLCanvas &)  = delete;
-    SFMLCanvas &        operator=(const SFMLCanvas &)   = delete;
-    //
-
     virtual void        draw(const gui::GameState & info);
     virtual gui::Inputs getInputs(void);
 

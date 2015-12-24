@@ -13,12 +13,6 @@ public:
                         SDLSound(const std::string &);
     virtual             ~SDLSound(void);
 
-    // 42 norme
-                        SDLSound(void)              = delete;
-                        SDLSound(const SDLSound &)  = delete;
-    SDLSound &          operator=(const SDLSound &) = delete;
-    //
-
     void                play(void);
 
 private:

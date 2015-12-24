@@ -8,16 +8,10 @@ class PositionT {
 public:
     T           x, y;
 
+                PositionT(void) = default;
                 PositionT(int x, int y):
                     x(x), y(y)
                 { }
-
-    // 42 norme
-                PositionT(void) = default;
-                ~PositionT(void) = default;
-                PositionT(const PositionT &) = default;
-    PositionT & operator=(const PositionT &) = default;
-    //
 
     PositionT   operator+(const PositionT & delta) const {
         return {

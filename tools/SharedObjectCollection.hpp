@@ -15,12 +15,6 @@ public:
         currentObject_ { nullptr }
     { }
 
-    // 42 norme
-    ~SharedObjectCollection(void)                                       = default;
-    SharedObjectCollection(const SharedObjectCollection &)              = delete;
-    SharedObjectCollection & operator=(const SharedObjectCollection &)  = delete;
-    //
-
     template <class... Args, size_t n>
     void load(const char * (&libraryNames)[n], const Args &... args) {
         for (auto name: libraryNames)

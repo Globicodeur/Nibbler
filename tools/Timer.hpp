@@ -11,12 +11,6 @@ public:
         t0_ { clock::now() }
     { }
 
-    // 42 norme
-    ~Timer(void) = default;
-    Timer(const Timer &) = default;
-    Timer & operator=(const Timer &) = default;
-    //
-
     void reset(void) {
         t0_ = clock::now();
     }

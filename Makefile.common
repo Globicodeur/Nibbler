@@ -23,7 +23,7 @@ all: show_fancy_name
 
 $(NAME): $(OBJS)
 	@echo "$(bold)$(blue)linking		$(green)$@$(reset)"
-	$(COMPILER) $^ $(LFLAGS) -o $@
+	@$(COMPILER) $^ $(LFLAGS) -o $@
 
 $(OBJS): | $(OBJ_DIR)
 

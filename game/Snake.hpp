@@ -11,12 +11,6 @@ public:
     using Body              = std::vector<Position>;
 
                             Snake(const Body &, bool, Direction, unsigned);
-    // 42 norme
-                            ~Snake(void)                = default;
-                            Snake(void)                 = delete;
-                            Snake(const Snake &)        = default;
-    Snake &                 operator=(const Snake &)    = delete;
-    //
 
     void                    move(void);
     void                    eat(void);

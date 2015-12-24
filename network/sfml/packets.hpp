@@ -56,13 +56,6 @@ struct VariantSerializer: boost::static_visitor<> {
         stream_ { stream }
     { }
 
-    // 42 norme
-                        VariantSerializer(void)                         = delete;
-                        ~VariantSerializer(void)                        = default;
-                        VariantSerializer(const VariantSerializer &)    = delete;
-    VariantSerializer & operator=(const VariantSerializer &)            = delete;
-    //
-
     template <class T>
     void operator()(const T & t) const {
         stream_ << t;

@@ -12,13 +12,6 @@ class QtCanvas: public gui::Canvas, public QObject {
 public:
                         QtCanvas(unsigned width, unsigned height);
 
-    // 42 norme
-    virtual             ~QtCanvas(void)             = default;
-                        QtCanvas(void)              = delete;
-                        QtCanvas(const QtCanvas &)  = delete;
-    QtCanvas &          operator=(const QtCanvas &) = delete;
-    //
-
     virtual void        draw(const gui::GameState & info);
     virtual gui::Inputs getInputs(void);
 

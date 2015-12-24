@@ -11,12 +11,6 @@ public:
                                     SFMLServer(unsigned, unsigned);
     virtual                         ~SFMLServer(void);
 
-    // 42 norme
-                                    SFMLServer(void) = delete;
-                                    SFMLServer(const SFMLServer &) = delete;
-    SFMLServer &                    operator=(const SFMLServer &) = delete;
-    //
-
     virtual bool                    listen(network::Port port);
     virtual void                    waitFor(unsigned players);
     virtual void                    sendMessage(const network::ServerMessage &);

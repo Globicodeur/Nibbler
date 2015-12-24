@@ -12,11 +12,6 @@ class GameEngine {
 
 public:
                         GameEngine(void);
-    // 42 norme
-                        ~GameEngine(void)               = default;
-                        GameEngine(const GameEngine &)  = delete;
-    GameEngine &        operator=(const GameEngine &)   = delete;
-    //
 
     void                update(void);
 

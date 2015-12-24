@@ -30,10 +30,6 @@ private:
     public:
                             GILLocker(void);
                             ~GILLocker(void);
-        // 42 norme
-                            GILLocker(const GILLocker &)    = delete;
-    GILLocker &             operator=(const GILLocker &)    = delete;
-        //
     private:
         PyGILState_STATE    state_;
     };

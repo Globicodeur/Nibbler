@@ -38,12 +38,6 @@ public:
         dlclose(handle_);
     }
 
-    // 42 norme
-    SharedObject(void)                              = delete;
-    SharedObject(const SharedObject &)              = delete;
-    SharedObject & operator=(const SharedObject &)  = delete;
-    //
-
     void init(void) {
         interface_.reset(initF_());
         if (!interface_)
