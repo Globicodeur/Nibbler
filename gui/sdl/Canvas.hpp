@@ -4,6 +4,8 @@
 
 #include "spec.hpp"
 
+#include <memory>
+
 class SDLCanvas: public gui::Canvas {
 
 public:

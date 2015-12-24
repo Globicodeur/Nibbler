@@ -4,6 +4,8 @@
 
 #include "spec.hpp"
 
+#include <memory>
+
 class SFMLCanvas: public gui::Canvas {
 
 public:

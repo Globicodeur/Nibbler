@@ -3,6 +3,7 @@
 #include "Sound.hpp"
 
 #include <map>
+#include <memory>
 
 static const char EAT_PATH[] = "./audio/sfml/assets/pacman_eatfruit.wav";
 static const char DIE_PATH[] = "./audio/sfml/assets/pacman_death.wav";
