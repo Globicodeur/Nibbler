@@ -72,18 +72,21 @@ void SFMLCanvas::drawSpriteAt(const Position & pos, sf::Sprite & sprite) {
 
 using KeyMap = std::map<sf::Keyboard::Key, gui::Input>;
 static const KeyMap KEY_MAP = {
-    { sf::Keyboard::Up,     gui::Input::Up    },
-    { sf::Keyboard::Down,   gui::Input::Down  },
-    { sf::Keyboard::Left,   gui::Input::Left  },
-    { sf::Keyboard::Right,  gui::Input::Right },
-    { sf::Keyboard::W,      gui::Input::W     },
-    { sf::Keyboard::S,      gui::Input::S     },
-    { sf::Keyboard::A,      gui::Input::A     },
-    { sf::Keyboard::D,      gui::Input::D     },
-    { sf::Keyboard::Escape, gui::Input::Exit  },
-    { sf::Keyboard::Num1,   gui::Input::Key1  },
-    { sf::Keyboard::Num2,   gui::Input::Key2  },
-    { sf::Keyboard::Num3,   gui::Input::Key3  },
+    { sf::Keyboard::Up,      gui::Input::Up    },
+    { sf::Keyboard::Down,    gui::Input::Down  },
+    { sf::Keyboard::Left,    gui::Input::Left  },
+    { sf::Keyboard::Right,   gui::Input::Right },
+    { sf::Keyboard::W,       gui::Input::W     },
+    { sf::Keyboard::S,       gui::Input::S     },
+    { sf::Keyboard::A,       gui::Input::A     },
+    { sf::Keyboard::D,       gui::Input::D     },
+    { sf::Keyboard::Escape,  gui::Input::Exit  },
+    { sf::Keyboard::Num1,    gui::Input::Key1  },
+    { sf::Keyboard::Num2,    gui::Input::Key2  },
+    { sf::Keyboard::Num3,    gui::Input::Key3  },
+    { sf::Keyboard::Numpad1, gui::Input::Key1  },
+    { sf::Keyboard::Numpad2, gui::Input::Key2  },
+    { sf::Keyboard::Numpad3, gui::Input::Key3  },
 };
 
 gui::Inputs SFMLCanvas::getInputs(void) {

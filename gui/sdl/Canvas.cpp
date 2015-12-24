@@ -95,7 +95,11 @@ static const KeyMap KEY_MAP = {
     { SDLK_1,      gui::Input::Key1  },
     { SDLK_2,      gui::Input::Key2  },
     { SDLK_3,      gui::Input::Key3  },
+    { SDLK_KP_1,   gui::Input::Key1  },
+    { SDLK_KP_2,   gui::Input::Key2  },
+    { SDLK_KP_3,   gui::Input::Key3  },
 };
+
 
 gui::Inputs SDLCanvas::getInputs(void) {
     gui::Inputs inputs;
