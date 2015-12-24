@@ -42,13 +42,14 @@ QtCanvas::QtCanvas(unsigned width, unsigned height):
         snakes_.push_back(GraphicSnake { head, body });
     }
 
-    scene_.setSceneRect(0, 0, gui::WINDOW_WIDTH, gui::WINDOW_HEIGHT);
+    scene_.setSceneRect(0, 0, gui::WINDOW_WIDTH - 2, gui::WINDOW_HEIGHT - 2);
 
     window_.setScene(&scene_);
     window_.setWindowTitle((gui::WINDOW_TITLE_PREFIX + "Qt").c_str());
-    window_.setFixedSize(gui::WINDOW_WIDTH, gui::WINDOW_HEIGHT);
+    window_.resize(gui::WINDOW_WIDTH, gui::WINDOW_HEIGHT);
+    window_.setContentsMargins(0,0,0,0);
     window_.installEventFilter(this);
-    window_.show();
+    window_.showFullScreen();
 
     app_.processEvents();
 }

@@ -27,6 +27,7 @@ SDLCanvas::SDLCanvas(unsigned width, unsigned height):
         gui::WINDOW_HEIGHT,
         SDL_WINDOW_SHOWN
     );
+    SDL_SetWindowFullscreen(window_, SDL_WINDOW_FULLSCREEN_DESKTOP);
 
     renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED);
     SDL_SetRenderDrawColor(renderer_, 255, 255, 255, 255);
