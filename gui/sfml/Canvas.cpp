@@ -1,6 +1,6 @@
 #include "Canvas.hpp"
 
-#include <unordered_map>
+#include <map>
 #include <iterator>
 
 static const sf::Color COLORS[][2] = {
@@ -70,7 +70,7 @@ void SFMLCanvas::drawSpriteAt(const Position & pos, sf::Sprite & sprite) {
     window_.draw(sprite);
 }
 
-using KeyMap = std::unordered_map<sf::Keyboard::Key, gui::Input>;
+using KeyMap = std::map<sf::Keyboard::Key, gui::Input>;
 static const KeyMap KEY_MAP = {
     { sf::Keyboard::Up,     gui::Input::Up    },
     { sf::Keyboard::Down,   gui::Input::Down  },

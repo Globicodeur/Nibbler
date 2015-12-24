@@ -2,12 +2,12 @@
 
 #include "Sound.hpp"
 
-#include <unordered_map>
+#include <map>
 
 static const char EAT_PATH[] = "./audio/sfml/assets/pacman_eatfruit.wav";
 static const char DIE_PATH[] = "./audio/sfml/assets/pacman_death.wav";
 
-using SoundMap = std::unordered_map<audio::Sound, std::shared_ptr<SFMLSound>>;
+using SoundMap = std::map<audio::Sound, std::shared_ptr<SFMLSound>>;
 static const SoundMap SOUNDS = {
     { audio::Sound::FoodEaten, std::make_shared<SFMLSound>(EAT_PATH) },
     { audio::Sound::Dead,      std::make_shared<SFMLSound>(DIE_PATH) },

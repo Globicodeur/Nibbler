@@ -1,6 +1,6 @@
 #include "dispatch.hpp"
 
-#include <unordered_map>
+#include <map>
 
 namespace spec {
 
@@ -11,7 +11,7 @@ namespace spec {
 
     void dispatchInput(gui::Input input) {
         using Emitter = std::function<void ()>;
-        using DispatchMap = std::unordered_map<gui::Input, Emitter>;
+        using DispatchMap = std::map<gui::Input, Emitter>;
 
         static const DispatchMap DISPATCH_MAP = {
             { gui::Input::Up,    bind<Event::ChangeDirection>(0ul, Up)    },
