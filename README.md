@@ -1,6 +1,8 @@
 # Nibbler
 Yet another snake
 
+![demo](https://cloud.githubusercontent.com/assets/2079561/12066016/1d37cd74-afe1-11e5-9d15-8e7d8e27ac81.gif)
+
 ## Principle
 This project aims to familiarize with Unix's dynamic library API: `libdl`  
 In this rework of the famous game [`Snake`](http://www.wikiwand.com/en/Snake_(video_game)), we give to the player the ability to change, in real time, the graphics library used to display the game. This is done by implementing different dynamic libraries which export an interface specialization.  
